@@ -16,6 +16,12 @@ def convert_wk_lead_time_to_string(value):
     else:
         raise ValueError(f"The value '{value}' is not a number nor str.")
 
+def check_string_is_in_file(filepath,string):
+    with open(filepath,'r') as file:
+        file_contents = file.read()
+    if string not in file_contents:
+        raise ValueError(f"{string} is not in list of acceptable submissions.")
+
 def check_and_flip_latitudes(ds, lat_name='latitude'):
     """
     Check if latitudes range from 90 to -90, and flip if necessary.
@@ -91,7 +97,7 @@ def AI_WQ_forecast_submission(data,variable,fc_start_date,wk_lead_time,teamname,
     then copy to FTP site under correct forecast folder, i.e. 20241118. 
 
     Parameters:
-        data: TBC
+        data (xarray.Dataset): xarray dataset with forecasted probabilites in format (quintile, lat, long). 
         variable (str): Saved variable. Options include 'tas', 'mslp' and 'pr'.
         fc_start_date (str): The forecast start date as a string in format '%Y%m%d', i.e. 20241118.
         wk_lead_time (str or number): Three- or four-week forecast, i.e. '3' or 3.
@@ -104,7 +110,8 @@ def AI_WQ_forecast_submission(data,variable,fc_start_date,wk_lead_time,teamname,
 
     # Check all submitted variables are correct format.
     check_variable_in_list(variable,['tas','mslp','pr'])
-    # do you need to check fc_start_date # maybe have a list of appropriate start dates? 
+    check_string_is_in_file('mondays_start_dates.txt',fc_start_date) # checking whether forecast start date is a Monday and in correct format
+    
     # check_variable_in_list(teamname,[]) # to be updated, check that teamname is in list of registered teamnames.
 
     # if wk_lead_time is number, change to string.
@@ -112,7 +119,7 @@ def AI_WQ_forecast_submission(data,variable,fc_start_date,wk_lead_time,teamname,
     check_variable_in_list(wk_lead_time_str,['3','4']) # then check wk_lead_time is either string of 3 or 4.
 
     # after all checks have been performed regarding filename, save final finalname
-    final_filename = variable+'_'+fc_start_date+'_week'+wk_lead_time_str+'_'+teamname+'_'+modelname+'.nc'
+    final_filename = variable+'_'+fc_start_date+'_wk'+wk_lead_time_str+'_'+teamname+'_'+modelname+'.nc'
 
     ################################################################################################################
     # OPEN NETCDF DATA AND INPUT INTO NEW netCDF xarray
@@ -136,7 +143,9 @@ def AI_WQ_forecast_submission(data,variable,fc_start_date,wk_lead_time,teamname,
             attrs=dict(description=variable+' prediction from '+teamname+' using '+modelname+' at week '+wk_lead_time_str+' lead time'))
 
     ds.to_netcdf(final_filename) # save netcdf file temporaily whether the script is being run
+    
     ################################################################################################################
+    
     # save new dataset as netCDF to FTP site
     session = ftplib.FTP('ftp.ecmwf.int','ai_weather_quest','NegF8LfwK') # open FTP session
     create_ftp_dir_if_does_not_exist(session,'forecast_submissions/'+fc_start_date) # save the forecast directory if it does not exist
@@ -150,11 +159,6 @@ def AI_WQ_forecast_submission(data,variable,fc_start_date,wk_lead_time,teamname,
 # code to test functions. give it saved netcdf file on PERM
 slp_wk3_predictions = xr.load_dataset('/perm/ecm0847/S2S_comp/'+'slp_20241111_wk3_ECext.nc')
 # submit forecasts to FTP site
-AI_WQ_forecast_submission(slp_wk3_predictions,'mslp','20241111','3','ECMWF','ext_range')
-
-
-
-
-
+AI_WQ_forecast_submission(slp_wk3_predictions,'mslp','20241111','3','ECMWF','EXTrange')
 
 
