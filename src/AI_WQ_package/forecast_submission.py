@@ -110,7 +110,7 @@ def AI_WQ_forecast_submission(data,variable,fc_start_date,wk_lead_time,teamname,
 
     # Check all submitted variables are correct format.
     check_variable_in_list(variable,['tas','mslp','pr'])
-    check_string_is_in_file('mondays_start_dates.txt',fc_start_date) # checking whether forecast start date is a Monday and in correct format
+    #check_string_is_in_file('mondays_start_dates.txt',fc_start_date) # checking whether forecast start date is a Monday and in correct format
     
     # check_variable_in_list(teamname,[]) # to be updated, check that teamname is in list of registered teamnames.
 
@@ -134,13 +134,43 @@ def AI_WQ_forecast_submission(data,variable,fc_start_date,wk_lead_time,teamname,
     data_var_key = list(data.data_vars.keys())[0]
     data_only = data[data_var_key].values # this should be shaped, quintile, latitude, longitude
 
+    # define coordinates
+    lat_coord = ('latitude',np.arange(90.0,-91.0,-1.0),{'units':'degrees_north','long_name':'latitude','standard_name':'latitude','axis':'X'})
+    lon_coord = ('longitude',np.arange(0.0,360.0,1.0),{'units':'degrees_east','long_name':'longitude','standard_name':'longitude','axis':'Y'})
+    quintile_coord = ('quintile',np.arange(0.2,1.1,0.2))
+
+    # standard for all variables
+    standard_names_all_vars = {'units':'1','grid_mapping':'hcrs','coordinates':'latitude longitude'}
+
+    # set standard names of variable
+    if variable == 'mslp':
+        data_specs = {**{'standard_name':'air_pressure_at_sea_level'},**standard_names_all_vars}
+    elif variable == 'tas':
+        data_specs = {**{'standard_name':'air_temperature'},**standard_names_all_vars}
+    elif variable == 'pr':
+        data_specs = {**{'standard_name':'precipitation'},**standard_names_all_vars}
+
+    fc_issue_date = fc_start_date[:4]+'-'+fc_start_date[4:6]+'-'+fc_start_date[6:]
+
+    # add a reference time coordinate
+    reference_time = ('reftime', np.array([fc_issue_date+'T00:00:00'], dtype='datetime64[ns]'), {
+    'units': 'seconds since 1980-01-01T00:00:00',
+    'calendar': 'gregorian',
+    'standard_name': 'forecast_reference_time',
+    'long_name': 'reference time',
+    'axis':'T'})
+
+    # need to add weekly-mean characteristic. 
+
     # With the data, make a dataset array. Streamlining dataset creation so all submissions are the same.
     ds = xr.Dataset(
-            data_vars=dict(variable=(['quintile','latitude','longitude'],data_only)),
-            coords=dict(quintile=np.arange(0.2,1.1,0.2), # outputs [0.2,0.4,0.6,0.8,1.0]
-                        latitude=np.arange(90.0,-91.0,-1.0),
-                        longitude=np.arange(0.0,360.0,1.0)),
-            attrs=dict(description=variable+' prediction from '+teamname+' using '+modelname+' at week '+wk_lead_time_str+' lead time'))
+            data_vars={variable:(['quintile','latitude','longitude'],data_only,data_specs)
+                },
+            coords=dict(quintile=quintile_coord, # outputs [0.2,0.4,0.6,0.8,1.0]
+                        latitude=lat_coord,
+                        longitude=lon_coord,
+                        time=reference_time),
+            attrs=dict(description=variable+' prediction from '+teamname+' using '+modelname+' at week '+wk_lead_time_str+' lead time',Conventions='CF-1.6'))
 
     ds.to_netcdf(final_filename) # save netcdf file temporaily whether the script is being run
     
@@ -154,11 +184,11 @@ def AI_WQ_forecast_submission(data,variable,fc_start_date,wk_lead_time,teamname,
     file.close() # close the file and quit the session
     session.quit()
 
-    os.remove(final_filename)
+#    os.remove(final_filename)
 
 # code to test functions. give it saved netcdf file on PERM
-slp_wk3_predictions = xr.load_dataset('/perm/ecm0847/S2S_comp/'+'slp_20241111_wk3_ECext.nc')
+#slp_wk3_predictions = xr.load_dataset('/perm/ecm0847/S2S_comp/'+'slp_20241111_wk3_ECext.nc')
 # submit forecasts to FTP site
-AI_WQ_forecast_submission(slp_wk3_predictions,'mslp','20241111','3','ECMWF','EXTrange')
+#AI_WQ_forecast_submission(slp_wk3_predictions,'mslp','20241111','3','ECMWF','EXTrange')
 
 
