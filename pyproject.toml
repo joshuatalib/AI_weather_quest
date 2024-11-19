@@ -7,7 +7,7 @@ name = "AI_WQ_package"
 authors = [
   { name="Joshua Talib", email="joshuatalib@ecmwf.int" },
 ]
-version = "0.0.1"
+version = "0.0.2"
 description = "A python package to support forecast submission, evaluation and access to FTP site for DESTIN-E S2S AI prediction project"
 readme = "README.md"
 requires-python = ">=3.8"
