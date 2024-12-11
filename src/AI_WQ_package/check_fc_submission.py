@@ -117,7 +117,19 @@ def check_all_values_0_and_1(da):
         print("All data is between 0 and 1.")
     else:
         raise ValueError(f"Submitted dataarray has values outside the range of 0 and 1. Nans are also permitted.")
-    
+
+def check_filename_characteristics(variable,fc_start_date,s2s_time_period,teamname,modelname):
+    # (1) first check submitted variables except for the dataset, i.e. components of the filename.
+    # (1.a) check submitted variable name. - only allowed to submit 'tas', 'mslp' and 'pr'
+    check_variable_in_list(variable,['tas','mslp','pr'])
+
+    # (1.c) convert forecast period to a string and check it is 1 or 2.
+    s2s_time_period = convert_fc_period_to_string(s2s_time_period)
+    check_variable_in_list(s2s_time_period,['1','2'])
+
+    return s2s_time_period
+
+
 def all_checks(data,variable,fc_start_date,s2s_time_period,teamname,modelname):
     ''' This function performs all checks on submitted fields.
     Parameters:
@@ -141,7 +153,7 @@ def all_checks(data,variable,fc_start_date,s2s_time_period,teamname,modelname):
     check_variable_in_list(s2s_time_period,['1','2'])
 
     # (1.d) need to check TEAMNAME and MODELNAME. TBC with web developers
-    final_filename = variable+'_'+fc_start_date+'_'+s2s_time_period+'_'+teamname+'_'+modelname+'.nc'
+    final_filename = variable+'_'+fc_start_date+'_p'+s2s_time_period+'_'+teamname+'_'+modelname+'.nc'
 
     # (2) Check the submitted xarray dataset.
 

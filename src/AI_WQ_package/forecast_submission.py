@@ -29,23 +29,53 @@ def create_ftp_dir_if_does_not_exist(ftp,dir_name):
             raise
 
 def AI_WQ_create_empty_dataarray(variable,fc_start_date,fc_period,teamname,modelname):
-    ''' Function that creates an 'empty' dataarray that will support forecast submission.
-    The AI WQ advises users to download the empty dataarray and then fill it with their forecasted values.
-    The function is also used during forecast submission to ensure all participants submit the same file.
+    ''' A function that creates an 'empty' dataarray that supports forecast submission for the AI Weather Quest. 
+    The AI WQ advises that users use this function to output an empty dataarray and then fill it with their forecasted values. The function is also used during forecast submission to the FTP site to ensure all participants submit the same file structure.
     '''
 
+    # Check filename characteristics and output a string version of fc_period
+    fc_period = check_fc_submission.check_filename_characteristics(variable,fc_start_date,fc_period,teamname,modelname)
+
     # standard for all variables
-    standard_names_all_vars = {'units':'1','grid_mapping':'hcrs','coordinates':'latitude longitude'}
+    standard_names_all_vars = {'units':'1','coordinates':'latitude longitude'}
 
     # set standard names of variable
+    # need to add cell method - MEAN (tas, mslp) and SUM (pr).
     if variable == 'mslp':
-        data_specs = {**{'standard_name':'air_pressure_at_sea_level'},**standard_names_all_vars}
+        data_specs = {**{'standard_name':'Mean sea level pressure probability','cell_methods':'time: mean (interval: 6 hours)'},**standard_names_all_vars}
     elif variable == 'tas':
-        data_specs = {**{'standard_name':'air_temperature'},**standard_names_all_vars}
+        data_specs = {**{'standard_name':'2 metre temperature probability','cell_methods':'time: mean (interval: 6 hours)'},**standard_names_all_vars}
     elif variable == 'pr':
-        data_specs = {**{'standard_name':'precipitation'},**standard_names_all_vars}
+        data_specs = {**{'standard_name':'Total precipitation probability','cell_methods':'time: sum (interval: 24 hours)'},**standard_names_all_vars}
+
+    # add a height dimension if tas
+    if variable == 'tas':
+        height = 2  # Assuming height is at near-surface level (2 m), modify if needed
+        height_attrs = {
+        'standard_name': 'height',
+        'units': 'm',
+        'positive': 'up',
+        'axis': 'Z'
+                        }
+    else:
+        height = None  # No height for other variables
 
     fc_issue_date = fc_start_date[:4]+'-'+fc_start_date[4:6]+'-'+fc_start_date[6:]
+
+    # alongside defining the forecast issue date, define the forecasting period in days from forecasting issue date.
+    if fc_period == '1':
+        forecast_period_start = 18
+        if variable == 'mslp' or variable == 'tas':
+            forecast_period_end = 24.75
+        elif variable == 'pr':
+            forecast_period_end = 25.0
+    elif fc_period == '2':
+        forecast_period_start = 25
+        if variable == 'mslp' or variable == 'tas':
+            forecast_period_end = 31.75
+        elif variable == 'pr':
+            forecast_period_end = 32.0
+    forecast_period_bounds = [[forecast_period_start,forecast_period_end]]
 
     # empty data
     empty_data = np.empty((5,181,360))
@@ -53,19 +83,32 @@ def AI_WQ_create_empty_dataarray(variable,fc_start_date,fc_period,teamname,model
     # dimension attributes
     lat_attrs = {'units':'degrees_north','long_name':'latitude','standard_name':'latitude','axis':'X'}
     lon_attrs = {'units':'degrees_east','long_name':'longitude','standard_name':'longitude','axis':'Y'}
-    time_attrs = {'standard_name': 'forecast_reference_time','long_name': 'reference time','axis':'T'}
     latitude = np.arange(90.0,-91.0,-1.0)
     longitude = np.arange(0.0,360.0,1.0)
 
+    # work out forecast issue time
+    fc_issue_time = np.datetime64(fc_issue_date+'T00:00:00')
     # With the data, make a dataset array. Streamlining dataset creation so all submissions are the same.
     da = xr.DataArray(data=empty_data,dims=['quintile','latitude','longitude'],
             coords=dict(quintile=(['quintile'],np.arange(0.2,1.1,0.2)), # outputs [0.2,0.4,0.6,0.8,1.0]
                         latitude=(['latitude'],latitude,lat_attrs),
                         longitude=(['longitude'],longitude,lon_attrs),
-                        time=np.datetime64(fc_issue_date+'T00:00:00')),
-            attrs=dict(**data_specs,description=variable+' prediction from '+teamname+' using '+modelname,Conventions='CF-1.6'))
-    # finally, add the time attrs
-    da.coords['time'].attrs = time_attrs
+                        forecast_issue_date=fc_issue_time,
+                        forecast_period_start=fc_issue_time+np.timedelta64(int(forecast_period_start*24), 'h'),
+                        forecast_period_end=fc_issue_time+np.timedelta64(int(forecast_period_end*24), 'h'),
+                        height=height if height is not None else None
+                        ),
+            attrs=dict(**data_specs,description=variable+' prediction from '+teamname+' using '+modelname+' for forecasting period '+str(fc_period),
+                Conventions='CF-1.6',
+                forecast_period_bounds_units='days into forecast',
+                forecast_period_bounds=f"[{forecast_period_start},{forecast_period_end}]"))
+    # add the time attrs
+    da.coords['forecast_issue_date'].attrs = {'standard_name': 'forecast_issue_time','long_name': 'forecast issue time','axis':'T'}
+    da.coords['forecast_period_start'].attrs = {'long_name': 'forecast period start','axis':'T'} 
+    da.coords['forecast_period_end'].attrs = {'long_name': 'forecast period end','axis':'T'}
+
+    if height is not None:
+        da.coords['height'].attrs = height_attrs
 
     return da
 
