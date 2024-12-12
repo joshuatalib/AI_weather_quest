@@ -11,6 +11,7 @@ _python3 -m pip install AI-WQ-package_
 If you need assistance installing Python 3 or pip, we recommend referring to the official documentation for guidance.
 
 **Dependencies**
+
 The AI-WQ-package has two dependencies:
   	numpy (version 1.23 or higher)
   	xarray (version 2024.09.0 or higher).
