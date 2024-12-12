@@ -130,9 +130,9 @@ def AI_WQ_forecast_submission(data,variable,fc_start_date,fc_period,teamname,mod
     # outputs the data (dataarray) and final filename
     data, final_filename = check_fc_submission.all_checks(data,variable,fc_start_date,fc_period,teamname,modelname)
 
-    data_only = data.values # this should be shaped, quintile, latitude, longitude.
+    data_only = data.values # this should be shaped, quintile, latitude, longitude. check has been made in all_checks
 
-    submitted_da = AI_WQ_create_empty_dataarray(variable,fc_start_date,fc_period,teamname,modelname)
+    submitted_da = AI_WQ_create_empty_dataarray(variable,fc_start_date,fc_period,teamname,modelname) # create an empty dataarray.
     submitted_da.values = data_only
 
     submitted_da.to_netcdf(final_filename) # save netcdf file temporaily whether the script is being run
@@ -160,6 +160,4 @@ def AI_WQ_forecast_submission(data,variable,fc_start_date,fc_period,teamname,mod
     os.remove(final_filename) # delete the saved dataarray.
     
     return submitted_da
-
-
 
