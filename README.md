@@ -18,5 +18,6 @@ The AI-WQ-package has two dependencies:
 If these dependencies might conflict with your working environment, we recommend installing the package in a virtual environment to isolate its impact.
 
 **Upgrading the package**
+
 _python3 -m pip install --upgrade AI-WQ-package_
 
