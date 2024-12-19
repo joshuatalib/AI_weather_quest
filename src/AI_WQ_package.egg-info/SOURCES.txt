@@ -1,0 +1,13 @@
+LICENSE
+README.md
+pyproject.toml
+src/AI_WQ_package/__init__.py
+src/AI_WQ_package/check_fc_submission.py
+src/AI_WQ_package/compute_20yr_quintile_climatology.py
+src/AI_WQ_package/forecast_submission.py
+src/AI_WQ_package/output_Mondays_txt_files.py
+src/AI_WQ_package.egg-info/PKG-INFO
+src/AI_WQ_package.egg-info/SOURCES.txt
+src/AI_WQ_package.egg-info/dependency_links.txt
+src/AI_WQ_package.egg-info/requires.txt
+src/AI_WQ_package.egg-info/top_level.txt
