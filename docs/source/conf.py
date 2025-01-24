@@ -2,9 +2,9 @@
 
 # -- Project information
 
-project = 'Lumache'
-copyright = '2021, Graziella'
-author = 'Graziella'
+project = 'AI_Weather_Quest'
+copyright = '2025, Talib'
+author = 'Joshua Talib'
 
 release = '0.1'
 version = '0.1.0'
