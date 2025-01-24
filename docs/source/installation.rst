@@ -1,5 +1,5 @@
 Installation
-============
+======================
 To install the package on a Linux system, run the following command:
 
 .. code-block:: bash
