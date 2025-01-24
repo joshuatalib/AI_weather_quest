@@ -112,7 +112,7 @@ def AI_WQ_create_empty_dataarray(variable,fc_start_date,fc_period,teamname,model
 
     return da
 
-def AI_WQ_forecast_submission(data,variable,fc_start_date,fc_period,teamname,modelname,FTPpassword,checks=True):
+def AI_WQ_forecast_submission(data,password,variable,fc_start_date,fc_period,teamname,modelname):
     ''' This function will take a dataset in quintile, lat, long format, save as appropriate netCDF format,
     then copy to FTP site under correct forecast folder, i.e. 20241118. 
 
@@ -140,7 +140,7 @@ def AI_WQ_forecast_submission(data,variable,fc_start_date,fc_period,teamname,mod
     ################################################################################################################
     
     # save new dataset as netCDF to FTP site
-    session = ftplib.FTP('ftp.ecmwf.int','ai_weather_quest',FTPpassword) # open FTP session
+    session = ftplib.FTP('ftp.ecmwf.int','ai_weather_quest',password) # open FTP session
     create_ftp_dir_if_does_not_exist(session,'forecast_submissions/'+fc_start_date) # save the forecast directory if it does not exist
     remote_path = f"/forecast_submissions/{fc_start_date}/{final_filename}"
     print (remote_path)
