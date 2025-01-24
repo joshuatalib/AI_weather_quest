@@ -8,9 +8,14 @@ To install the package on a Linux system, run the following command:
 
 For guidance on installing Python 3 or pip, refer to the official documentation.
 
-.. contents::
-   :depth: 2
-   :local:
+Contents
+--------
+
+.. toctree::
+   :maxdepth: 2
+
+   dependencies
+   upgrading
 
 Dependencies
 ------------
