@@ -14,6 +14,5 @@ Contents
 .. toctree::
    :maxdepth: 2
 
-   usage
-   api
+   installation
    submit_forecast
