@@ -9,20 +9,8 @@ project = 'AI_Weather_Quest'
 copyright = '2025, Talib'
 author = 'Joshua Talib'
 
-# Read version from pyproject.toml
-pyproject_path = Path(__file__).parent.parent.parent.parent.parent / "pyproject.toml"  # Adjust the path as needed
-with pyproject_path.open("rb") as f:
-    pyproject = tomli.load(f)
-
-# Extract version from the relevant section (e.g., `[tool.poetry]` or `[project]`)
-release = pyproject.get("tool", {}).get("poetry", {}).get("version", "0.0.0")  # For Poetry projects
-# or
-# release = pyproject.get("project", {}).get("version", "0.0.0")  # For PEP 621-compliant projects
-
-version = ".".join(release.split(".")[:2])  # e.g., '0.1' for '0.1.0'
-
-# release = '0.1'
-# version = '0.1.0'
+release = '0.1'
+version = '0.1.0'
 
 # -- General configuration
 
