@@ -14,6 +14,9 @@ The AI-WQ-package requires the following dependencies:
 
 - **numpy** (version 1.23 or higher)
 - **xarray** (version 2024.09.0 or higher)
+- **pandas** (version 2.2.3 or higher)
+- **scipy** (version 1.14.1 or higher)
+- **netCDF4** (version 1.7.2 or higher)
 
 If these dependencies might conflict with your existing environment, it is recommended to install the package in a virtual environment to avoid issues.
 
