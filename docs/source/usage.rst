@@ -1,5 +1,5 @@
 Installation
-------------
+============
 To install the package on a Linux system, run the following command:
 
 .. code-block:: bash
@@ -32,8 +32,4 @@ To upgrade to the latest version of the AI-WQ-package, use:
 
    This project is under active development, and new features or updates may be released periodically.
 
-.. toctree::
-   :hidden:
-
-   installation
 
