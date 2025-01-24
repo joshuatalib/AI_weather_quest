@@ -32,3 +32,8 @@ To upgrade to the latest version of the AI-WQ-package, use:
 
    This project is under active development, and new features or updates may be released periodically.
 
+.. toctree::
+   :hidden:
+
+   installation
+
