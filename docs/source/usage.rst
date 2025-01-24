@@ -1,34 +1,31 @@
-Usage
-=====
-
-.. _installation:
-
 Installation
 ------------
+To install the package on a Linux system, run the following command:
 
-To use Lumache, first install it using pip:
+.. code-block:: bash
 
-.. code-block:: console
+   python3 -m pip install AI-WQ-package
 
-   (.venv) $ pip install lumache
+For guidance on installing Python 3 or pip, refer to the official documentation.
 
-Creating recipes
-----------------
+Dependencies
+------------
+The AI-WQ-package requires the following dependencies:
 
-To retrieve a list of random ingredients,
-you can use the ``lumache.get_random_ingredients()`` function:
+- **numpy** (version 1.23 or higher)
+- **xarray** (version 2024.09.0 or higher)
 
-.. autofunction:: lumache.get_random_ingredients
+If these dependencies might conflict with your existing environment, it is recommended to install the package in a virtual environment to avoid issues.
 
-The ``kind`` parameter should be either ``"meat"``, ``"fish"``,
-or ``"veggies"``. Otherwise, :py:func:`lumache.get_random_ingredients`
-will raise an exception.
+Upgrading the Package
+----------------------
+To upgrade to the latest version of the AI-WQ-package, use:
 
-.. autoexception:: lumache.InvalidKindError
+.. code-block:: bash
 
-For example:
+   python3 -m pip install --upgrade AI-WQ-package
 
->>> import lumache
->>> lumache.get_random_ingredients()
-['shells', 'gorgonzola', 'parsley']
+.. note::
+
+   This project is under active development, and new features or updates may be released periodically.
 
