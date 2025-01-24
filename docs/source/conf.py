@@ -1,5 +1,8 @@
 # Configuration file for the Sphinx documentation builder.
 
+import tomli  # Use 'import tomllib' if using Python 3.11+
+from pathlib import Path
+
 # -- Project information
 
 project = 'AI_Weather_Quest'
