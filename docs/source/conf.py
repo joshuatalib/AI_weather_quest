@@ -10,7 +10,7 @@ copyright = '2025, Talib'
 author = 'Joshua Talib'
 
 # Read version from pyproject.toml
-pyproject_path = Path(__file__).parent.parent / "pyproject.toml"  # Adjust the path as needed
+pyproject_path = Path(__file__).parent.parent.parent.parent.parent / "pyproject.toml"  # Adjust the path as needed
 with pyproject_path.open("rb") as f:
     pyproject = tomli.load(f)
 
