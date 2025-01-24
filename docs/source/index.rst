@@ -16,3 +16,4 @@ Contents
 
    usage
    api
+   submit_forecast
