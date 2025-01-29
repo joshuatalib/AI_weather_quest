@@ -40,7 +40,7 @@ Use the `AI_WQ_create_empty_dataarray` function to generate a suitable DataArray
 
 .. note::  
   
-   The function accepts either a string or integer. If an integer, it converts the variable to a string.
+   The function accepts either a string or integer. If an integer, it converts the variable to a string. 
 
 - **teamname** (*str*): The team name submitted during online registration.
 - **modelname** (*str*): The model name submitted during online registration.
