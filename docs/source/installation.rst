@@ -8,9 +8,6 @@ To install the package on a Linux system, run the following command:
 
 For guidance on installing Python 3 or pip, refer to the official documentation.
 
-Contents
---------
-
 .. toctree::
    :maxdepth: 2
 
