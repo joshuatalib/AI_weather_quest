@@ -18,3 +18,7 @@ Contents
    submit_forecast
    forecast_evaluation
    training_data
+
+.. note::
+
+   This project is under active development, and new features or updates may be released periodically.
