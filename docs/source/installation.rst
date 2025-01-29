@@ -1,12 +1,12 @@
 Installation
 ======================
-To install the package on a Linux system, run the following command:
+To install the package on Linux, run the following command:
 
 .. code-block:: bash
 
    python3 -m pip install AI-WQ-package
 
-For guidance on installing Python 3 or pip, refer to the official documentation.
+For guidance on installing 'Python 3 <https://wiki.python.org/moin/BeginnersGuide/Download>'_ or 'pip <https://pip.pypa.io/en/stable/installation/>'_, refer to the official documentation.
 
 .. toctree::
    :maxdepth: 2
