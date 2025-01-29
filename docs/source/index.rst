@@ -7,6 +7,9 @@ Overview
 --------
 The AI-WQ-package is a Python package designed to streamline participation in the AI Weather Quest. It provides essential tools for submitting forecasts and accessing competition data. This package requires `Python 3 <https://wiki.python.org/moin/BeginnersGuide/Download>`__, and its source code is available on `GitHub <https://github.com/joshuatalib/AI_weather_quest>`__.
 
+.. note::
+
+   This project is under active development, and new features or updates may be released periodically.
 
 Contents
 --------
@@ -19,6 +22,4 @@ Contents
    forecast_evaluation
    training_data
 
-.. note::
 
-   This project is under active development, and new features or updates may be released periodically.
