@@ -22,24 +22,32 @@ Use the `AI_WQ_create_empty_dataarray` function to generate a suitable DataArray
    AI_WQ_create_empty_dataarray(<<variable>>, <<fc_start_date>>, <<fc_period>>, <<teamname>>, <<modelname>>)
 
 - **variable** (*str*): The forecasted variable. Options are:
-  - `'tas'`: Near-surface temperature
-  - `'mslp'`: Mean sea level pressure
-  - `'pr'`: Precipitation
   
-  *Note*: The function only works with these variables.
+  - ``'tas'``: Near-surface temperature
+  - ``'mslp'``: Mean sea level pressure
+  - ``'pr'``: Precipitation
+
+.. note::  
+   
+   The function only works with these variables.
 
 - **fc_start_date** (*str*): The forecast issue date in format `YYYYMMDD` (e.g., `'20250303'` for 3rd March 2025).
 
 - **fc_period** (*str* or *int*): The chosen sub-seasonal forecasting period. Valid options are:
-  - `'1'`: Weekly-mean forecasts for days 18 to 24 inclusive.
-  - `'2'`: Weekly-mean forecasts for days 25 to 31 inclusive.
   
-  *Note*: The function accepts either a string or integer. If an integer, it converts the variable to a string.
+  - ``'1'``: Weekly-mean forecasts for days 19 to 25 inclusive.
+  - ``'2'``: Weekly-mean forecasts for days 26 to 32 inclusive.
+
+.. note::  
+  
+   The function accepts either a string or integer. If an integer, it converts the variable to a string.
 
 - **teamname** (*str*): The team name submitted during online registration.
 - **modelname** (*str*): The model name submitted during online registration.
 
-The function will only generate an empty DataArray if all parameters follow the required conventions. Ensure valid inputs to avoid errors.
+.. warning::
+
+   The function will only generate an empty DataArray if all parameters follow the required conventions. Ensure valid inputs to avoid errors.
 
 **Example**:
 
@@ -61,7 +69,9 @@ Before populating the DataArray with forecasted probabilities, understand its co
 
 The DataArray also has coordinates describing the issuing forecast date and weekly forecast period. These time coordinates are stored in `np.datetime64` format.
 
-When populating the DataArray with forecasted probabilities, adhere to these predefined coordinates to maintain compatibility with the AI Weather Quest submission process.
+.. important::
+
+   When populating the DataArray with forecasted probabilities, adhere to these predefined coordinates to maintain compatibility with the AI Weather Quest submission process.
 
 Populating the DataArray
 ------------------------
