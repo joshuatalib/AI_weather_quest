@@ -3,9 +3,14 @@ Submitting a Forecast
 
 Importing Forecast Submission Functions
 ----------------------------------------
-To submit a forecast to the AI Weather Quest, you will need to use key functions provided in the `forecast_submission.py` module of the `AI_WQ_package`. These functions leverage the `xarray` library to simplify forecast submissions.
+To submit a forecast to the AI Weather Quest, you will need to use key functions provided in the `forecast_submission.py` module of the `AI_WQ_package`. Important functions include:
 
-Use the following line to import the necessary functions for forecast submission:
+- **AI_WQ_create_empty_dataarray**: Create an empty DataArray for forecast submission ` (see :ref:`Creating an Empty DataArray`).
+- **AI_WQ_forecast_submission**: Submit your populated DataArray to ECMWF ` (see :ref:`Submitting a Forecast to the AI Weather Quest`).
+
+These functions leverage the `xarray` library to simplify forecast submissions.
+
+Use the following line to import these necessary functions for forecast submission:
 
 .. code-block:: python
 
@@ -97,11 +102,11 @@ Once you have populated the DataArray with forecast probabilities, you can submi
 
 - **populated_DataArray** (*xarray.DataArray*): The filled DataArray.
 - **password** (*str*): The forecast submission portal password provided in your registration email.
-- All other variables are the same as those used when creating the empty DataArray.
+- All other variables are the same as those used when creating the empty DataArray ` (see :ref:`Creating an Empty DataArray`).
 
 The function performs multiple checks to ensure suitable data formatting before submission. These checks include:
 
-- The forecast issue date is within the four-day submission window (see forecast submission rules).
+- The forecast issue date is within the four-day submission window (see `forecast submission rules <https://aiweatherquest.ecmwf.int>`__).
 - Data shape is `(5, 181, 360)`.
 - Latitude coordinate contains 181 points, ordered from `90.0°N` to `-90.0°N`.
 - Longitude coordinate contains 360 points, ordered from `0.0°` to `359.0°`.
