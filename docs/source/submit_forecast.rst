@@ -104,6 +104,10 @@ Once you have populated the DataArray with forecast probabilities, you can submi
 - **password** (*str*): The forecast submission portal password provided in your registration email.
 - All other variables are the same as those used when creating the empty DataArray ` (see :ref:`Creating an Empty DataArray`).
 
+.. warning::
+
+   The function will only permit submission if you provide the same teamname and modelname that was given during registration.
+
 The function performs multiple checks to ensure suitable data formatting before submission. These checks include:
 
 - The forecast issue date is within the four-day submission window (see `forecast submission rules <https://aiweatherquest.ecmwf.int>`__).
