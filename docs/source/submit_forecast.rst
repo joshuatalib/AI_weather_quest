@@ -66,8 +66,8 @@ Empty DataArray Coordinates
 ---------------------------
 Before populating the DataArray with forecasted probabilities, understand its coordinate structure:
 
-- **Latitude**: Ranges from `90.0°N` to `-90.0°N` with a step of `-1.0°` latitude.
-- **Longitude**: Ranges from `0.0°` to `359.0°` longitude with a step of `1.0°`.
+- **Latitude**: Ranges from `90.0°N` to `-90.0°N` with a step of `-1.5°` latitude.
+- **Longitude**: Ranges from `0.0°` to `358.5°` longitude with a step of `1.5°`.
 - **Quintile**: Divided into intervals of `0.2` within `[0, 1.0]`. Quintile values represent the upper limit of climatological conditions:
   - `0.2`: Includes probabilities <= 0.2.
   - `0.4`, `0.6`, etc.: Include probabilities where the lower limit is the previous quintile value (e.g., `0.4` includes probabilities `0.2 <= x < 0.4`).
@@ -88,7 +88,7 @@ Once an "empty" DataArray is created and its structure is understood, fill the D
 
    tas_p1_fc.values = forecast_array
 
-Here, the `tas_p1_fc.values` attribute is filled with the data stored in `forecast_array`. The input array must have the shape `(5, 181, 360)` corresponding to the quintile, latitude, and longitude coordinates, respectively.
+Here, the `tas_p1_fc.values` attribute is filled with the data stored in `forecast_array`. The input array must have the shape `(5, 121, 240)` corresponding to the quintile, latitude, and longitude coordinates, respectively.
 
 Submitting a Forecast to the AI Weather Quest
 ---------------------------------------------
@@ -111,9 +111,9 @@ Once you have populated the DataArray with forecast probabilities, you can submi
 The function performs multiple checks to ensure suitable data formatting before submission. These checks include:
 
 - The forecast issue date is within the four-day submission window (see `forecast submission rules <https://aiweatherquest.ecmwf.int>`__).
-- Data shape is `(5, 181, 360)`.
-- Latitude coordinate contains 181 points, ordered from `90.0°N` to `-90.0°N`.
-- Longitude coordinate contains 360 points, ordered from `0.0°` to `359.0°`.
+- Data shape is `(5, 121, 240)`.
+- Latitude coordinate contains 121 points, ordered from `90.0°N` to `-90.0°N`.
+- Longitude coordinate contains 240 points, ordered from `0.0°` to `358.5°`.
 - Quintile coordinate has five values: `0.2`, `0.4`, `0.6`, `0.8`, and `1.0`.
 - All data values are between `0.0` and `1.0`. (NaN values are permitted.)
 - When summed across the first axis (the quintile axis), the total probability equals `1.0`.
