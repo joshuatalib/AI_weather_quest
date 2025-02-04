@@ -64,17 +64,17 @@ def AI_WQ_create_empty_dataarray(variable,fc_start_date,fc_period,teamname,model
 
     # alongside defining the forecast issue date, define the forecasting period in days from forecasting issue date.
     if fc_period == '1':
-        forecast_period_start = 18
+        forecast_period_start = 19.0
         if variable == 'mslp' or variable == 'tas':
-            forecast_period_end = 24.75
+            forecast_period_end = 25.75
         elif variable == 'pr':
-            forecast_period_end = 25.0
+            forecast_period_end = 26.0
     elif fc_period == '2':
-        forecast_period_start = 25
+        forecast_period_start = 26.0
         if variable == 'mslp' or variable == 'tas':
-            forecast_period_end = 31.75
+            forecast_period_end = 32.75
         elif variable == 'pr':
-            forecast_period_end = 32.0
+            forecast_period_end = 33.0
     forecast_period_bounds = [[forecast_period_start,forecast_period_end]]
 
     # empty data
@@ -120,7 +120,7 @@ def AI_WQ_forecast_submission(data,password,variable,fc_start_date,fc_period,tea
         data (xarray.Dataset): xarray dataset with forecasted probabilites in format (quintile, lat, long). 
         variable (str): Saved variable. Options include 'tas', 'mslp' and 'pr'.
         fc_start_date (str): The forecast start date as a string in format '%Y%m%d', i.e. 20241118.
-        fc_period (str or number): Either forecast period 1 (days 18 to 24) for forecast period 2 (days 25 to 31).
+        fc_period (str or number): Either forecast period 1 (days 19 to 25) for forecast period 2 (days 26 to 32).
         teamname (str): The teamname that was submitted during registration.
         modelname (str): Modelname for particular forecast. Teams are only allowed to submit three models each.
 
