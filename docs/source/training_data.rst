@@ -7,10 +7,10 @@ Avaliable Data
 --------------------------------------
 The following datasets are avaliable through the retrieve_training_data.py module:
 
-- ERA5 data (1979 - 2024):
+- `ERA5 <https://www.ecmwf.int/en/forecasts/dataset/ecmwf-reanalysis-v5>`_ data (1979 - 2024):
    - Weekly-mean temperature (K)
    - Weekly-mean mean sea level pressure (Pa)
-- MSWEP data (1979 - 2024):
+- `MSWEP <https://www.gloh2o.org/mswep/>`_ data (1979 - 2024):
    - Weekly-accumulated precipitation (mm week\ :sup:`-1`)
 
 Importing the Retrieve Training Data Module
