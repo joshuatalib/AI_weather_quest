@@ -35,7 +35,7 @@ templates_path = ['_templates']
 # -- Options for HTML output
 
 html_theme = 'sphinx_rtd_theme'
-html_logo = os.path.abspath("docs/source/Logo_AIWQ_Dark.png")
+html_logo = os.path.abspath("Logo_AIWQ_Dark.png")
 
 # -- Options for EPUB output
 epub_show_urls = 'footnote'
