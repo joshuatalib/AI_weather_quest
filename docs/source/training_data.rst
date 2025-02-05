@@ -1,18 +1,25 @@
 Training Data
 ======================================
 
-Participants are welcome to use any forecast or observational dataset to develop their AI/ML forecasting model. To support initial model development/training, post-processed ERA5 and MSWEP data is avaliable through the retrieve_training_data.py module. Data through this module includes:
+Participants can use any available forecast or observational dataset to develop their AI/ML forecasting models. To facilitate initial model development/training, registered participants can download post-processed ERA5 and MSWEP data through the retrieve_training_data.py module. 
 
-- Weekly-means of ERA5 temperature (K) and mean sea level pressure (Pa) spanning the period of 1979 to 2024.
-- Weekly accumulations of MSWEP precipitation (mm day\ :sup:`-1`) covering the same period. 
+Avaliable Data
+--------------------------------------
+The following datasets are avaliable through the retrieve_training_data.py module:
 
-Importing Retrieve Training Data Functions
+- ERA5 data (1979 - 2024):
+   - Weekly-mean temperature (K)
+   - Weekly-mean mean sea level pressure (Pa)
+- MSWEP data (1979 - 2024):
+   - Weekly-accumulated precipitation (mm week\ :sup:`-1`)
+
+Importing Functions from the Retrieve Training Data Module
 --------------------------------------------
-To download post-processed ERA5 or MSWEP data, you will need key functions in the `retrieve_training_data.py` module. Important functions include:
+To download post-processed ERA5 or MSWEP data, you will need functions from the `retrieve_training_data.py` module. The key function within this module is:
 
-- **retrieve_annual_training_data**: Download annual files containing weekly statistics of tas, mslp or pr.
+- **retrieve_annual_training_data**: Download annual files containing weekly statistics for temperature (tas), mean sea level pressure (mslp) or precipitation (pr).
 
-Use the following python code to import functions within this module:
+To import the module, use the following Python code:
 
 .. code-block:: python
 
@@ -21,7 +28,7 @@ Use the following python code to import functions within this module:
 
 Downloading Training Data
 --------------------------------------------
-Use the `retrieve_annual_training_data` function to download annual files contains weekly statistics of tas, mslp or pr:
+To download data to the directory you are working in, use the `retrieve_annual_training_data` function:
 
 .. code-block:: python
 
@@ -34,32 +41,32 @@ Use the `retrieve_annual_training_data` function to download annual files contai
   - ``'mslp'``: Mean sea level pressure
   - ``'pr'``: Precipitation
 
+- **password** (*str*): The forecast submission portal password provided in your registration email.
+
 .. note::  
    
-   The function only works with these variables.
-
-- **password** (*str*): The forecast submission portal password provided in your registration email.
+   The function only supports the variables listed above.
 
 .. important::
 
-   Each file is approximately 91 mb in size and contains weekly statistics at a daily, 1.5 degree resolution.
+   Each file is approximately 91 MB and contains weekly statistics at a daily, 1.5 degree resolution. Participants should ensure they have adequate storage space if downloading data for multiple years.
 
-Data details
+Data Processing Details
 --------------------------------------------
-Post-processed ERA5 data was computed using the following methodology:
+ERA5 Data Processing
 
-- Download ERA5 data at a six-hourly (0, 6, 12 and 18 UTC), 1.5 degree resolution.
-- Compute seven-day rolling means with labelling on the time axis denoting the start of the 7-day period. 
+- Downloaded at six-hourly intervals (0, 6, 12 and 18 UTC) at a 1.5 degree resolution.
+- Seven-day rolling means are computed, with time axis labels indicating the start of each 7-day period. 
 
-Post-processed MSWEP data was computed in the following manner:
+MSWEP Data Processing
 
-- Download daily rainfall accumulations from *Past* directory for rainfall accumulations before 2021 and *NRT* directory for 2021 and beyond. 
-- Regrid daily rainfall accumulations to a 1.5-degree resolution using first-order conservative remapping (more specifically, the `CDO REMAPCON function <https://code.mpimet.mpg.de/projects/cdo/embedded/index.html#x1-7330002.12.5>`_).
-- Compute seven-day rolling sums with time axis labelling denoting the start of the 7-day period. 
+- Data before 2021 was sourced from the *Past* directory, whilst data from 2021 onwards is from the *NRT* directory. 
+- Daily rainfall accumulations are regridded to a 1.5-degree resolution using first-order conservative remapping (`CDO REMAPCON function <https://code.mpimet.mpg.de/projects/cdo/embedded/index.html#x1-7330002.12.5>`_).
+- Seven-day rolling sums are computed, with time axis labels denoting the start of each 7-day period. 
 
 Summary
 -------------
-Below is a complete Python code example for retrieving post-processed temperature, mean sea level pressure and precipitation data for the year 2005:
+The following is a Python example that retrieves post-processed temperature, mean sea level pressure, and precipitation data for 2005:
 
 .. code-block:: python
 
