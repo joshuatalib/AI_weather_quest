@@ -47,10 +47,12 @@ Use the `retrieve_annual_training_data` function to download annual files contai
 Data details
 --------------------------------------------
 Post-processed ERA5 data was computed using the following methodology:
+
 - Download ERA5 data at a six-hourly (0, 6, 12 and 18 UTC), 1.5 degree resolution.
 - Compute seven-day rolling means with labelling on the time axis denoting the start of the 7-day period. 
 
 Post-processed MSWEP data was computed in the following manner:
+
 - Download daily rainfall accumulations from *Past* directory for rainfall accumulations before 2021 and *NRT* directory for 2021 and beyond. 
 - Regrid daily rainfall accumulations to a 1.5-degree resolution using first-order conservative remapping (more specifically, the `CDO REMAPCON function <https://code.mpimet.mpg.de/projects/cdo/embedded/index.html#x1-7330002.12.5>`_).
 - Compute seven-day rolling sums with time axis labelling denoting the start of the 7-day period. 
