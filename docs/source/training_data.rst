@@ -4,7 +4,7 @@ Training Data
 Participants are welcome to use any forecast or observational dataset to develop their AI/ML forecasting model. To support initial model development/training, post-processed ERA5 and MSWEP data is avaliable through the retrieve_training_data.py module. Data through this module includes:
 
 - Weekly-means of ERA5 temperature (K) and mean sea level pressure (Pa) spanning the period of 1979 to 2024.
-- Weekly accumulations of MSWEP precipitation (mm day^{-1}) covering the same period. 
+- Weekly accumulations of MSWEP precipitation (mm day\ :sup:`-1`) covering the same period. 
 
 Importing Retrieve Training Data Functions
 --------------------------------------------
