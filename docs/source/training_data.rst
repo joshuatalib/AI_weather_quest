@@ -5,7 +5,7 @@ Participants can use any available forecast or observational dataset to develop 
 
 Avaliable Data
 --------------------------------------
-The following datasets are avaliable through the retrieve_training_data.py module:
+The following datasets at a 1.5 degree resolution are avaliable through the retrieve_training_data.py module:
 
 - `ERA5 <https://www.ecmwf.int/en/forecasts/dataset/ecmwf-reanalysis-v5>`_ data (1979 - 2024):
    - Weekly-mean temperature (K)
