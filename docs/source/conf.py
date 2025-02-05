@@ -3,6 +3,7 @@
 import tomllib  # Use 'import tomllib' if using Python 3.11+
 from pathlib import Path
 import sphinx_rtd_theme
+import os
 
 # -- Project information
 
@@ -34,7 +35,7 @@ templates_path = ['_templates']
 # -- Options for HTML output
 
 html_theme = 'sphinx_rtd_theme'
-html_logo = 'docs/source/Logo.png'
+html_logo = os.path.abspath("docs/source/Logo_AIWQ_Dark.png")
 
 # -- Options for EPUB output
 epub_show_urls = 'footnote'
