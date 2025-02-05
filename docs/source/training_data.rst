@@ -13,7 +13,7 @@ The following datasets are avaliable through the retrieve_training_data.py modul
 - MSWEP data (1979 - 2024):
    - Weekly-accumulated precipitation (mm week\ :sup:`-1`)
 
-Importing Functions from the Retrieve Training Data Module
+Importing the Retrieve Training Data Module
 --------------------------------------------
 To download post-processed ERA5 or MSWEP data, you will need functions from the `retrieve_training_data.py` module. The key function within this module is:
 
@@ -28,7 +28,7 @@ To import the module, use the following Python code:
 
 Downloading Training Data
 --------------------------------------------
-To download data to the directory you are working in, use the `retrieve_annual_training_data` function:
+To download data into the directory you are working in, use the `retrieve_annual_training_data` function:
 
 .. code-block:: python
 
@@ -54,11 +54,13 @@ To download data to the directory you are working in, use the `retrieve_annual_t
 Data Processing Details
 --------------------------------------------
 ERA5 Data Processing
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 - Downloaded at six-hourly intervals (0, 6, 12 and 18 UTC) at a 1.5 degree resolution.
 - Seven-day rolling means are computed, with time axis labels indicating the start of each 7-day period. 
 
 MSWEP Data Processing
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 - Data before 2021 was sourced from the *Past* directory, whilst data from 2021 onwards is from the *NRT* directory. 
 - Daily rainfall accumulations are regridded to a 1.5-degree resolution using first-order conservative remapping (`CDO REMAPCON function <https://code.mpimet.mpg.de/projects/cdo/embedded/index.html#x1-7330002.12.5>`_).
@@ -66,7 +68,7 @@ MSWEP Data Processing
 
 Summary
 -------------
-The following is a Python example that retrieves post-processed temperature, mean sea level pressure, and precipitation data for 2005:
+The following is a Python example that retrieves post-processed temperature, mean sea level pressure and precipitation data for 2005:
 
 .. code-block:: python
 
