@@ -78,13 +78,13 @@ def AI_WQ_create_empty_dataarray(variable,fc_start_date,fc_period,teamname,model
     forecast_period_bounds = [[forecast_period_start,forecast_period_end]]
 
     # empty data
-    empty_data = np.empty((5,181,360))
+    empty_data = np.empty((5,121,240))
 
     # dimension attributes
     lat_attrs = {'units':'degrees_north','long_name':'latitude','standard_name':'latitude','axis':'X'}
     lon_attrs = {'units':'degrees_east','long_name':'longitude','standard_name':'longitude','axis':'Y'}
-    latitude = np.arange(90.0,-91.0,-1.0)
-    longitude = np.arange(0.0,360.0,1.0)
+    latitude = np.arange(90.0,-91.0,-1.5) # based on 1.5 deg grid
+    longitude = np.arange(0.0,360.0,1.5)
 
     # work out forecast issue time
     fc_issue_time = np.datetime64(fc_issue_date+'T00:00:00')

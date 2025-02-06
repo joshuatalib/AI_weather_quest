@@ -13,13 +13,13 @@ def change_lat_long_coord_names(da):
     return da
 
 def retrieve_land_sea_mask(password):
-    #### copy across 1 DEG land sea mask used for evaluation ####
+    #### copy across 1.5 deg land sea mask used for evaluation ####
     # create a local filename ###
-    local_filename = f'land_sea_mask_1DEG.nc'
+    local_filename = f'land_sea_mask_1pt5DEG.nc'
 
     # log onto FTP session
     session = ftplib.FTP('ftp.ecmwf.int','ai_weather_quest',password)
-    remote_path = f'land_sea_mask_1DEG.nc'
+    remote_path = f'land_sea_mask_1pt5DEG.nc'
     # retrieve the full year file 
     with open(local_filename,'wb') as f:
         session.retrbinary(f"RETR {remote_path}", f.write)
@@ -34,7 +34,6 @@ def retrieve_land_sea_mask(password):
     land_sea_mask = change_lat_long_coord_names(land_sea_mask)
     # return the single day climatology.
     return land_sea_mask
-
 
 def retrieve_20yr_quintile_clim(date,variable,password):
     '''
@@ -93,7 +92,7 @@ def retrieve_weekly_obs(date,variable,password):
     if variable == 'tas' or variable == 'mslp':
         local_filename = f'ERA5T_sfc_inst_{variable}_{date}_WEEKMEAN.nc'
     elif variable == 'pr':
-        local_filename = f'pr_MSWEP_1DEG_{date}_WEEKACCUM.nc'
+        local_filename = f'pr_MSWEP_1pt5DEG_{date}_WEEKACCUM.nc'
 
     # log onto FTP session
     session = ftplib.FTP('ftp.ecmwf.int','ai_weather_quest',password)

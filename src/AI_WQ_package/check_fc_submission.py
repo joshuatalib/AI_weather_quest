@@ -3,6 +3,68 @@ import xarray as xr
 import numpy as np
 import ftplib
 from datetime import datetime, timedelta
+import pandas as pd
+import requests
+import time
+
+def check_status(url):
+    response = requests.get(url)
+    return response.status_code
+
+def check_registered_teamname(teamname):
+    csv_trigger_url = 'https://aiweatherquest.ecmwf.int/wp-load.php?export_key=REMOVED_EXPORT_KEY&export_id=2&action=trigger'
+    csv_check_status_url = 'https://aiweatherquest.ecmwf.int/wp-load.php?export_key=REMOVED_EXPORT_KEY&export_id=2&action=processing'
+    csv_data_url = 'https://aiweatherquest.ecmwf.int/wp-load.php?security_token=REMOVED_SECURITY_TOKEN&export_id=2&action=get_data'
+    
+    # first trigger csv download
+    check_status(csv_trigger_url)
+
+    # wait for processing to complete. # will complete when status code 200 is recieved.
+    while True:
+        status_code = check_status(csv_check_status_url)
+        if status_code == 200:
+            print("Processing completed. Status code 200 received.")
+            break
+        else:
+            print("Processing not yet complete. Waiting 2 seconds before retrying...")
+            time.sleep(2)  # Wait for 2 seconds before checking again
+
+    # once processing is complete, read the data.
+    # read data within the url # saved webpage with team and model names
+    df = pd.read_csv(csv_data_url)
+    reg_teamnames = df.iloc[:,0]
+    # check whether given teamname is within registered teamnames
+    if teamname in reg_teamnames.values:
+        print (f"{teamname} is registered to the AI Weather Quest. You may submit your forecast.")
+    else:
+        raise ValueError(f"{teamname} is not recognised as a registered AI Weather Quest teamname.")
+
+def check_registered_modelname(modelname):
+    csv_trigger_url = 'https://aiweatherquest.ecmwf.int/wp-load.php?export_key=REMOVED_EXPORT_KEY&export_id=2&action=trigger'
+    csv_check_status_url = 'https://aiweatherquest.ecmwf.int/wp-load.php?export_key=REMOVED_EXPORT_KEY&export_id=2&action=processing'
+    csv_data_url = 'https://aiweatherquest.ecmwf.int/wp-load.php?security_token=REMOVED_SECURITY_TOKEN&export_id=2&action=get_data'
+
+    # first trigger csv download
+    check_status(csv_trigger_url)
+
+    # wait for processing to complete. # will complete when status code 200 is recieved.
+    while True:
+        status_code = check_status(csv_check_status_url)
+        if status_code == 200:
+            print("Processing completed. Status code 200 received.")
+            break
+        else:
+            print("Processing not yet complete. Waiting 2 seconds before retrying...")
+            time.sleep(2)  # Wait for 2 seconds before checking again
+    
+    # read data within the url # saved webpage with team and model names
+    df = pd.read_csv(csv_data_url)
+    reg_modelnames = df.iloc[:,1]
+    # check whether given teamname is within registered teamnames
+    if modelname in reg_modelnames.values:
+        print (f"{modelname} is registered to the AI Weather Quest. You may submit your forecast.")
+    else:
+        raise ValueError(f"{modelname} is not recognised as a registered AI Weather Quest teamname.")
 
 def check_variable_in_list(variable_name, expected_values):
     if variable_name not in expected_values:
@@ -149,8 +211,8 @@ def check_data_characteristics(da):
     else:
         raise ValueError(f"Submitted dataarray has values outside the range of 0 and 1. Nans are also permitted.")
 
-    # check data shape is (5,181,360)
-    expected_shape = (5, 181, 360)
+    # check data shape is (5,121,240)
+    expected_shape = (5, 121, 240)
     if da.shape != expected_shape:
         raise ValueError(f"DataArray shape is {da.shape}, but expected {expected_shape}.")
 
@@ -179,7 +241,8 @@ def check_filename_characteristics(variable,fc_start_date,s2s_time_period,teamna
     check_variable_in_list(s2s_time_period,['1','2'])
 
     # (1.d) TO ADD: CHECK THE TEAMNAME AND MODELNAME HAVE BEEN REGISTERED!
-
+    check_registered_teamname(teamname)
+    check_registered_modelname(modelname)
 
     return s2s_time_period
 
@@ -197,7 +260,7 @@ def all_checks(data,variable,fc_start_date,s2s_time_period,teamname,modelname):
     '''
     # (1) first check all components of filename. OUTPUTS S2S time period as a string.
     s2s_time_period = check_filename_characteristics(variable,fc_start_date,s2s_time_period,teamname,modelname)
-    
+
     # after checking all components of the filename, create a final filename that will be used to save the file!
     final_filename = variable+'_'+fc_start_date+'_p'+s2s_time_period+'_'+teamname+'_'+modelname+'.nc'
 
@@ -216,7 +279,7 @@ def all_checks(data,variable,fc_start_date,s2s_time_period,teamname,modelname):
 
     # (2.d) check data characteristics
         # checks all data is between 0 and 1.0
-        # checks data shape is equal to (5, 181, 360)
+        # checks data shape is equal to (5, 121, 240)
         # checks probabilities equal 1.0 when summing across first axis (quintile)
     check_data_characteristics(data)
 
