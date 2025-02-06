@@ -41,9 +41,33 @@ Output
 Retrieving climatological quintile boundaries
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
+The *retrieve_20yr_quintile_clim* function within the *retrieve_evaluation_data* module downloads climatological quintile boundaries that are then used for forecast evaluation.
+
+.. code-block:: python
+
+  clim_quintile_bounds = retrieve_evaluation_data.retrieve_20yr_quintile_boundaries(<<date>>,<<variable>>,<<password>>)
+
+- **date** (*str*): The requested date for climatological quintile boundaries in format `YYYYMMDD` (e.g., `'20250303'` for 3rd March 2025).
+
+.. note::  
+   
+   Participants will only be able to download climatological quintile boundaries associated with a Monday start date.
+
+- **variable** (*str*): The requested variable. Options are:
+  
+  - ``'tas'``: Near-surface temperature
+  - ``'mslp'``: Mean sea level pressure
+  - ``'pr'``: Precipitation
+
+- **password** (str): The forecast submission portal password provided in your registration email.
+
 Output
 ~~~~~~~~~~~
+The **retrieve_20yr_quintile_boundaries** function returns a dataset containing climatological quintile boundaries. Quintile boundaries have been calculated through using the relevant weekly statistics (weekly-mean/weekly-sum) and then collating observations from the past twenty years. To expand the sample size to 100 observations, we include data from +/- 4 days at two-day intervals around the requested date. 
 
+.. note:: 
+
+  For temperature and pressure, ERA5 is used for computing quintile climatologies, whilst for precipitation, we use data from the MSWEP product. 
 
 Retrieving land fraction data
 ^^^^^^^^^^^^^^^^^^^^^^^^
