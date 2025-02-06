@@ -35,9 +35,9 @@ To download data into the directory you are working in, use the `retrieve_annual
 
 .. code-block:: python
 
-   retrieve_annual_training_data(<<year>>,<<variable>>,<<password>>)
+   retrieve_annual_training_data(<<year>>,<<variable>>,<<password>>,<<local_destination>>=None)
 
-- **year** (*str* or *int*): The year of requested data, i.e. '2000'.
+- **year** (*int*): The year of requested data, i.e. '2000'. The year must be between 1979 and 2024 inclusive. 
 - **variable** (*str*): The requested variable. Options are:
   
   - ``'tas'``: Near-surface temperature
@@ -45,6 +45,7 @@ To download data into the directory you are working in, use the `retrieve_annual
   - ``'pr'``: Precipitation
 
 - **password** (*str*): The forecast submission portal password provided in your registration email.
+- **local_destination** (*str*): The local destination where the user would like to save the dataset. Otherwise, the data is saved in the working directory.
 
 .. note::  
    
@@ -52,7 +53,7 @@ To download data into the directory you are working in, use the `retrieve_annual
 
 .. important::
 
-   Each file is approximately 41 MB and contains weekly statistics at a daily, 1.5 degree resolution. Participants should ensure they have adequate storage space if downloading data for multiple years.
+   Each file is approximately 41 MB and contains weekly statistics at a daily, 1.5 degree resolution. Participants should ensure they have adequate storage space if downloading multiple years.
 
 
 Data Processing Details
