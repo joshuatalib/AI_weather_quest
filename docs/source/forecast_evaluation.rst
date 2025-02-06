@@ -26,9 +26,9 @@ Describes datasets required and the necessary functions.
 
 Important functions include:
 
-- **retrieve_weekly_obs**: Downloads weekly statistics of observed atmospheric characteristics ` (see :ref:`ADD SUBSECTION TITLE`).
-- **retrieve_land_sea_mask**: Downloads land fraction values which are used to mask out oceanic grid points ` (see :ref:`ADD SUBSECTION TITLE`).
-- **retrieve_20yr_quintile_clim**: Downloads climatological quintile boundaries which are compared against observed conditions ` (see :ref:`ADD SUBSECTION TITLE`). 
+- **retrieve_weekly_obs**: Downloads weekly statistics of observed atmospheric characteristics ` (see :ref:`Retrieving weekly observations`).
+- **retrieve_land_sea_mask**: Downloads land fraction values which are used to mask out oceanic grid points ` (see :ref:`Retrieving climatological quintile boundaries`).
+- **retrieve_20yr_quintile_clim**: Downloads climatological quintile boundaries which are compared against observed conditions ` (see :ref:`Retrieving land fraction data`). 
 
 
 Retrieving weekly observations
