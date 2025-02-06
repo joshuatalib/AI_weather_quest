@@ -34,9 +34,6 @@ Important functions include:
 Retrieving weekly observations
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
-Output
-~~~~~~~~~~~
-
 
 Retrieving climatological quintile boundaries
 ^^^^^^^^^^^^^^^^^^^^^^^^
@@ -61,8 +58,6 @@ The *retrieve_20yr_quintile_clim* function within the *retrieve_evaluation_data*
 
 - **password** (str): The forecast submission portal password provided in your registration email.
 
-Output
-~~~~~~~~~~~
 The **retrieve_20yr_quintile_boundaries** function returns a dataset containing climatological quintile boundaries. Quintile boundaries have been calculated through using the relevant weekly statistic (weekly-mean [tas, mslp]/weekly-sum [pr]) and then collating observations from the past twenty years. To expand the sample size to 100 observations, we include data from +/- 4 days at two-day intervals around the requested date. 
 
 .. note:: 
@@ -80,8 +75,6 @@ The *retrieve_land_sea_mask* function within the *retrieve_evaluation_data* modu
 
 - **password** (str): The forecast submission portal password provided in your registration email.
 
-Output
-~~~~~~~~~~~~~
 The **retrieve_land_sea_mask** function returns a dataset containing land fraction values. These values range from 0 to 1, where:
 
 - 0 represents open ocean.
