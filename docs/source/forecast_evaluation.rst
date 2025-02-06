@@ -104,6 +104,9 @@ The **retrieve_land_sea_mask** function returns a dataset containing land fracti
 
 This dataset is used to mask out oceanic grid points when evaluating forecasts over land-dominated regions.
 
+Example of retieving all datasets required for evaluation
+^^^^^^^^^^^^^^^^^^^^^^^^
+
 Evaluating forecasts using retrieved data
 ---------------------------------------------------
 
