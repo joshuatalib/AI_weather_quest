@@ -5,7 +5,7 @@ A Python library to support and participate in ECMWF-hosted AI Weather Quest.
 
 Overview
 --------
-The AI-WQ-package is a Python package designed to streamline participation in the AI Weather Quest. It provides essential tools for submitting forecasts and accessing competition data. This package requires `Python 3 <https://wiki.python.org/moin/BeginnersGuide/Download>`__, and its source code is available on `GitHub <https://github.com/joshuatalib/AI_weather_quest>`__.
+The *AI-WQ-package* is a Python package designed to streamline participation in the AI Weather Quest. It provides essential tools for submitting forecasts and accessing competition data. This package requires `Python 3 <https://wiki.python.org/moin/BeginnersGuide/Download>`__, and its source code is available on `GitHub <https://github.com/joshuatalib/AI_weather_quest>`__.
 
 .. note::
 
@@ -26,7 +26,7 @@ Contents
 License
 ----------
 
-*Anemoi* is available under the open source `Apache License`__.
+*AI-WQ-package* is available under the open source `Apache License`__.
 
 .. __: http://www.apache.org/licenses/LICENSE-2.0.html
 
