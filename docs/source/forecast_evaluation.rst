@@ -63,11 +63,11 @@ The *retrieve_20yr_quintile_clim* function within the *retrieve_evaluation_data*
 
 Output
 ~~~~~~~~~~~
-The **retrieve_20yr_quintile_boundaries** function returns a dataset containing climatological quintile boundaries. Quintile boundaries have been calculated through using the relevant weekly statistics (weekly-mean/weekly-sum) and then collating observations from the past twenty years. To expand the sample size to 100 observations, we include data from +/- 4 days at two-day intervals around the requested date. 
+The **retrieve_20yr_quintile_boundaries** function returns a dataset containing climatological quintile boundaries. Quintile boundaries have been calculated through using the relevant weekly statistic (weekly-mean [tas, mslp]/weekly-sum [pr]) and then collating observations from the past twenty years. To expand the sample size to 100 observations, we include data from +/- 4 days at two-day intervals around the requested date. 
 
 .. note:: 
 
-  For temperature and pressure, ERA5 is used for computing quintile climatologies, whilst for precipitation, we use data from the MSWEP product. 
+  For temperature and pressure, ERA5 is used for computing quintile climatologies, whilst for precipitation, MSWEP data is utilised. 
 
 Retrieving land fraction data
 ^^^^^^^^^^^^^^^^^^^^^^^^
