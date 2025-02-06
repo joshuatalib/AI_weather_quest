@@ -9,7 +9,7 @@ The AI-WQ-package is a Python package designed to streamline participation in th
 
 .. note::
 
-   This project is under active development, and new features or updates may be released periodically.
+   This project is under active development! New updates may be released periodically.
 
 Contents
 --------
