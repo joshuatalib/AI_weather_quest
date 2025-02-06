@@ -51,9 +51,6 @@ To download data into the directory you are working in, use the `retrieve_annual
    
    The function only supports the variables listed above.
 
-Output
-~~~~~~~~~~~~~
-   
 Each file is approximately 41 MB and contains weekly statistics at a daily, 1.5 degree resolution. Participants should ensure they have adequate storage space if downloading multiple years.
 
 
