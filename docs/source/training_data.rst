@@ -45,7 +45,7 @@ To download data into the directory you are working in, use the `retrieve_annual
   - ``'pr'``: Precipitation
 
 - **password** (*str*): The forecast submission portal password provided in your registration email.
-- **local_destination** (*str*): The local destination where the user would like to save the dataset. Otherwise, the data is saved in the working directory.
+- **local_destination** (*str*): The local destination for the downloaded dataset. If unspecified, the dataset is saved locally.
 
 .. note::  
    
