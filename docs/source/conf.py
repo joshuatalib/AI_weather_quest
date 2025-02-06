@@ -1,12 +1,14 @@
 # Configuration file for the Sphinx documentation builder.
 
-import tomli  # Use 'import tomllib' if using Python 3.11+
+import tomllib  # Use 'import tomllib' if using Python 3.11+
 from pathlib import Path
+import sphinx_rtd_theme
+import os
 
 # -- Project information
 
 project = 'AI_Weather_Quest'
-copyright = '2025, Talib'
+copyright = '2025, AI Weather Quest contributors'
 author = 'Joshua Talib'
 
 release = '0.1'
@@ -33,7 +35,7 @@ templates_path = ['_templates']
 # -- Options for HTML output
 
 html_theme = 'sphinx_rtd_theme'
-html_logo = 'docs/source/Logo_AIWQ_Dark.png'
+html_logo = os.path.abspath("Logo.png")
 
 # -- Options for EPUB output
 epub_show_urls = 'footnote'
