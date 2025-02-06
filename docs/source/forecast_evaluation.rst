@@ -33,12 +33,33 @@ Important functions include:
 
 Retrieving weekly observations
 ^^^^^^^^^^^^^^^^^^^^^^^^
+The *retrieve_weekly_obs* function downloads the requested set of observations that are then used for forecast evaluation.
+
+.. code-block:: python
+
+  weekly_obs = retrieve_evaluation_data.retrieve_weekly_obs(<<date>>,<<variable>>,<<password>>)
+
+- **date** (*str*): The requested date for climatological quintile boundaries in format `YYYYMMDD` (e.g., `'20250303'` for 3rd March 2025).
+
+.. note::  
+   
+   Participants will only be able to download observations associated with forecast start dates throughout both the training and competitive period of the competition (from June 2025).
+
+- **variable** (*str*): The requested variable. Options are:
+  
+  - ``'tas'``: Near-surface temperature
+  - ``'mslp'``: Mean sea level pressure
+  - ``'pr'``: Precipitation
+
+- **password** (str): The forecast submission portal password provided in your registration email.
+
+The **retrieve_weekly_obs** function returns a dataset containing observations used for forecast evaluation. For temperature and mean sea level pressure these observations are based on ERA5T data, whilst for precipitation, data from the *NRT* directory is used. Additionally, in line with forecast submission requirements, weekly-means of tas and mslp are computed from data at 0, 6, 12 and 18 UTC, whilst for precipitation, weekly-accumulations are computed.  
 
 
 Retrieving climatological quintile boundaries
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
-The *retrieve_20yr_quintile_clim* function within the *retrieve_evaluation_data* module downloads climatological quintile boundaries that are then used for forecast evaluation.
+The *retrieve_20yr_quintile_clim* function downloads climatological quintile boundaries that are then used for forecast evaluation.
 
 .. code-block:: python
 
