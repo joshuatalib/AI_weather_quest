@@ -7,7 +7,7 @@ Avaliable Data
 --------------------------------------
 The following datasets at a 1.5 degree resolution are avaliable through the retrieve_training_data.py module:
 
-- `ERA5 <https://cds.climate.copernicus.eu/datasets/reanalysis-era5-pressure-levels?tab=overview`_ data (1979 - 2024):
+- `ERA5 <https://cds.climate.copernicus.eu/datasets/reanalysis-era5-pressure-levels?tab=overview>`_ data (1979 - 2024):
    - Weekly-mean temperature (K)
    - Weekly-mean mean sea level pressure (Pa)
 - `MSWEP <https://www.gloh2o.org/mswep/>`_ data (1979 - 2024):
