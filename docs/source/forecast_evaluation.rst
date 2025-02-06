@@ -32,3 +32,24 @@ Important functions include:
 
 Evaluating a forecast locally
 ---------------------------------------------------
+
+Retrieving land fraction data
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+The *retrieve_land_sea_mask* function within the *retrieve_evaluation_data* module will call land fraction values stored at ECMWF and used for evaluation.
+
+.. code-block:: python
+
+  land_sea_mask = retrieve_evaluation_data.retrieve_land_sea_mask(<<password>>)
+
+- **password** (str): The forecast submission portal password provided in your registration email.
+
+Output
+~~~~~~~~~~~~~
+The **retrieve_land_sea_mask** function returns a dataset containing land fraction values. These values range from 0 to 1, where:
+
+- 0 represents open ocean.
+- 1 represents land.
+- Intermediate values indicate partial land coverage.
+
+This dataset is used to mask out oceanic grid points when evaluating forecasts over land-dominated regions.
