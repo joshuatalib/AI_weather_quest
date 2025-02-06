@@ -28,6 +28,9 @@ To import the module, use the following Python code:
 
 Downloading Training Data
 --------------------------------------------
+Download through Python
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 To download data into the directory you are working in, use the `retrieve_annual_training_data` function:
 
 .. code-block:: python
@@ -35,7 +38,7 @@ To download data into the directory you are working in, use the `retrieve_annual
    retrieve_annual_training_data(<<year>>,<<variable>>,<<password>>)
 
 - **year** (*str* or *int*): The year of requested data, i.e. '2000'.
-- **variable** (*str*): The forecasted variable. Options are:
+- **variable** (*str*): The requested variable. Options are:
   
   - ``'tas'``: Near-surface temperature
   - ``'mslp'``: Mean sea level pressure
@@ -49,7 +52,8 @@ To download data into the directory you are working in, use the `retrieve_annual
 
 .. important::
 
-   Each file is approximately 91 MB and contains weekly statistics at a daily, 1.5 degree resolution. Participants should ensure they have adequate storage space if downloading data for multiple years.
+   Each file is approximately 41 MB and contains weekly statistics at a daily, 1.5 degree resolution. Participants should ensure they have adequate storage space if downloading data for multiple years.
+
 
 Data Processing Details
 --------------------------------------------
@@ -65,6 +69,21 @@ MSWEP Data Processing
 - Data before 2021 was sourced from the *Past* directory, whilst data from 2021 onwards is from the *NRT* directory. 
 - Daily rainfall accumulations are regridded to a 1.5-degree resolution using first-order conservative remapping (`CDO REMAPCON function <https://code.mpimet.mpg.de/projects/cdo/embedded/index.html#x1-7330002.12.5>`_).
 - Seven-day rolling sums are computed, with time axis labels denoting the start of each 7-day period. 
+
+Filename conventions
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+For each post-processed historical file the following filename convention is used:
+
+.. code-block:: linux
+   
+   <<variable>>_sevenday_<<weekly_statistic>>_<<year>>.nc
+
+- **variable**: The requested variable.
+- **weekly_statistic**: The statistic performed across a seven-day timescales. Options include:
+  - ``'WEEKLYMEAN'``: Seven-day mean.
+  - ``'WEEKLYSUM'``: Seven-day sum.
+- **year**: The corresponding year associated with the dataset.
 
 Summary
 -------------
