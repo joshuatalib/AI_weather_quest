@@ -74,7 +74,7 @@ MSWEP Data Processing
 Filename conventions
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-For each post-processed historical file the following filename convention is used:
+For each post-processed historical file, the following filename convention is used:
 
 .. code-block:: linux
    
