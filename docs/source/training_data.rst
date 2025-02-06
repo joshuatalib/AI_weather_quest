@@ -79,7 +79,7 @@ For each post-processed historical file the following filename convention is use
    
    <<variable>>_sevenday_<<weekly_statistic>>_<<year>>.nc
 
-- **variable**: The requested variable.
+- **variable**: The requested variable (tas, mslp or pr).
 - **weekly_statistic**: The statistic performed across a seven-day timescales. Options include:
 
   - ``'WEEKLYMEAN'``: Seven-day mean.
