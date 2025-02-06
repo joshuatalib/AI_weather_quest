@@ -30,8 +30,20 @@ Important functions include:
 - **retrieve_land_sea_mask**: Downloads land fraction values which are used to mask out oceanic grid points ` (see :ref:`ADD SUBSECTION TITLE`).
 - **retrieve_20yr_quintile_clim**: Downloads climatological quintile boundaries which are compared against observed conditions ` (see :ref:`ADD SUBSECTION TITLE`). 
 
-Evaluating a forecast locally
----------------------------------------------------
+
+Retrieving weekly observations
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+Output
+~~~~~~~~~~~
+
+
+Retrieving climatological quintile boundaries
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+Output
+~~~~~~~~~~~
+
 
 Retrieving land fraction data
 ^^^^^^^^^^^^^^^^^^^^^^^^
@@ -53,3 +65,10 @@ The **retrieve_land_sea_mask** function returns a dataset containing land fracti
 - Intermediate values indicate partial land coverage.
 
 This dataset is used to mask out oceanic grid points when evaluating forecasts over land-dominated regions.
+
+Evaluating forecasts using retrieved data
+---------------------------------------------------
+
+
+
+
