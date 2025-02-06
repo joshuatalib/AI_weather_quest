@@ -81,8 +81,10 @@ For each post-processed historical file the following filename convention is use
 
 - **variable**: The requested variable.
 - **weekly_statistic**: The statistic performed across a seven-day timescales. Options include:
+
   - ``'WEEKLYMEAN'``: Seven-day mean.
   - ``'WEEKLYSUM'``: Seven-day sum.
+
 - **year**: The corresponding year associated with the dataset.
 
 Summary
