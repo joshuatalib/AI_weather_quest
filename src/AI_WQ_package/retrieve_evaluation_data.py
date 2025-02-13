@@ -12,10 +12,13 @@ def change_lat_long_coord_names(da):
     da = da.rename({'lon':'longitude'})
     return da
 
-def retrieve_land_sea_mask(password):
+def retrieve_land_sea_mask(password,local_destination=None):
     #### copy across 1.5 deg land sea mask used for evaluation ####
     # create a local filename ###
-    local_filename = f'land_sea_mask_1pt5DEG.nc'
+    if local_destination == None:
+        local_filename = f'land_sea_mask_1pt5DEG.nc'
+    else:
+        local_filename = f'{local_destination}/land_sea_mask_1pt5DEG.nc'
 
     # log onto FTP session
     session = ftplib.FTP('ftp.ecmwf.int','ai_weather_quest',password)
@@ -31,11 +34,11 @@ def retrieve_land_sea_mask(password):
     # open file using xarray.
     # when opening, drop the time coordinate from the xarray.
     land_sea_mask = xr.open_dataarray(local_filename).squeeze().reset_coords('time',drop=True)
-    land_sea_mask = change_lat_long_coord_names(land_sea_mask)
+    #land_sea_mask = change_lat_long_coord_names(land_sea_mask)
     # return the single day climatology.
     return land_sea_mask
 
-def retrieve_20yr_quintile_clim(date,variable,password):
+def retrieve_20yr_quintile_clim(date,variable,password,local_destination=None):
     '''
     '''
     # get year of date variable. #######
@@ -53,7 +56,10 @@ def retrieve_20yr_quintile_clim(date,variable,password):
 
     #### copy across single day climatological file ####
     # create a local filename ###
-    local_filename = f'{variable}_20yrCLIM_WEEKLYMEAN_quintiles_{date}.nc'
+    if local_destination == None:
+        local_filename = f'{variable}_20yrCLIM_WEEKLYMEAN_quintiles_{date}.nc'
+    else:
+        local_filename = f'{local_destination}/{variable}_20yrCLIM_WEEKLYMEAN_quintiles_{date}.nc'
 
     # log onto FTP session
     session = ftplib.FTP('ftp.ecmwf.int','ai_weather_quest',password) 
@@ -75,7 +81,7 @@ def retrieve_20yr_quintile_clim(date,variable,password):
     # return the single day climatology.
     return single_day_clim
 
-def retrieve_weekly_obs(date,variable,password):
+def retrieve_weekly_obs(date,variable,password,local_destination=None):
     '''
     date = date of observational week
     '''
@@ -90,9 +96,15 @@ def retrieve_weekly_obs(date,variable,password):
     #### copy across single day climatological file ####
     # create a local filename ###
     if variable == 'tas' or variable == 'mslp':
-        local_filename = f'ERA5T_sfc_inst_{variable}_{date}_WEEKMEAN.nc'
+        if local_destination == None:
+            local_filename = f'ERA5T_sfc_inst_{variable}_{date}_WEEKMEAN.nc'
+        else:
+            local_filename = f'{local_destination}/ERA5T_sfc_inst_{variable}_{date}_WEEKMEAN.nc'
     elif variable == 'pr':
-        local_filename = f'pr_MSWEP_1pt5DEG_{date}_WEEKACCUM.nc'
+        if local_destination == None:
+            local_filename = f'pr_MSWEP_1pt5DEG_{date}_WEEKACCUM.nc'
+        else:
+            local_filename = f'{local_destination}/pr_MSWEP_1pt5DEG_{date}_WEEKACCUM.nc'
 
     # log onto FTP session
     session = ftplib.FTP('ftp.ecmwf.int','ai_weather_quest',password)

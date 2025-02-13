@@ -126,7 +126,7 @@ def check_and_flip_latitudes(da):
     if latitude is None:
         raise ValueError(f"Latitude coordinate not found in the dataset. Tried '{latitude_names}.'")
 
-    if latitude_vals.shape[0] != 181:
+    if latitude_vals.shape[0] != 121:
         raise ValueError(f"Latitude coordinate does not have 181 points. Require 181 points (90 to -90 at resolution of 1 deg) to submit'")
 
     # Check if latitudes need to be flipped
@@ -189,7 +189,7 @@ def check_and_convert_longitudes(ds):
     if longitude is None:
         raise ValueError(f"Longitude coordinate not found in the dataset. Tried '{longitude_names}.'")
 
-    if longitude_vals.shape[0] != 360:
+    if longitude_vals.shape[0] != 240:
         raise ValueError(f"Longitude coordinate does not have 360 points. Require 360 points (0 to 359 (inclusive) at resolution of 1 deg) to submit'")
 
     # Check if longitudes are in the -180 to 180 range
