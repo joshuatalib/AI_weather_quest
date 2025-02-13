@@ -122,6 +122,59 @@ Example of retieving all datasets required for evaluation
 
 Evaluating forecasts using retrieved data
 ---------------------------------------------------
+After downloading the required weekly observations, climatological quintile boundaries and land fraction values, you can now evaluate your forecast. 
+
+The **forecast evaluation** module provides two key functions for computing Ranked Probability Skill Scores (RPSSs):
+
+- **conditional_obs_probs**: Generates an **xarray.dataarray** containing observed probabilities within climatological quintile boundaries. 
+- **work_out_RPSS**: Computes the global area-weighted RPSS, benchmarking forecasts against climatology.
+
+Compute observed probabilities
+^^^^^^^^^^^^^^^^^^^^^^^^
+The *conditional_obs_probs* function determines observed probabilities within a given set of climatological quintile boundaries. The probability is 1 when an observation falls within the specified boundaries.
+
+.. code-block:: python
+
+  obs_pbs = forecast_evaluation.conditional_obs_probs(<<obs>>,<<quintiles>>)
+
+- **obs** (xarray.DataArray): Weekly observations.
+- **quintiles** (xarray.DataArray): Climatological quintile boundaries.
+
+Calculate Ranked Probability Skill Score:
+^^^^^^^^^^^^^^^^^^^^^^^^
+The **work_out_RPSS** function computes the global area-weighted RPSS, measuring forecast accuracy against climatology. 
+
+.. code-block:: python
+
+  RPSS_global_area_weighted = forecast_evaluation.work_out_RPSS(<<fc_pbs>>,<<obs_pbs>>,<<variable>>,<<land_sea_mask>>,quantile_dim='quintile')
+
+- **fc_pbs** (xarray.DataArray): Predicted probabilities between quintile boundaries.
+- **obs_pbs** (xarray.DataArray): Observed probabilities (computed using **conditional_obs_probs**).
+- **variable** (*str*): The variables being evaluated. Options are:
+  
+  - ``'tas'``: Near-surface temperature
+  - ``'mslp'``: Mean sea level pressure
+  - ``'pr'``: Precipitation
+
+- **land_sea_mask** (xarray.DataArray): Dataset containing land fraction values.
+- **quantile_dim** (str,default='quintile'): Dimension over which ranked probability scores are aggregated. It is recommended to keep this fixed as 'quintile'.
+
+The **work_out_RPSS** function executes the following tasks:
+
+- Computes the ranked probability score by comparing the cumulative sum of forecast and observed probabilities.
+- Calculates the climatological ranked probability score by comparing the cumulative sum of climatological and observed probabilities.
+- Determines the RPSS with respect to climatology. 
+- Applies a land-sea mask when the examined variable is either temperature or precipitation. Values are set to NaN at grid points with land fraction values less than 80%.
+- Computes the area-weighted RPSS.
+
+The final output is the same RPSS displayed on the AI Weather Quest website.
+
+Example evaluating a single forecast
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+
+
 
 
 
