@@ -20,12 +20,12 @@ def conditional_obs_probs(obs,quintiles):
 
     threshold_crit = []
 
-    for q in np.arange(num_quintiles+1):
+    for q in np.arange(num_quantiles+1):
         # if q == 0, check whether its lower than first quantile
         if q == 0:
             # need to transpose fc_data so ensemble member is first. 
             threshold_crit.append((obs < quintiles.values[0]))
-        elif q == num_quintiles:
+        elif q == num_quantiles:
             # if at highest value, is it bigger than top quartile
             threshold_crit.append((obs > quintiles.values[-1]))
         else: # is it bigger or equal to previous quartile and smaller or equal to current quartile (i.e. 0.33 <= x <= 0.66).
@@ -43,6 +43,8 @@ def work_out_RPSS(fc_pbs,obs_pbs,variable,land_sea_mask,quantile_dim='quintile')
     # make both dataarray have same attribute sizes
     fc_pbs = fc_pbs.chunk({'quintile':5,'latitude':10,'longitude':10})
     obs_pbs = obs_pbs.chunk({'quintile':5,'latitude':10,'longitude':10})
+
+    num_quants = fc_pbs.shape[0]
 
     # cumulate across quantiles
     fc_pbs_cumsum = fc_pbs.cumsum(dim=quantile_dim)

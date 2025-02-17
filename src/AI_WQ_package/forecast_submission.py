@@ -3,6 +3,8 @@ import xarray as xr
 import numpy as np
 import ftplib
 import os
+import pandas as pd
+import io
 #import sys
 #sys.path.append('/perm/ecm0847/S2S_comp/AI_WEATHER_QUEST_code/AI_weather_quest/src/AI_WQ_package/')
 from AI_WQ_package import check_fc_submission
@@ -28,7 +30,7 @@ def create_ftp_dir_if_does_not_exist(ftp,dir_name):
             # Raise if the error is something else (not directory not found)
             raise
 
-def AI_WQ_create_empty_dataarray(variable,fc_start_date,fc_period,teamname,modelname):
+def AI_WQ_create_empty_dataarray(variable,fc_start_date,fc_period,teamname,modelname,password):
     ''' A function that creates an 'empty' dataarray that supports forecast submission for the AI Weather Quest. 
     The AI WQ advises that users use this function to output an empty dataarray and then fill it with their forecasted values. The function is also used during forecast submission to the FTP site to ensure all participants submit the same file structure.
     '''
@@ -86,6 +88,9 @@ def AI_WQ_create_empty_dataarray(variable,fc_start_date,fc_period,teamname,model
     latitude = np.arange(90.0,-91.0,-1.5) # based on 1.5 deg grid
     longitude = np.arange(0.0,360.0,1.5)
 
+    # create an appropriate identity names. Unique_ID = origin (characters from teamname [first four + last six - filled with 'z' if needed]). expver_ID (teamname plus '01', '02' etc... where number denotes model number (based on names already in look-up table).
+    origin_id, expver_id = update_table_unique_identifies(teamname,modelname,password)
+
     # work out forecast issue time
     fc_issue_time = np.datetime64(fc_issue_date+'T00:00:00')
     # With the data, make a dataset array. Streamlining dataset creation so all submissions are the same.
@@ -101,7 +106,9 @@ def AI_WQ_create_empty_dataarray(variable,fc_start_date,fc_period,teamname,model
             attrs=dict(**data_specs,description=variable+' prediction from '+teamname+' using '+modelname+' for forecasting period '+str(fc_period),
                 Conventions='CF-1.6',
                 forecast_period_bounds_units='days into forecast',
-                forecast_period_bounds=f"[{forecast_period_start},{forecast_period_end}]"))
+                forecast_period_bounds=f"[{forecast_period_start},{forecast_period_end}]",
+                origin=origin_id,
+                expver_id=expver_id))
     # add the time attrs
     da.coords['forecast_issue_date'].attrs = {'standard_name': 'forecast_issue_time','long_name': 'forecast issue time','axis':'T'}
     da.coords['forecast_period_start'].attrs = {'long_name': 'forecast period start','axis':'T'} 
@@ -112,7 +119,7 @@ def AI_WQ_create_empty_dataarray(variable,fc_start_date,fc_period,teamname,model
 
     return da
 
-def AI_WQ_forecast_submission(data,password,variable,fc_start_date,fc_period,teamname,modelname):
+def AI_WQ_forecast_submission(data,variable,fc_start_date,fc_period,teamname,modelname,password):
     ''' This function will take a dataset in quintile, lat, long format, save as appropriate netCDF format,
     then copy to FTP site under correct forecast folder, i.e. 20241118. 
 
@@ -132,10 +139,10 @@ def AI_WQ_forecast_submission(data,password,variable,fc_start_date,fc_period,tea
 
     data_only = data.values # this should be shaped, quintile, latitude, longitude. check has been made in all_checks
 
-    submitted_da = AI_WQ_create_empty_dataarray(variable,fc_start_date,fc_period,teamname,modelname) # create an empty dataarray.
+    submitted_da = AI_WQ_create_empty_dataarray(variable,fc_start_date,fc_period,teamname,modelname,password) # create an empty dataarray.
     submitted_da.values = data_only
 
-    submitted_da.to_netcdf(final_filename) # save netcdf file temporaily whether the script is being run
+    submitted_da.to_netcdf(final_filename) # save netcdf file temporaily where the script is being run
     
     ################################################################################################################
     
@@ -160,4 +167,78 @@ def AI_WQ_forecast_submission(data,password,variable,fc_start_date,fc_period,tea
     os.remove(final_filename) # delete the saved dataarray.
     
     return submitted_da
+
+def generate_identifier(teamname, modelname,df):
+    # Normalize teamname to ensure it has 4+2 characters
+    first_four = teamname[:4]  # First 4 characters
+    last_two = teamname[-2:]   # Last 2 characters
+    normalized_teamname = first_four + last_two  # Combine them
+    
+    # Pad with 'z' if necessary
+    if len(teamname) < 4:
+        normalized_teamname = (teamname + "zz")[:6]
+    elif len(teamname) < 6:
+        normalized_teamname = (teamname[:4] + 'z' * (6 - len(teamname)))[0:6]
+
+    # Check if the model already exists
+    existing_entry = df[(df["Teamname"] == teamname) & (df["Modelname"] == modelname)]
+    if not existing_entry.empty:
+        return existing_entry["Unique_ID"].values[0], existing_entry["expver_ID"].values[0], df
+
+    # Count existing models for this team
+    team_models_count = df[df["Teamname"] == teamname].shape[0] + 1
+
+    # Generate new identifier
+    new_identifier = f"{normalized_teamname}_{team_models_count:02d}"
+    expver_identifier = f"{teamname}_{team_models_count:02d}"
+
+    # Append new entry to DataFrame
+    expected_columns = ["Unique_ID", "expver_ID", "Teamname", "Modelname"]
+
+    new_row = pd.DataFrame({
+        "Unique_ID": [new_identifier],
+        "expver_ID": [expver_identifier],
+        "Teamname": [teamname],
+        "Modelname": [modelname]
+        }, columns=expected_columns)
+
+    df = pd.concat([df, new_row],axis=0,ignore_index=True,sort=False)
+
+    return new_identifier, expver_identifier, df
+
+def update_table_unique_identifies(teamname,modelname,password):
+    csv_filename = "AI_WQ_unique_IDs.csv"
+    # read in .csv file stored on ftp site - table of identifies that is stored on FTP site.
+    session = ftplib.FTP('ftp.ecmwf.int','ai_weather_quest',password)
+    try:
+        csv_data = io.StringIO()
+        session.retrlines(f"RETR {csv_filename}", lambda line: csv_data.write(line + "\n"))
+        csv_data.seek(0)
+        df = pd.read_csv(csv_data)
+        print (df)
+    except Exception as e:
+        # if file does not exist, create one and upload to FTP site.
+        print (f"File not found on FTP. Creating a new file. Error: {e}")
+
+        # Define an empty DataFrame with the expected structure
+        df = pd.DataFrame(columns=["Unique_ID", "expver_ID", "Teamname", "Modelname"])
+
+        # Upload the empty file to initialize it on the FTP server
+        csv_output = io.StringIO()
+        df.to_csv(csv_output, index=False)  # Ensure we don't include an index column
+        csv_output.seek(0)
+        session.storbinary(f"STOR {csv_filename}", io.BytesIO(csv_output.getvalue().encode()))
+        print("New file created and uploaded to FTP.") 
+
+    # a function that generates a unique identifier if one cannot be found associated with the model or teamname.
+    str_identity, str_expver_id, df = generate_identifier(teamname,modelname,df)    
+ 
+    csv_output = io.StringIO()
+    df.to_csv(csv_output,index=False)
+    csv_output.seek(0)
+
+    session.storbinary(f"STOR {csv_filename}", io.BytesIO(csv_output.getvalue().encode()))
+    session.quit()
+
+    return str_identity, str_expver_id
 

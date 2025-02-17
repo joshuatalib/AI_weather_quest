@@ -59,7 +59,7 @@ def check_registered_modelname(modelname):
     
     # read data within the url # saved webpage with team and model names
     df = pd.read_csv(csv_data_url)
-    reg_modelnames = df.iloc[:,1]
+    reg_modelnames = df.iloc[:,2]
     # check whether given teamname is within registered teamnames
     if modelname in reg_modelnames.values:
         print (f"{modelname} is registered to the AI Weather Quest. You may submit your forecast.")
