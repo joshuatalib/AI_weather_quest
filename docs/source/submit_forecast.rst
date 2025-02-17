@@ -60,7 +60,7 @@ Use the `AI_WQ_create_empty_dataarray` function to generate a suitable DataArray
 
 .. code-block:: python
 
-   tas_p1_fc = forecast_submission.AI_WQ_create_empty_dataarray('tas', '20241209', '1', 'EC', 'extrange')
+   tas_p1_fc = forecast_submission.AI_WQ_create_empty_dataarray('tas', '20241209', '1', 'EC', 'extrange', <<password>>)
 
 This creates an empty DataArray for near-surface temperature predictions issued on 9th December 2024 for the first sub-seasonal forecasting period.
 
@@ -125,7 +125,7 @@ After verification, the function populates a new DataArray that meets ECMWF requ
 
 .. code-block:: python
 
-   tas_p1_fc_submit = forecast_submission.AI_WQ_forecast_submission(tas_p1_fc, password, 'tas', '20241209', '1', 'EC', 'extrange')
+   tas_p1_fc_submit = forecast_submission.AI_WQ_forecast_submission(tas_p1_fc, 'tas', '20241209', '1', 'EC', 'extrange', <<password>>)
 
 In this case, team `EC` has used the model `extrange` to predict near-surface temperatures for the first sub-seasonal forecasting period from 9th December 2024.
 
@@ -138,12 +138,12 @@ Below is a complete Python code example for submitting a single forecast:
    from AI_WQ_package import forecast_submission
 
    # Create an empty DataArray
-   tas_p1_fc = forecast_submission.AI_WQ_create_empty_dataarray('tas', '20241209', '1', 'EC', 'extrange')
+   tas_p1_fc = forecast_submission.AI_WQ_create_empty_dataarray('tas', '20241209', '1', 'EC', 'extrange', <<password>>)
 
    # Populate the DataArray with forecast probabilities
    tas_p1_fc.values = tas_p1_fc_pbs
 
    # Submit the forecast
-   tas_p1_fc_submit = forecast_submission.AI_WQ_forecast_submission(tas_p1_fc, password, 'tas', '20241209', '1', 'EC', 'extrange')
+   tas_p1_fc_submit = forecast_submission.AI_WQ_forecast_submission(tas_p1_fc, 'tas', '20241209', '1', 'EC', 'extrange', <<password>>)
 
 This process ensures your forecast is successfully transferred to the AI Weather Quest for real-time evaluation.
