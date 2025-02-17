@@ -24,7 +24,7 @@ Use the `AI_WQ_create_empty_dataarray` function to generate a suitable DataArray
 
 .. code-block:: python
 
-   AI_WQ_create_empty_dataarray(<<variable>>, <<fc_start_date>>, <<fc_period>>, <<teamname>>, <<modelname>>)
+   AI_WQ_create_empty_dataarray(<<variable>>, <<fc_start_date>>, <<fc_period>>, <<teamname>>, <<modelname>>, <<password>>)
 
 - **variable** (*str*): The forecasted variable. Options are:
   
@@ -53,6 +53,8 @@ Use the `AI_WQ_create_empty_dataarray` function to generate a suitable DataArray
 .. warning::
 
    The function will only generate an empty DataArray if all parameters follow the required conventions. Ensure valid inputs to avoid errors.
+
+- **password** (*str*): The forecast submission portal password provided in your registration email.
 
 **Example**:
 
@@ -96,12 +98,11 @@ Once you have populated the DataArray with forecast probabilities, you can submi
 
 .. code-block:: python
 
-   AI_WQ_forecast_submission(<<populated_DataArray>>, <<password>>, <<variable>>, <<fc_start_date>>, <<fc_period>>, <<teamname>>, <<modelname>>)
+   AI_WQ_forecast_submission(<<populated_DataArray>>, <<variable>>, <<fc_start_date>>, <<fc_period>>, <<teamname>>, <<modelname>>, <<password>>)
 
 **Parameters**:
 
 - **populated_DataArray** (*xarray.DataArray*): The filled DataArray.
-- **password** (*str*): The forecast submission portal password provided in your registration email.
 - All other variables are the same as those used when creating the empty DataArray ` (see :ref:`Creating an Empty DataArray`).
 
 .. warning::
