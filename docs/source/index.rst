@@ -26,6 +26,7 @@ User guide
 -----------
 
 This guide provides step-by-step instructions on how to:
+
 - Submit a forecast to the AI Weather Quest competition.
 - Evaluate sub-seasonal forecasts using tools developed by the AI Weather Quest.
 - Download training data for initially developing sub-seasonal forecast models. 
