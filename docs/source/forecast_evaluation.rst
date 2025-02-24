@@ -3,7 +3,7 @@ Forecast Evaluation
 
 Forecast Evaluation Modules
 ----------------------------------------
-To aid transparency and replicability throughout the AI Weather Quest, registered participants can evaluate their own submitted predictions after a forecast period has passed (day 37). To evaluate forecasts locally, you will need to use the following modules of the `AI_WQ_package`:
+To aid transparency and replicability throughout the AI Weather Quest, registered participants can evaluate their own submitted predictions after a forecast period has passed. To evaluate forecasts locally, you will need to use the following modules of the `AI_WQ_package`:
 
 - **retrieve_evaluation_data**: Retrieves all the required datasets for local forecast evaluation. 
 - **forecast_evaluation**: Includes all the necessary functions to compute area-weighted ranked probability skill scores. 
@@ -31,7 +31,7 @@ In addition to forecasted probabilities, three datasets are required for forecas
 
 Weekly observations
 ^^^^^^^^^^^^^^^^^^^^^^^^
-The *retrieve_weekly_obs* function downloads the requested set of observations that are used for forecast evaluation.
+The **retrieve_weekly_obs** function downloads the requested set of observations that are used for forecast evaluation.
 
 .. code-block:: python
 
@@ -41,7 +41,7 @@ The *retrieve_weekly_obs* function downloads the requested set of observations t
 
 .. note::  
    
-   Participants will only be able to download observations associated with forecasts within the training and competitive periods of the competition (i.e. from June 2025).
+   Participants should be able to download relevant observations from mid-January 2024).
 
 .. important::  
    
@@ -56,8 +56,13 @@ The *retrieve_weekly_obs* function downloads the requested set of observations t
 - **password** (str): The forecast submission portal password provided in your registration email.
 - **local_destination** (*str*): The local destination for the downloaded dataset. If unspecified, the dataset is saved within the working directory.
 
-The **retrieve_weekly_obs** function returns a dataset containing the observations that are used for forecast evaluation. For temperature and mean sea level pressure, these observations are based on ERA5T, whilst for precipitation, data from the *NRT* directory is used. Additionally, in line with forecast submission requirements, weekly-means of tas and mslp are computed from data at 0, 6, 12 and 18 UTC, whilst for precipitation, weekly-accumulations are computed.  
+The **retrieve_weekly_obs** function returns a dataset containing the observations that are used for forecast evaluation. For temperature and mean sea level pressure, these observations are based on **ERA5T**, whilst for precipitation, data from the **MSWEP** *NRT* directory is used. Additionally, weekly-means of temperature and pressure are computed using six-hourly data (0, 6, 12 and 18 UTC), whilst for precipitation, weekly-accumulations are computed. The following filename convention is followed for downloaded observations:
 
+.. code-block:: bash
+
+   <<variable>>_obs_<<WEEKLYSTAT>>_<<date>>
+
+where WEEKLYSTAT is either *WEEKLYMEAN* for temperature and pressure, or *WEEKLYSUM* for precipitation. 
 
 Climatological quintile boundaries
 ^^^^^^^^^^^^^^^^^^^^^^^^
