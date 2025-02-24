@@ -63,9 +63,9 @@ Downloaded observations follow this naming pattern:
 
 .. code-block:: bash
 
-   <<variable>>_obs_<<WEEKLYSTAT>>_<<date>>
+   <<variable>>_obs_<<weekly_statistic>>_<<date>>
 
-where **WEEKLYSTAT** is either 'WEEKLYMEAN' (for temperature and pressure) or 'WEEKLYSUM' (for precipitation). 
+where **weekly_statistic** is either 'WEEKLYMEAN' (for temperature and pressure) or 'WEEKLYSUM' (for precipitation). 
 
 Climatological quintile boundaries
 ^^^^^^^^^^^^^^^^^^^^^^^^
