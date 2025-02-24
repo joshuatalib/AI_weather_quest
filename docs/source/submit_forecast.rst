@@ -3,14 +3,12 @@ Submitting a Forecast
 
 Importing Forecast Submission Functions
 ----------------------------------------
-To submit a forecast to the AI Weather Quest, you will need to use key functions provided in the `forecast_submission.py` module of the `AI_WQ_package`. Important functions include:
+To submit a forecast to the AI Weather Quest, you will need to use two key functions provided in the `forecast_submission.py` module of the `AI_WQ_package`. Important functions include:
 
-- **AI_WQ_create_empty_dataarray**: Create an empty DataArray for forecast submission ` (see :ref:`Creating an Empty DataArray`).
-- **AI_WQ_forecast_submission**: Submit your populated DataArray to ECMWF ` (see :ref:`Submitting a Forecast to the AI Weather Quest`).
+- **AI_WQ_create_empty_dataarray**: Create an empty *xarray.DataArray* for forecast submission.
+- **AI_WQ_forecast_submission**: Submit your populated DataArray to the AI Weather Quest.
 
-These functions leverage the `xarray` library to simplify forecast submissions.
-
-Use the following line to import these necessary functions for forecast submission:
+Use the following line to import these necessary functions:
 
 .. code-block:: python
 
@@ -18,7 +16,7 @@ Use the following line to import these necessary functions for forecast submissi
 
 Creating an Empty DataArray
 ---------------------------
-To prepare your forecast submission, create an "empty" xarray DataArray. This template, with the necessary characteristics and attributes required for the AI Weather Quest, will be populated with forecasted probabilities to ensure compatibility with ECMWF IT infrastructure.
+To prepare your forecast submission, you will need to create an "empty" *xarray.DataArray* using the **AI_WQ_create_empty_dataarray** function. This function outputs an *xarray.DataArray* template that includes all the necessary characteristics and attributes required for the AI Weather Quest.
 
 Use the `AI_WQ_create_empty_dataarray` function to generate a suitable DataArray:
 
@@ -32,27 +30,27 @@ Use the `AI_WQ_create_empty_dataarray` function to generate a suitable DataArray
   - ``'mslp'``: Mean sea level pressure
   - ``'pr'``: Precipitation
 
+- **fc_start_date** (*str*): The forecast initialisation date in format `YYYYMMDD` (e.g., `'20250303'` for 3rd March 2025).
+
 .. note::  
-   
-   The function only works with these variables.
+  
+   Only Thursday forecast initialisation dates are permitted. 
 
-- **fc_start_date** (*str*): The forecast issue date in format `YYYYMMDD` (e.g., `'20250303'` for 3rd March 2025).
-
-- **fc_period** (*str* or *int*): The chosen sub-seasonal forecasting period. Valid options are:
+- **fc_period** (*str* or *int*): The chosen sub-seasonal forecasting period (`details given on <https://aiweatherquest.ecmwf.int/submitting-forecasts/>`__). Valid options are:
   
   - ``'1'``: Weekly-mean forecasts for days 19 to 25 inclusive.
   - ``'2'``: Weekly-mean forecasts for days 26 to 32 inclusive.
 
 .. note::  
   
-   The function accepts either a string or integer. If an integer, it converts the variable to a string. 
+   The function accepts either a string or integer. If an integer is provided, it is converted to a string. 
 
 - **teamname** (*str*): The team name submitted during online registration.
 - **modelname** (*str*): The model name submitted during online registration.
 
 .. warning::
 
-   The function will only generate an empty DataArray if all parameters follow the required conventions. Ensure valid inputs to avoid errors.
+   The function will only generate an empty *DataArray* if all parameters follow the required conventions. Ensure valid inputs to avoid errors.
 
 - **password** (*str*): The forecast submission portal password provided in your registration email.
 
@@ -62,19 +60,21 @@ Use the `AI_WQ_create_empty_dataarray` function to generate a suitable DataArray
 
    tas_p1_fc = forecast_submission.AI_WQ_create_empty_dataarray('tas', '20241209', '1', 'EC', 'extrange', <<password>>)
 
-This creates an empty DataArray for near-surface temperature predictions issued on 9th December 2024 for the first sub-seasonal forecasting period.
+This creates an empty DataArray for near-surface (2 m) temperature predictions issued on 9th December 2024 for the first sub-seasonal forecasting period.
 
 Empty DataArray Coordinates
 ---------------------------
-Before populating the DataArray with forecasted probabilities, understand its coordinate structure:
+Before populating the empty *DataArray* with forecasted probabilities, you should understand key components of its coordinate structure:
 
 - **Latitude**: Ranges from `90.0°N` to `-90.0°N` with a step of `-1.5°` latitude.
 - **Longitude**: Ranges from `0.0°` to `358.5°` longitude with a step of `1.5°`.
 - **Quintile**: Divided into intervals of `0.2` within `[0, 1.0]`. Quintile values represent the upper limit of climatological conditions:
-  - `0.2`: Includes probabilities <= 0.2.
-  - `0.4`, `0.6`, etc.: Include probabilities where the lower limit is the previous quintile value (e.g., `0.4` includes probabilities `0.2 <= x < 0.4`).
 
-The DataArray also has coordinates describing the issuing forecast date and weekly forecast period. These time coordinates are stored in `np.datetime64` format.
+- `0.2`: Includes probabilities <= 0.2.
+- `0.4`, `0.6`, `0.8`: Include probabilities where the lower limit is the previous quintile value (e.g., `0.4` includes probabilities `0.2 <= x < 0.4`).
+- `1.0`: Includes probabilities >= 0.8.
+
+The DataArray also has coordinates describing the forecast initialisation date and weekly forecasting period. These time coordinates are stored in `np.datetime64` format.
 
 .. important::
 
@@ -82,7 +82,7 @@ The DataArray also has coordinates describing the issuing forecast date and week
 
 Populating the DataArray
 ------------------------
-Once an "empty" DataArray is created and its structure is understood, fill the DataArray with forecast probabilities by assigning your data to its `values` attribute.
+Once an empty *DataArray* is created and its structure is understood, fill the *xarray.DataArray* with forecasted probabilities by assigning your data to the `values` attribute.
 
 **Example**:
 
@@ -90,11 +90,11 @@ Once an "empty" DataArray is created and its structure is understood, fill the D
 
    tas_p1_fc.values = forecast_array
 
-Here, the `tas_p1_fc.values` attribute is filled with the data stored in `forecast_array`. The input array must have the shape `(5, 121, 240)` corresponding to the quintile, latitude, and longitude coordinates, respectively.
+Here, the `tas_p1_fc.values` attribute is filled with the data stored in `forecast_array`. The input array must have the shape `(5, 121, 240)` corresponding to the quintile, latitude, and longitude coordinates respectively.
 
 Submitting a Forecast to the AI Weather Quest
 ---------------------------------------------
-Once you have populated the DataArray with forecast probabilities, you can submit your forecast to the AI Weather Quest. Use the `AI_WQ_forecast_submission` function:
+Once you have populated the DataArray with forecasted probabilities, you can submit your forecast to the AI Weather Quest. Use the `AI_WQ_forecast_submission` function:
 
 .. code-block:: python
 
@@ -103,7 +103,7 @@ Once you have populated the DataArray with forecast probabilities, you can submi
 **Parameters**:
 
 - **populated_DataArray** (*xarray.DataArray*): The filled DataArray.
-- All other variables are the same as those used when creating the empty DataArray ` (see :ref:`Creating an Empty DataArray`).
+- All other variables are the same as those used when creating the empty DataArray.
 
 .. warning::
 
@@ -111,15 +111,15 @@ Once you have populated the DataArray with forecast probabilities, you can submi
 
 The function performs multiple checks to ensure suitable data formatting before submission. These checks include:
 
-- The forecast issue date is within the four-day submission window (see `forecast submission rules <https://aiweatherquest.ecmwf.int>`__).
+- The forecast initialisation date is a Thursday and within the four-day submission window (see `forecast submission schedule <https://aiweatherquest.ecmwf.int/submitting-forecasts/>`__).
 - Data shape is `(5, 121, 240)`.
 - Latitude coordinate contains 121 points, ordered from `90.0°N` to `-90.0°N`.
 - Longitude coordinate contains 240 points, ordered from `0.0°` to `358.5°`.
 - Quintile coordinate has five values: `0.2`, `0.4`, `0.6`, `0.8`, and `1.0`.
-- All data values are between `0.0` and `1.0`. (NaN values are permitted.)
+- All data values are between `0.0` and `1.0` (NaN values are also permitted).
 - When summed across the first axis (the quintile axis), the total probability equals `1.0`.
 
-After verification, the function populates a new DataArray that meets ECMWF requirements and transfers the forecasted probabilities to an ECMWF-hosted site. The returned DataArray is the one submitted.
+After verification, the function populates a new *xarray.DataArray* that meets ECMWF requirements and transfers forecasted probabilities to an ECMWF-hosted site. The returned DataArray is the one that has been submitted to the competition.
 
 **Example**:
 
@@ -127,7 +127,7 @@ After verification, the function populates a new DataArray that meets ECMWF requ
 
    tas_p1_fc_submit = forecast_submission.AI_WQ_forecast_submission(tas_p1_fc, 'tas', '20241209', '1', 'EC', 'extrange', <<password>>)
 
-In this case, team `EC` has used the model `extrange` to predict near-surface temperatures for the first sub-seasonal forecasting period from 9th December 2024.
+In this case, team `EC` has used the model `extrange` to predict near-surface temperatures for the first sub-seasonal forecasting period (days 19 to 25) from 9th December 2024.
 
 Summary
 -------
