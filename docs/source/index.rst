@@ -5,7 +5,7 @@ A Python library for participating in the `ECMWF-hosted AI Weather Quest <https:
 
 Overview
 --------
-*AI-WQ-package* is a Python library designed to streamline participation in the AI Weather Quest. It provides essential tools for submitting forecasts and accessing data important for competitive participation. The package leverages capability developed through `*xarray* <https://docs.xarray.dev/en/stable/>`__ for efficient data handling. 
+*AI-WQ-package* is a Python library designed to streamline participation in the AI Weather Quest. It provides essential tools for submitting forecasts and accessing data important for competitive participation. The package leverages capability developed through `xarray <https://docs.xarray.dev/en/stable/>`__ for efficient data handling. 
 
 *AI-WQ-package* requires `Python 3 <https://wiki.python.org/moin/BeginnersGuide/Download>`__, and its source code is available on `GitHub <https://github.com/joshuatalib/AI_weather_quest>`__. 
 
