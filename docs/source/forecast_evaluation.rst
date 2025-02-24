@@ -3,12 +3,12 @@ Forecast Evaluation
 
 Forecast Evaluation Modules
 ----------------------------------------
-To aid transparency and replicability throughout the AI Weather Quest, registered participants can evaluate their own submitted predictions after a forecast period has passed. To evaluate forecasts locally, you will need to use the following modules of the `AI_WQ_package`:
+To aid transparency and replicability throughout the AI Weather Quest, registered participants can evaluate their own submitted forecasts after a forecast period has passed. The **AI-WQ-Package** provides dedicated modules for local forecast evaluation:
 
-- **retrieve_evaluation_data**: Retrieves all the required datasets for local forecast evaluation. 
-- **forecast_evaluation**: Includes all the necessary functions to compute area-weighted ranked probability skill scores. 
+- **retrieve_evaluation_data**: Downloads all the necessary datasets for local forecast evaluation. 
+- **forecast_evaluation**: Contains functions to compute area-weighted Ranked Probability Skill Scores (RPSSs). 
 
-The following lines of code, import these necessary modules:
+To import these modules, use the following:
 
 .. code-block:: python
 
@@ -25,9 +25,8 @@ Retrieving Datasets for Forecast Evaluation
 In addition to forecasted probabilities, three datasets are required for forecast evaluation. These datasets, and the important functions within the **retrieve_evaluation_data** module for downloading such data, include:
 
 - Weekly statistics of observed atmospheric characteristics: **retrieve_weekly_obs**.
-- Land fraction values which are used to mask out oceanic grid points: **retrieve_land_sea_mask**
 - Climatological quintile boundaries which are compared against observed conditions: **retrieve_20yr_quintile_clim**
-
+- Land fraction values which are used to exclude oceanic grid points: **retrieve_land_sea_mask**
 
 Weekly observations
 ^^^^^^^^^^^^^^^^^^^^^^^^
@@ -47,7 +46,7 @@ The **retrieve_weekly_obs** function downloads the requested set of observations
    
    The date should correspond to the beginning of the forecast period (i.e. day 19 or day 26) and not the forecast initialisation date (day 1).
 
-- **variable** (*str*): The requested variable. Options are:
+- **variable** (*str*): The requested atmospheric variable. Options are:
   
   - ``'tas'``: Near-surface temperature
   - ``'mslp'``: Mean sea level pressure
@@ -81,7 +80,7 @@ The *retrieve_20yr_quintile_clim* function downloads climatological quintile bou
 
 .. note::  
    
-   Participants will only be able to download climatological quintile boundaries associated with a Monday start date.
+   Participants will only be able to download historical quintile boundaries associated with a Monday start date.
 
 .. important::  
    
@@ -105,13 +104,13 @@ The **retrieve_20yr_quintile_boundaries** function returns a dataset containing 
 Land fraction data
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
-The *retrieve_land_sea_mask* function downloads land fraction values stored at ECMWF.
+The *retrieve_land_sea_mask* function retrieves land fraction values from ECMWF.
 
 .. code-block:: python
 
   land_sea_mask = retrieve_evaluation_data.retrieve_land_sea_mask(<<password>>,local_destination=None)
 
-- **password** (str): The forecast submission portal password provided in your registration email.
+- **password** (*str*): The forecast submission portal password provided in your registration email.
 - **local_destination** (*str*): The local destination for the downloaded dataset. If unspecified, the dataset is saved within the working directory.
 
 The **retrieve_land_sea_mask** function returns a dataset containing land fraction values. These values range from 0 to 1, where:
@@ -120,28 +119,28 @@ The **retrieve_land_sea_mask** function returns a dataset containing land fracti
 - 1 represents land.
 - Intermediate values indicate partial land coverage.
 
-This dataset is used to mask out oceanic grid points when evaluating temperature and precipitation forecasts over land-dominated regions.
+This dataset is used to mask oceanic grid points when evaluating temperature and precipitation forecasts.
 
 .. important::  
    
    Land fraction values are not used when evaluating forecasts of mean sea level pressure. 
 
-Example of retieving all datasets required for evaluation
+Example: Retrieving Requried Datasets
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code-block:: python
 
    from AI_WQ_package import retrieve_evaluation_data
 
-   # Download observations from FTP site
+   # Download weekly observations
    obs = retrieve_evaluation_data.retrieve_weekly_obs(20250106,'tas',<<password>>)
-   # Download climatology from FTP site
+   # Download historical quintile boundaries 
    quintile_clim = retrieve_evaluation_data.retrieve_20yr_quintile_clim(20250106,'tas',<<password>>)
     
-   # Download land-sea mask from FTP site
+   # Download land-sea mask
    land_sea_mask = retrieve_evaluation_data.retrieve_land_sea_mask(<<password>>)
 
-The above example downloads the appropriate observations, quintile climatology boundaries and land fraction values for evaluating near-surface temperature forecasts for the week commencing 6th January 2025.
+This example retrieves all necessary datasets for evaluating near-surface temperature forecasts for the week starting January 6, 2025.
 
 Evaluating forecasts using retrieved data
 ---------------------------------------------------
@@ -150,7 +149,7 @@ After downloading the required weekly observations, climatological quintile boun
 The **forecast evaluation** module provides two key functions for computing Ranked Probability Skill Scores (RPSSs):
 
 - **conditional_obs_probs**: Generates an **xarray.dataarray** containing observed probabilities within climatological quintile boundaries. 
-- **work_out_RPSS**: Computes the global area-weighted RPSS, benchmarking forecasts against climatology.
+- **work_out_RPSS**: Computes the global area-weighted ranked probability skill score, benchmarking forecasts against climatology.
 
 Compute observed probabilities
 ^^^^^^^^^^^^^^^^^^^^^^^^
@@ -160,8 +159,8 @@ The *conditional_obs_probs* function determines observed probabilities within a 
 
   obs_pbs = forecast_evaluation.conditional_obs_probs(<<obs>>,<<quintiles>>)
 
-- **obs** (xarray.DataArray): Weekly observations.
-- **quintiles** (xarray.DataArray): Climatological quintile boundaries.
+- **obs** (*xarray.DataArray*): Weekly observations.
+- **quintiles** (*xarray.DataArray*): Climatological quintile boundaries.
 
 Calculate Ranked Probability Skill Score:
 ^^^^^^^^^^^^^^^^^^^^^^^^
@@ -169,10 +168,10 @@ The **work_out_RPSS** function computes the global area-weighted RPSS, measuring
 
 .. code-block:: python
 
-  RPSS_global_area_weighted = forecast_evaluation.work_out_RPSS(<<fc_pbs>>,<<obs_pbs>>,<<variable>>,<<land_sea_mask>>,quantile_dim='quintile')
+  RPSS_global_area_weighted = forecast_evaluation.work_out_RPSS(<<fc_pbs>>,<<obs_pbs>>,<<variable>>,land_sea_mask,quantile_dim='quintile')
 
-- **fc_pbs** (xarray.DataArray): Predicted probabilities between quintile boundaries.
-- **obs_pbs** (xarray.DataArray): Observed probabilities (computed using **conditional_obs_probs**).
+- **fc_pbs** (*xarray.DataArray*): Predicted probabilities between quintile boundaries.
+- **obs_pbs** (*xarray.DataArray*): Observed probabilities (computed using **conditional_obs_probs**).
 - **variable** (*str*): The variables being evaluated. Options are:
   
   - ``'tas'``: Near-surface temperature
@@ -184,16 +183,40 @@ The **work_out_RPSS** function computes the global area-weighted RPSS, measuring
 
 The **work_out_RPSS** function executes the following tasks:
 
-- Computes the ranked probability score by comparing the cumulative sum of forecast and observed probabilities.
+- Computes a ranked probability score by comparing the cumulative sum of forecast and observed probabilities.
 - Calculates the climatological ranked probability score by comparing the cumulative sum of climatological and observed probabilities.
 - Determines the RPSS with respect to climatology. 
 - Applies a land-sea mask when the examined variable is either temperature or precipitation. Values are set to NaN at grid points with land fraction values less than 80%.
 - Computes the area-weighted RPSS.
 
+.. important::  
+   
+   Land fraction values are not used when evaluating forecasts of mean sea level pressure. 
+
 The final output is the same RPSS displayed on the AI Weather Quest website.
 
 Example evaluating a single forecast
 ^^^^^^^^^^^^^^^^^^^^^^^^
+
+Continuing from the example above, the following code illstrates the evaluation of temperature forecasts for the week commencing 6th January 2025. 
+
+.. code-block:: python
+
+   from AI_WQ_package import forecast_evaluation
+
+   # compute observed probabilities
+   obs_pbs = forecast_evaluation.conditional_obs_probs(obs,quintile_clim)
+
+   # compute global RPSS
+   global_RPSS = forecast_evaluation.work_out_RPSS(submitted_forecast,obs_pbs,'tas',land_sea_mask)
+
+.. note::  
+   
+   As of March 2025, users can only compute RPSSs for individual forecasts. Future updates will enable average and accumulated evaluation scores.
+
+
+
+
 
 
 
