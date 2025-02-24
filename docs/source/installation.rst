@@ -1,6 +1,6 @@
 Installation
 ======================
-To install the package on Linux, run the following command:
+To install the *AI-WQ-package* on Linux, run the following command:
 
 .. code-block:: bash
 
@@ -24,11 +24,11 @@ The AI-WQ-package requires the following dependencies:
 - **scipy** (version 1.14.1 or higher)
 - **netCDF4** (version 1.7.2 or higher)
 
-If these dependencies might conflict with your existing environment, it is recommended to install the package in a virtual environment to avoid issues.
+If these dependencies conflict with your current working environment, consider installing the package in a new virtual environment.
 
 Upgrading the Package
 ----------------------
-To upgrade to the latest version of the AI-WQ-package, use:
+To upgrade to the latest version, run:
 
 .. code-block:: bash
 
@@ -36,6 +36,6 @@ To upgrade to the latest version of the AI-WQ-package, use:
 
 .. note::
 
-   This project is under active development, and new features or updates may be released periodically.
+   This project is being actively developed. New updates may be released periodically with detailed annoucements given on the `ECMWF-hosted forum <https://forum.ecmwf.int/c/workshop-and-events/ai-weather-quest/41>`__.
 
 
