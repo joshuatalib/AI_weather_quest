@@ -56,13 +56,17 @@ The **retrieve_weekly_obs** function downloads the requested set of observations
 - **password** (str): The forecast submission portal password provided in your registration email.
 - **local_destination** (*str*): The local destination for the downloaded dataset. If unspecified, the dataset is saved within the working directory.
 
-The **retrieve_weekly_obs** function returns a dataset containing the observations that are used for forecast evaluation. For temperature and mean sea level pressure, these observations are based on **ERA5T**, whilst for precipitation, data from the **MSWEP** *NRT* directory is used. Additionally, weekly-means of temperature and pressure are computed using six-hourly data (0, 6, 12 and 18 UTC), whilst for precipitation, weekly-accumulations are computed. The following filename convention is followed for downloaded observations:
+The **retrieve_weekly_obs** function returns a dataset containing observations used for forecast evaluation. Temperature and mean sea level pressure are based on **ERA5T** data, whilst precipitation data is sourced from the **MSWEP** *NRT* directory. Additionally, weekly-means of temperature and pressure are computed using six-hourly data (0, 6, 12 and 18 UTC), whilst for precipitation, weekly-accumulations are derived.
+
+**Filename Convention**
+
+Downloaded observations follow this naming pattern:
 
 .. code-block:: bash
 
    <<variable>>_obs_<<WEEKLYSTAT>>_<<date>>
 
-where WEEKLYSTAT is either *WEEKLYMEAN* for temperature and pressure, or *WEEKLYSUM* for precipitation. 
+where **WEEKLYSTAT** is either 'WEEKLYMEAN' (for temperature and pressure) or 'WEEKLYSUM' (for precipitation). 
 
 Climatological quintile boundaries
 ^^^^^^^^^^^^^^^^^^^^^^^^
@@ -92,7 +96,7 @@ The *retrieve_20yr_quintile_clim* function downloads climatological quintile bou
 - **password** (str): The forecast submission portal password provided in your registration email.
 - **local_destination** (*str*): The local destination for the downloaded dataset. If unspecified, the dataset is saved within the working directory.
 
-The **retrieve_20yr_quintile_boundaries** function returns a dataset containing climatological quintile boundaries. Quintile boundaries have been calculated using the relevant weekly statistic (weekly-mean [tas, mslp]/weekly-sum [pr]) and collating observations from the past twenty years. To expand the sample size to 100 observations, we include data from +/- 4 days at two-day intervals around the requested date. 
+The **retrieve_20yr_quintile_boundaries** function returns a dataset containing climatological quintile boundaries. Quintile boundaries have been calculated using the relevant weekly statistic (weekly-mean [tas, mslp]/weekly-sum [pr]) and collating observations from the past twenty years. To expand the sample size to 100 observations, we include data from +/- 4 days at two-day intervals around the requested date (i.e. Thursday (day -4), Saturday (day -2), Monday (day 0), Wednesday (day 2), Friday (day 4)). 
 
 .. note:: 
 
@@ -124,6 +128,20 @@ This dataset is used to mask out oceanic grid points when evaluating temperature
 
 Example of retieving all datasets required for evaluation
 ^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code-block:: python
+
+   from AI_WQ_package import retrieve_evaluation_data
+
+   # Download observations from FTP site
+   obs = retrieve_evaluation_data.retrieve_weekly_obs(20250106,'tas',<<password>>)
+   # Download climatology from FTP site
+   quintile_clim = retrieve_evaluation_data.retrieve_20yr_quintile_clim(20250106,'tas',<<password>>)
+    
+   # Download land-sea mask from FTP site
+   land_sea_mask = retrieve_evaluation_data.retrieve_land_sea_mask(<<password>>)
+
+The above example downloads the appropriate observations, quintile climatology boundaries and land fraction values for evaluating near-surface temperature forecasts for the week commencing 6th January 2025.
 
 Evaluating forecasts using retrieved data
 ---------------------------------------------------
