@@ -1,11 +1,11 @@
 Training Data
 ======================================
 
-Participants can use any available forecast or observational dataset to develop their AI/ML forecasting models. To facilitate initial model development/training, registered participants can download post-processed ERA5 and MSWEP data through the retrieve_training_data.py module. 
+Participants can use any forecast or observational dataset to develop their AI/ML forecasting models. To facilitate initial model development, registered participants can download post-processed ERA5 and MSWEP data through the retrieve_training_data.py module. 
 
 Avaliable Data
 --------------------------------------
-The following datasets at a 1.5 degree resolution are avaliable through the retrieve_training_data.py module:
+The following datasets at a 1.5 degree resolution are avaliable through the **retrieve_training_data.py** module:
 
 - `ERA5 <https://cds.climate.copernicus.eu/datasets/reanalysis-era5-pressure-levels?tab=overview>`_ data (1979 - 2024):
    - Weekly-mean temperature (K)
@@ -25,13 +25,10 @@ To import the module, use the following Python code:
 
    from AI_WQ_package import retrieve_training_data
 
-
 Downloading Training Data
 --------------------------------------------
-Download through Python
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-To download data into the directory you are working in, use the `retrieve_annual_training_data` function:
+To download historical data, use the `retrieve_annual_training_data` function:
 
 .. code-block:: python
 
