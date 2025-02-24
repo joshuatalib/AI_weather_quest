@@ -77,7 +77,10 @@ def retrieve_20yr_quintile_clim(date,variable,password,local_destination=None):
     # downloaded single climatological file #### 
     # open file using xarray.
     single_day_clim = xr.open_dataarray(local_filename).squeeze()
-    single_day_clim = change_lat_long_coord_names(single_day_clim)
+    try: 
+         single_day_clim = change_lat_long_coord_names(single_day_clim)
+    except:
+        pass
     # return the single day climatology.
     return single_day_clim
 
@@ -97,18 +100,22 @@ def retrieve_weekly_obs(date,variable,password,local_destination=None):
     # create a local filename ###
     if variable == 'tas' or variable == 'mslp':
         if local_destination == None:
-            local_filename = f'ERA5T_sfc_inst_{variable}_{date}_WEEKMEAN.nc'
+            local_filename = f'{variable}_obs_WEEKLYMEAN_{date}.nc'
         else:
-            local_filename = f'{local_destination}/ERA5T_sfc_inst_{variable}_{date}_WEEKMEAN.nc'
+            local_filename = f'{local_destination}/{variable}_obs_WEEKLYMEAN_{date}.nc'
     elif variable == 'pr':
         if local_destination == None:
-            local_filename = f'pr_MSWEP_1pt5DEG_{date}_WEEKACCUM.nc'
+            local_filename = f'{variable}_obs_WEEKLYSUM_{date}.nc'
         else:
-            local_filename = f'{local_destination}/pr_MSWEP_1pt5DEG_{date}_WEEKACCUM.nc'
+            local_filename = f'{local_destination}/{variable}_obs_WEEKLYSUM_{date}.nc'
 
     # log onto FTP session
     session = ftplib.FTP('ftp.ecmwf.int','ai_weather_quest',password)
-    remote_path = f'/observations/{date}/{local_filename}'
+    if variable == 'tas' or variable == 'mslp':
+        remote_path = f'/observations/{date}/{variable}_obs_WEEKLYMEAN_{date}.nc'
+    elif variable == 'pr':
+        remote_path = f'/observations/{date}/{variable}_obs_WEEKLYSUM_{date}.nc'
+    
     # retrieve the full year file 
     with open(local_filename,'wb') as f:
         session.retrbinary(f"RETR {remote_path}", f.write)
@@ -119,6 +126,9 @@ def retrieve_weekly_obs(date,variable,password,local_destination=None):
     # open file using xarray. # removes time bounds
     weekly_obs = xr.open_dataset(local_filename).squeeze().drop_dims('bnds').drop_vars('time_bnds',errors='ignore').to_array().squeeze()
     # return the single day climatology.
-    weekly_obs = change_lat_long_coord_names(weekly_obs)
+    try: 
+        weekly_obs = change_lat_long_coord_names(weekly_obs)
+    except:
+        pass
     return weekly_obs
 

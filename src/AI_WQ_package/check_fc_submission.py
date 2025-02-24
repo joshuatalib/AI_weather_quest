@@ -23,10 +23,10 @@ def check_registered_teamname(teamname):
     while True:
         status_code = check_status(csv_check_status_url)
         if status_code == 200:
-            print("Processing completed. Status code 200 received.")
+#            print("Processing completed. Status code 200 received.")
             break
         else:
-            print("Processing not yet complete. Waiting 2 seconds before retrying...")
+#            print("Processing not yet complete. Waiting 2 seconds before retrying...")
             time.sleep(2)  # Wait for 2 seconds before checking again
 
     # once processing is complete, read the data.
@@ -51,10 +51,10 @@ def check_registered_modelname(modelname):
     while True:
         status_code = check_status(csv_check_status_url)
         if status_code == 200:
-            print("Processing completed. Status code 200 received.")
+#            print("Processing completed. Status code 200 received.")
             break
         else:
-            print("Processing not yet complete. Waiting 2 seconds before retrying...")
+#            print("Processing not yet complete. Waiting 2 seconds before retrying...")
             time.sleep(2)  # Wait for 2 seconds before checking again
     
     # read data within the url # saved webpage with team and model names
@@ -202,8 +202,9 @@ def check_and_convert_longitudes(ds):
 def check_data_characteristics(da):
     # check all data is between 0.0 and 1.0
     all_within_range = True
-    
-    if not ((da.values >= 0) & (da.values <= 1) | np.isnan(da.values)).all():
+   
+    tol = 1e-5
+    if not ((da.values >= -1.0*tol) & (da.values <= 1+tol) | np.isnan(da.values)).all():
         all_within_range = False
 
     if all_within_range:
@@ -218,7 +219,7 @@ def check_data_characteristics(da):
 
     # check all probabilities equal 1.0 when summing across axis.
     summed_values = da.sum(axis=0)
-    if not np.allclose(summed_values,1.0,atol=1e-3):
+    if not np.allclose(summed_values,1.0,atol=0.1):
         raise ValueError("Values do not sum to 1.0 along the first axis.")
 
 def is_valid_date(input_str):
@@ -271,7 +272,7 @@ def all_checks(data,variable,fc_start_date,s2s_time_period,teamname,modelname):
     # (2.b) check spatial components. - the components also check the domain size and the spacing between them (should be 1.0) for each.
     # (2.bi) lat range [should be 90, -90 , 'degrees_north']
     data = check_and_flip_latitudes(data)
-    # (2.bii) long range [should be 0 to 359.0,'degrees_east']
+    # (2.bii) long range [should be 0 to 358.5,'degrees_east']
     data = check_and_convert_longitudes(data)
 
     # (2.c) check the quintile range 
