@@ -1,11 +1,11 @@
 Training Data
 ======================================
 
-Participants can use any forecast or observational dataset to develop their AI/ML forecasting models. To facilitate initial model development, registered participants can download post-processed ERA5 and MSWEP data through the retrieve_training_data.py module. 
+Participants can use any observational, forecast or reanalysis dataset to develop their AI/ML sub-seasonal forecasting models. To facilitate initial model development, registered participants can download post-processed ERA5 and MSWEP data from ECMWF. 
 
 Avaliable Data
 --------------------------------------
-The following datasets at a 1.5 degree resolution are avaliable through the **retrieve_training_data.py** module:
+The following datasets at a 1.5 degree resolution have been made easily accessible:
 
 - `ERA5 <https://cds.climate.copernicus.eu/datasets/reanalysis-era5-pressure-levels?tab=overview>`_ data (1979 - 2024):
    - Weekly-mean temperature (K)
@@ -19,7 +19,7 @@ To download post-processed ERA5 or MSWEP data, you will need functions from the 
 
 - **retrieve_annual_training_data**: Download annual files containing weekly statistics for temperature (tas), mean sea level pressure (mslp) or precipitation (pr).
 
-To import the module, use the following Python code:
+To import the necessary module, use the following Python code:
 
 .. code-block:: python
 
@@ -28,7 +28,7 @@ To import the module, use the following Python code:
 Downloading Training Data
 --------------------------------------------
 
-To download historical data, use the `retrieve_annual_training_data` function:
+Historical data, stored in annual files, can be retrieved using the `retrieve_annual_training_data` function:
 
 .. code-block:: python
 
@@ -46,10 +46,7 @@ To download historical data, use the `retrieve_annual_training_data` function:
 
 .. note::  
    
-   The function only supports the variables listed above.
-
-Each file is approximately 41 MB and contains weekly statistics at a daily, 1.5 degree resolution. Participants should ensure they have adequate storage space if downloading multiple years.
-
+   The function only supports the variables listed above. Additionally, each file is approximately 41 MB and contains weekly statistics at a daily, 1.5 degree resolution. Participants should ensure they have adequate storage space if downloading multiple years.
 
 Data Processing Details
 --------------------------------------------
@@ -64,7 +61,7 @@ MSWEP Data Processing
 
 - Data before 2021 was sourced from the *Past* directory, whilst data from 2021 onwards is from the *NRT* directory. 
 - Daily rainfall accumulations are regridded to a 1.5-degree resolution using first-order conservative remapping (`CDO REMAPCON function <https://code.mpimet.mpg.de/projects/cdo/embedded/index.html#x1-7330002.12.5>`_).
-- Seven-day rolling sums are computed, with time axis labels denoting the start of each 7-day period. 
+- Seven-day rolling accumulations are computed, with time axis labels denoting the start of each 7-day period. 
 
 Filename conventions
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
