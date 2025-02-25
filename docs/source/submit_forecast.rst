@@ -121,6 +121,13 @@ The function performs multiple checks to ensure suitable data formatting before 
 
 After verification, the function populates a new *xarray.DataArray* that meets ECMWF requirements and transfers forecasted probabilities to an ECMWF-hosted site. The returned DataArray is the one that has been submitted to the competition.
 
+.. note::
+
+   When you submit a forecast, it will be assigned an *origin* ID and an *expver* ID:
+      - The origin ID is derived from the first four and last two characters of your team name, followed by your model submission number.
+      - The expver ID consists of your full team name followed by your model submission number.
+   On the ECMWF-hosted sub-seasonal forecast portal, your forecast will be identified by the expver ID. 
+
 **Example**:
 
 .. code-block:: python
