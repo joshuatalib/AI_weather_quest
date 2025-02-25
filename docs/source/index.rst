@@ -13,17 +13,6 @@ Overview
 
    This project is being actively developed. New updates may be released periodically with detailed annoucements given on the `ECMWF-hosted forum <https://forum.ecmwf.int/c/workshop-and-events/ai-weather-quest/41>`__.
 
-Contents
---------
-
-.. toctree::
-   :maxdepth: 2
-
-   installation
-   submit_forecast
-   forecast_evaluation
-   training_data
-
 User guide
 -----------
 
@@ -34,6 +23,17 @@ This guide provides step-by-step instructions on how to:
 - Download training data for initially developing sub-seasonal forecast models. 
 
 For detailed explanations, refer to the corresponding sections.
+
+Contents
+--------
+
+.. toctree::
+   :maxdepth: 2
+
+   installation
+   submit_forecast
+   forecast_evaluation
+   training_data
 
 License
 ----------
