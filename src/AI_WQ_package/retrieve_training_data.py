@@ -34,7 +34,14 @@ def retrieve_annual_training_data(year,variable,password,local_destination=None)
 
     # log onto FTP session
     session = ftplib.FTP('ftp.ecmwf.int','ai_weather_quest',password)
-    remote_path = f'/training_data/{local_filename}'
+    if local_destination == None:
+        remote_path = f'/training_data/{local_filename}'
+    else:
+        if variable == 'tas' or variable == 'mslp':
+            remote_path = f'/training_data/{variable}_sevenday_WEEKLYMEAN_{year}.nc'
+        elif variable == 'pr':
+            remote_path = f'/training_data/{variable}_sevenday_WEEKLYSUM_{year}.nc'
+    
     # retrieve the full year file 
     with open(local_filename,'wb') as f:
         session.retrbinary(f"RETR {remote_path}", f.write)
