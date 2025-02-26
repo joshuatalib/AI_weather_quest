@@ -3,7 +3,7 @@ Forecast Evaluation
 
 Forecast Evaluation Modules
 ----------------------------------------
-To aid transparency and replicability throughout the AI Weather Quest, registered participants can evaluate their own submitted forecasts after a forecast period has passed. The **AI-WQ-Package** provides dedicated modules for local forecast evaluation:
+To ensure transparency and replicability throughout the AI Weather Quest, registered participants can evaluate their own submitted forecasts after a forecast window has passed. The **AI-WQ-Package** provides dedicated modules for local forecast evaluation:
 
 - **retrieve_evaluation_data**: Downloads all the necessary datasets for local forecast evaluation. 
 - **forecast_evaluation**: Contains functions to compute area-weighted Ranked Probability Skill Scores (RPSSs). 
@@ -36,7 +36,7 @@ The **retrieve_weekly_obs** function downloads the requested set of observations
 
   weekly_obs = retrieve_evaluation_data.retrieve_weekly_obs(<<date>>,<<variable>>,<<password>>,<<local_destination>>=None)
 
-- **date** (*str*): The requested date for weekly observations in format `YYYYMMDD` (e.g., `'20250303'` for 3rd March 2025).
+- **date** (*str*): The requested date for weekly observations in format `YYYYMMDD` (e.g., `'20250519'` for 19th May 2025).
 
 .. note::  
    
