@@ -133,7 +133,7 @@ Example: Retrieving Requried Datasets
 
 This example retrieves all necessary datasets for evaluating near-surface temperature forecasts for the week starting May 19th 2025.
 
-Evaluating forecasts using retrieved data
+Evaluating Forecasts Using Retrieved Data
 ---------------------------------------------------
 After downloading the required weekly observations, climatological quintile boundaries and land fraction values, you can now evaluate your forecast. 
 
