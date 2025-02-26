@@ -3,7 +3,7 @@ Training Data
 
 Participants can use any observational, forecast or reanalysis dataset to develop their AI/ML sub-seasonal forecasting models. To facilitate initial model development, registered participants can download post-processed ERA5 and MSWEP data from ECMWF. 
 
-Avaliable Data
+Accessing Avaliable Data
 --------------------------------------
 The following datasets at a 1.5 degree resolution have been made easily accessible:
 
@@ -34,21 +34,21 @@ Historical data, stored in annual files, can be retrieved using the `retrieve_an
 
    retrieve_annual_training_data(<<year>>,<<variable>>,<<password>>,<<local_destination>>=None)
 
-- **year** (*int*): The year of requested data, i.e. '2000'. The year must be between 1979 and 2024 inclusive. 
+- **year** (*int*): The year of requested data, i.e. 2000. The year must be between 1979 and 2024 inclusive. 
 - **variable** (*str*): The requested variable. Options are:
   
   - ``'tas'``: Near-surface temperature
   - ``'mslp'``: Mean sea level pressure
   - ``'pr'``: Precipitation
 
-- **password** (*str*): The forecast submission portal password provided in your registration email.
+- **password** (*str*): The forecast submission password provided in your registration email.
 - **local_destination** (*str*): The local destination for the downloaded dataset. If unspecified, the dataset is saved within the working directory.
 
 .. note::  
    
    The function only supports the variables listed above. Additionally, each file is approximately 41 MB and contains weekly statistics at a daily, 1.5 degree resolution. Participants should ensure they have adequate storage space if downloading multiple years.
 
-Data Processing Details
+Understanding Data Processing Details
 --------------------------------------------
 ERA5 Data Processing
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -72,13 +72,13 @@ For each post-processed historical file, the following filename convention is us
    
    <<variable>>_sevenday_<<weekly_statistic>>_<<year>>.nc
 
-- **variable**: The requested variable (tas, mslp or pr).
-- **weekly_statistic**: The statistic performed across a seven-day timescales. Options include:
+- **variable** (*str*): The requested variable (tas, mslp or pr).
+- **weekly_statistic** (*str*): The statistic performed across a seven-day timescales. Options include:
 
   - ``'WEEKLYMEAN'``: Seven-day mean.
   - ``'WEEKLYSUM'``: Seven-day sum.
 
-- **year**: The corresponding year associated with the dataset.
+- **year** (int): The corresponding year associated with the dataset.
 
 Summary
 -------------
