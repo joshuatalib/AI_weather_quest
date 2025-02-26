@@ -30,13 +30,13 @@ Use the `AI_WQ_create_empty_dataarray` function to generate a suitable DataArray
   - ``'mslp'``: Mean sea level pressure
   - ``'pr'``: Precipitation
 
-- **fc_start_date** (*str*): The forecast initialisation date in format `YYYYMMDD` (e.g., `'20250303'` for 3rd March 2025).
+- **fc_start_date** (*str*): The forecast initialisation date in format `YYYYMMDD` (e.g., `'20250515'` for 15th May 2025).
 
 .. note::  
   
-   Only Thursday forecast initialisation dates are permitted. 
+   To create an empty *xarray.DataArray*, a forecast initialisation date that occurs on a Thursday must be given. 
 
-- **fc_period** (*str* or *int*): The chosen sub-seasonal forecasting period (`details given on <https://aiweatherquest.ecmwf.int/submitting-forecasts/>`__). Valid options are:
+- **fc_period** (*str* or *int*): The selected forecasting window (`more details on the forecast submission schedule <https://aiweatherquest.ecmwf.int/submitting-forecasts/>`__). Valid options are:
   
   - ``'1'``: Weekly-mean forecasts for days 19 to 25 inclusive.
   - ``'2'``: Weekly-mean forecasts for days 26 to 32 inclusive.
@@ -45,14 +45,18 @@ Use the `AI_WQ_create_empty_dataarray` function to generate a suitable DataArray
   
    The function accepts either a string or integer. If an integer is provided, it is converted to a string. 
 
-- **teamname** (*str*): The team name submitted during online registration.
-- **modelname** (*str*): The model name submitted during online registration.
+- **teamname** (*str*): Your team name.
+- **modelname** (*str*): Your model name.
+
+.. note::  
+  
+   Your latest team name and model name can be viewed on your team’s login page with the credentials provided by email upon registration. 
+
+- **password** (*str*): The forecast submission password provided in your registration email.
 
 .. warning::
 
    The function will only generate an empty *DataArray* if all parameters follow the required conventions. Ensure valid inputs to avoid errors.
-
-- **password** (*str*): The forecast submission portal password provided in your registration email.
 
 **Example**:
 
@@ -60,10 +64,10 @@ Use the `AI_WQ_create_empty_dataarray` function to generate a suitable DataArray
 
    tas_p1_fc = forecast_submission.AI_WQ_create_empty_dataarray('tas', '20241209', '1', 'EC', 'extrange', <<password>>)
 
-This creates an empty DataArray for near-surface (2 m) temperature predictions issued on 9th December 2024 for the first sub-seasonal forecasting period.
+This creates an empty DataArray for near-surface (2 m) temperature predictions issued on 9th December 2024 for the first sub-seasonal forecasting window under the team name *EC* and associated with the model name *extrange*.
 
-Empty DataArray Coordinates
----------------------------
+Understanding Empty DataArray Coordinates
+-----------------------------------------
 Before populating the empty *DataArray* with forecasted probabilities, you should understand key components of its coordinate structure:
 
 - **Latitude**: Ranges from `90.0°N` to `-90.0°N` with a step of `-1.5°` latitude.
@@ -74,7 +78,7 @@ Before populating the empty *DataArray* with forecasted probabilities, you shoul
 - `0.4`, `0.6`, `0.8`: Include probabilities where the lower limit is the previous quintile value (e.g., `0.4` includes probabilities `0.2 <= x < 0.4`).
 - `1.0`: Includes probabilities >= 0.8.
 
-The DataArray also has coordinates describing the forecast initialisation date and weekly forecasting period. These time coordinates are stored in `np.datetime64` format.
+The DataArray also has coordinates describing the forecast initialisation date and weekly forecast window. These time coordinates are stored in `np.datetime64` format.
 
 .. important::
 
@@ -111,7 +115,7 @@ Once you have populated the DataArray with forecasted probabilities, you can sub
 
 The function performs multiple checks to ensure suitable data formatting before submission. These checks include:
 
-- The forecast initialisation date is a Thursday and within the four-day submission window (see `forecast submission schedule <https://aiweatherquest.ecmwf.int/submitting-forecasts/>`__).
+- That the forecast initialisation date is a Thursday and within the four-day submission window (see `forecast submission schedule <https://aiweatherquest.ecmwf.int/submitting-forecasts/>`__).
 - Data shape is `(5, 121, 240)`.
 - Latitude coordinate contains 121 points, ordered from `90.0°N` to `-90.0°N`.
 - Longitude coordinate contains 240 points, ordered from `0.0°` to `358.5°`.
