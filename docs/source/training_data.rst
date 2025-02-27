@@ -13,6 +13,10 @@ The following datasets at a 1.5 degree resolution have been made easily accessib
 - `MSWEP <https://www.gloh2o.org/mswep/>`_ data (1979 - 2024):
    - Weekly-accumulated precipitation (mm week\ :sup:`-1`)
 
+.. important::  
+   
+   At the launch of the AI Weather Quest, post-processed training data is available from the 2nd January 1979 to 30th November 2024. Code for automatically updating available training data is currently in development.
+
 Importing the Retrieve Training Data Module
 --------------------------------------------
 To download post-processed ERA5 or MSWEP data, you will need functions from the `retrieve_training_data.py` module. The key function within this module is:
