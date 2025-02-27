@@ -3,17 +3,24 @@ import numpy as np
 import xarray as xr
 
 def apply_land_sea_mask(score,land_sea_mask):
+    lsm_expanded = land_sea_mask.expand_dims(dim={"quintile":score.quintile},axis=0)
     # load in land sea mask
-    score = score.where(land_sea_mask>=0.8)
+    score = score.where(lsm_expanded>=0.8)
     return score
 
-def weighted_mean_calc(score):
+def weighted_mean_calc(score,weighted_only=False):
     weights = np.cos(np.deg2rad(score.latitude))
     weights.name = 'weights'
+    # applky weights
     score_weighted = score.weighted(weights)
-    # after weighting, extract selected lat region
-    score_weighted_mean = score_weighted.mean(('latitude','longitude'))
-    return score_weighted_mean
+    if weighted_only:
+        weights_2d = weights.broadcast_like(score)
+        score_weighted = score*weights_2d
+        return score_weighted
+    else:
+        # after weighting, extract selected lat region
+        score_weighted_mean = score_weighted.mean(('latitude','longitude'))
+        return score_weighted_mean
 
 def conditional_obs_probs(obs,quintiles):
     num_quantiles=quintiles['quantile'].shape[0]
@@ -39,6 +46,28 @@ def conditional_obs_probs(obs,quintiles):
 
     return all_crit
 
+def calculate_RPS(fc_pbs,obs_pbs,variable,land_sea_mask,quantile_dim='quintile',weighted_only=False):
+    # cumulate across quantiles
+    fc_pbs_cumsum = fc_pbs.cumsum(dim=quantile_dim)
+    obs_pbs_cumsum = obs_pbs.cumsum(dim=quantile_dim)
+    # apply a land sea mask
+    if variable == 't2m' or variable == 'pr':
+        print ('applying land sea mask')
+        fc_pbs_cumsum = apply_land_sea_mask(fc_pbs_cumsum,land_sea_mask)
+        obs_pbs_cumsum = apply_land_sea_mask(obs_pbs_cumsum,land_sea_mask)
+    
+    # RPS score for forecast
+    RPS_score = ((fc_pbs_cumsum-obs_pbs_cumsum)**2.0).sum(dim=quantile_dim)
+
+    # work out weighted average
+    if weighted_only:
+        RPS_score = weighted_mean_calc(RPS_score,weighted_only=True)
+    else:
+        RPS_score = weighted_mean_calc(RPS_score)
+
+    return RPS_score
+
+
 def work_out_RPSS(fc_pbs,obs_pbs,variable,land_sea_mask,quantile_dim='quintile'):
     # make both dataarray have same attribute sizes
     fc_pbs = fc_pbs.chunk({'quintile':5,'latitude':10,'longitude':10})
@@ -46,23 +75,14 @@ def work_out_RPSS(fc_pbs,obs_pbs,variable,land_sea_mask,quantile_dim='quintile')
 
     num_quants = fc_pbs.shape[0]
 
-    # cumulate across quantiles
-    fc_pbs_cumsum = fc_pbs.cumsum(dim=quantile_dim)
-    obs_pbs_cumsum = obs_pbs.cumsum(dim=quantile_dim)
     # RPS score for forecast
-    RPS_score_fc = ((fc_pbs_cumsum-obs_pbs_cumsum)**2.0).sum(dim=quantile_dim)
+    RPS_score_fc = calculate_RPS(fc_pbs,obs_pbs,variable,land_sea_mask)
 
     # create an xarray filled with climatological probs (i.e. 0.2).
     clim_pbs = obs_pbs.where(False,1.0/num_quants) 
-    clim_pbs_cumsum = clim_pbs.cumsum(dim=quantile_dim)
-    RPS_score_clim = ((clim_pbs_cumsum-obs_pbs_cumsum)**2.0).sum(dim=quantile_dim)
+    RPS_score_clim = calculate_RPS(clim_pbs,obs_pbs,variable,land_sea_mask)
 
     RPSS_wrt_clim = 1-(RPS_score_fc/RPS_score_clim)
-    if variable == 't2m' or variable == 'pr':
-        print ('applying land sea mask')
-        RPSS_wrt_clim = apply_land_sea_mask(RPSS_wrt_clim,land_sea_mask)
 
-    RPSS_wrt_clim_weighted = weighted_mean_calc(RPSS_wrt_clim)
-
-    return RPSS_wrt_clim_weighted
+    return RPSS_wrt_clim
 
