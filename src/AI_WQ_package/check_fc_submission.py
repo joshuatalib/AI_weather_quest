@@ -219,7 +219,7 @@ def check_data_characteristics(da):
 
     # check all probabilities equal 1.0 when summing across axis.
     summed_values = da.sum(axis=0)
-    if not np.allclose(summed_values,1.0,atol=0.1):
+    if not np.allclose(summed_values,1.0,atol=1e-4):
         raise ValueError("Values do not sum to 1.0 along the first axis.")
 
 def is_valid_date(input_str):
