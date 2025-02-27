@@ -203,7 +203,7 @@ Continuing from the example above, the following code illustrates the evaluation
 
 .. note::  
    
-   As of March 2025, users can only compute RPSSs for individual forecasts. Future updates will enable average evaluation scores.
+   As of March 2025, users can only compute RPSSs for individual forecasts. Future updates will enable users to compute average evaluation scores.
 
 
 
