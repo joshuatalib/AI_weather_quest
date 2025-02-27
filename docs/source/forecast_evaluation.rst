@@ -148,10 +148,10 @@ The *conditional_obs_probs* function determines observed probabilities within a 
 
 .. code-block:: python
 
-  obs_pbs = forecast_evaluation.conditional_obs_probs(<<obs>>,<<quintiles>>)
+  obs_pbs = forecast_evaluation.conditional_obs_probs(<<obs>>,<<quintile_bounds>>)
 
 - **obs** (*xarray.DataArray*): Weekly observations.
-- **quintiles** (*xarray.DataArray*): Climatological quintile boundaries.
+- **quintile_bounds** (*xarray.DataArray*): Climatological quintile boundaries.
 
 Calculate Ranked Probability Skill Score:
 ^^^^^^^^^^^^^^^^^^^^^^^^
