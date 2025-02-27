@@ -3,7 +3,7 @@ Training Data
 
 Participants can use any observational, forecast or reanalysis dataset to develop their AI/ML sub-seasonal forecasting models. To facilitate initial model development, registered participants can download post-processed ERA5 and MSWEP data from ECMWF. 
 
-Accessing Avaliable Data
+Accessing Available Data
 --------------------------------------
 The following datasets at a 1.5 degree resolution have been made easily accessible:
 
