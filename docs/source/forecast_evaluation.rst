@@ -1,9 +1,9 @@
 Forecast Evaluation
 ====================================
 
-Forecast Evaluation Modules
+Importing Forecast Evaluation Modules
 ----------------------------------------
-To aid transparency and replicability throughout the AI Weather Quest, registered participants can evaluate their own submitted forecasts after a forecast period has passed. The **AI-WQ-Package** provides dedicated modules for local forecast evaluation:
+To ensure transparency and replicability throughout the AI Weather Quest, registered participants can evaluate their own submitted forecasts after a forecast window has passed. The **AI-WQ-Package** provides dedicated modules for local forecast evaluation:
 
 - **retrieve_evaluation_data**: Downloads all the necessary datasets for local forecast evaluation. 
 - **forecast_evaluation**: Contains functions to compute area-weighted Ranked Probability Skill Scores (RPSSs). 
@@ -28,6 +28,10 @@ In addition to forecasted probabilities, three datasets are required for forecas
 - Climatological quintile boundaries which are compared against observed conditions: **retrieve_20yr_quintile_clim**
 - Land fraction values which are used to exclude oceanic grid points: **retrieve_land_sea_mask**
 
+.. important::  
+   
+   When downloading historical atmospheric characteristics, the date should correspond to the beginning of the forecast window (i.e. day 19 or day 26) and not the forecast initialisation date (day 1). Additionally, participants will only be able to download weekly observations commencing on a Monday.
+
 Weekly observations
 ^^^^^^^^^^^^^^^^^^^^^^^^
 The **retrieve_weekly_obs** function downloads the requested set of observations that are used for forecast evaluation.
@@ -36,15 +40,11 @@ The **retrieve_weekly_obs** function downloads the requested set of observations
 
   weekly_obs = retrieve_evaluation_data.retrieve_weekly_obs(<<date>>,<<variable>>,<<password>>,<<local_destination>>=None)
 
-- **date** (*str*): The requested date for weekly observations in format `YYYYMMDD` (e.g., `'20250303'` for 3rd March 2025).
+- **date** (*str*): The requested date for weekly observations in format `YYYYMMDD` (e.g., `'20250519'` for 19th May 2025).
 
 .. note::  
    
-   Participants should be able to download relevant observations from mid-January 2024).
-
-.. important::  
-   
-   The date should correspond to the beginning of the forecast period (i.e. day 19 or day 26) and not the forecast initialisation date (day 1).
+   Participants should be able to download relevant observations from mid-January 2024.
 
 - **variable** (*str*): The requested atmospheric variable. Options are:
   
@@ -52,7 +52,7 @@ The **retrieve_weekly_obs** function downloads the requested set of observations
   - ``'mslp'``: Mean sea level pressure
   - ``'pr'``: Precipitation
 
-- **password** (str): The forecast submission portal password provided in your registration email.
+- **password** (str): The forecast submission password provided in your registration email.
 - **local_destination** (*str*): The local destination for the downloaded dataset. If unspecified, the dataset is saved within the working directory.
 
 The **retrieve_weekly_obs** function returns a dataset containing observations used for forecast evaluation. Temperature and mean sea level pressure are based on **ERA5T** data, whilst precipitation data is sourced from the **MSWEP** *NRT* directory. Additionally, weekly-means of temperature and pressure are computed using six-hourly data (0, 6, 12 and 18 UTC), whilst for precipitation, weekly-accumulations are derived.
@@ -76,23 +76,14 @@ The *retrieve_20yr_quintile_clim* function downloads climatological quintile bou
 
   clim_quintile_bounds = retrieve_evaluation_data.retrieve_20yr_quintile_boundaries(<<date>>,<<variable>>,<<password>>,local_destination=None)
 
-- **date** (*str*): The requested date for climatological quintile boundaries in format `YYYYMMDD` (e.g., `'20250303'` for 3rd March 2025).
-
-.. note::  
-   
-   Participants will only be able to download historical quintile boundaries associated with a Monday start date.
-
-.. important::  
-   
-   The date should correspond to the beginning of the forecast period (i.e. day 19 or day 26) and not the forecast initialisation date (day 1).
-
+- **date** (*str*): The requested date for climatological quintile boundaries in format `YYYYMMDD` (e.g., `'20250519'` for 19th May 2025).
 - **variable** (*str*): The requested variable. Options are:
   
   - ``'tas'``: Near-surface temperature
   - ``'mslp'``: Mean sea level pressure
   - ``'pr'``: Precipitation
 
-- **password** (str): The forecast submission portal password provided in your registration email.
+- **password** (str): The forecast submission password provided in your registration email.
 - **local_destination** (*str*): The local destination for the downloaded dataset. If unspecified, the dataset is saved within the working directory.
 
 The **retrieve_20yr_quintile_boundaries** function returns a dataset containing climatological quintile boundaries. Quintile boundaries have been calculated using the relevant weekly statistic (weekly-mean [tas, mslp]/weekly-sum [pr]) and collating observations from the past twenty years. To expand the sample size to 100 observations, we include data from +/- 4 days at two-day intervals around the requested date (i.e. Thursday (day -4), Saturday (day -2), Monday (day 0), Wednesday (day 2), Friday (day 4)). 
@@ -110,7 +101,7 @@ The *retrieve_land_sea_mask* function retrieves land fraction values from ECMWF.
 
   land_sea_mask = retrieve_evaluation_data.retrieve_land_sea_mask(<<password>>,local_destination=None)
 
-- **password** (*str*): The forecast submission portal password provided in your registration email.
+- **password** (*str*): The forecast submission password provided in your registration email.
 - **local_destination** (*str*): The local destination for the downloaded dataset. If unspecified, the dataset is saved within the working directory.
 
 The **retrieve_land_sea_mask** function returns a dataset containing land fraction values. These values range from 0 to 1, where:
@@ -133,16 +124,16 @@ Example: Retrieving Requried Datasets
    from AI_WQ_package import retrieve_evaluation_data
 
    # Download weekly observations
-   obs = retrieve_evaluation_data.retrieve_weekly_obs(20250106,'tas',<<password>>)
+   obs = retrieve_evaluation_data.retrieve_weekly_obs(20250519,'tas',<<password>>)
    # Download historical quintile boundaries 
-   quintile_clim = retrieve_evaluation_data.retrieve_20yr_quintile_clim(20250106,'tas',<<password>>)
+   quintile_clim = retrieve_evaluation_data.retrieve_20yr_quintile_clim(20250519,'tas',<<password>>)
     
    # Download land-sea mask
    land_sea_mask = retrieve_evaluation_data.retrieve_land_sea_mask(<<password>>)
 
-This example retrieves all necessary datasets for evaluating near-surface temperature forecasts for the week starting January 6, 2025.
+This example retrieves all necessary datasets for evaluating near-surface temperature forecasts for the week starting May 19th 2025.
 
-Evaluating forecasts using retrieved data
+Evaluating Forecasts Using Retrieved Data
 ---------------------------------------------------
 After downloading the required weekly observations, climatological quintile boundaries and land fraction values, you can now evaluate your forecast. 
 
@@ -198,7 +189,7 @@ The final output is the same RPSS displayed on the AI Weather Quest website.
 Example evaluating a single forecast
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
-Continuing from the example above, the following code illstrates the evaluation of temperature forecasts for the week commencing 6th January 2025. 
+Continuing from the example above, the following code illustrates the evaluation of temperature forecasts for the week commencing 19th May 2025. 
 
 .. code-block:: python
 
