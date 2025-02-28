@@ -15,7 +15,7 @@ The following datasets at a 1.5 degree resolution have been made easily accessib
 
 .. important::  
    
-   At the launch of the AI Weather Quest, post-processed training data is available from the 2nd January 1979 to 30th November 2024. Code for automatically updating available training data is currently in development.
+   At the launch of the AI Weather Quest, post-processed training data is available from the 2nd January 1979 to 31st December 2024. Code for automatically updating available training data is currently in development.
 
 Importing the Retrieve Training Data Module
 --------------------------------------------
