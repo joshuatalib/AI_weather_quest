@@ -9,6 +9,8 @@ To participate in the AI Weather Quest, you will need to install the AI-WQ-packa
 
 The package leverages capability developed through xarray for efficient data handling.
 
+We highly recommend use the ReadTheDocs documentation as a guide for using this package: *https://ecmwf-ai-weather-quest.readthedocs.io/en/latest/*
+
 Installation
 --------------
 To install the *AI-WQ-package* on Linux, run the following command:
