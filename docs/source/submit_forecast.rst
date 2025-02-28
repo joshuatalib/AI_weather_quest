@@ -130,7 +130,7 @@ After verification, the function populates a new *xarray.DataArray* that meets E
    When you submit a forecast, it will be assigned an *origin* ID and an *expver* ID:
       - The origin ID is derived from the first four and last two characters of your team name, followed by your model submission number.
       - The expver ID consists of your full team name followed by your model submission number.
-   On the ECMWF-hosted sub-seasonal forecast portal, your forecast will be identified by the expver ID. 
+   On the ECMWF-hosted sub-seasonal forecast portal, your forecast will be identified by the expver ID. Additionally, a temporary *netcdf* file will be saved in your working directory during submission. 
 
 **Example**:
 
