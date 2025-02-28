@@ -124,9 +124,9 @@ Example: Retrieving Requried Datasets
    from AI_WQ_package import retrieve_evaluation_data
 
    # Download weekly observations
-   obs = retrieve_evaluation_data.retrieve_weekly_obs(20250519,'tas',<<password>>)
+   obs = retrieve_evaluation_data.retrieve_weekly_obs('20250519','tas',<<password>>)
    # Download historical quintile boundaries 
-   quintile_clim = retrieve_evaluation_data.retrieve_20yr_quintile_clim(20250519,'tas',<<password>>)
+   quintile_clim = retrieve_evaluation_data.retrieve_20yr_quintile_clim('20250519','tas',<<password>>)
     
    # Download land-sea mask
    land_sea_mask = retrieve_evaluation_data.retrieve_land_sea_mask(<<password>>)
