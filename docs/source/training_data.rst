@@ -7,10 +7,10 @@ Accessing Available Data
 --------------------------------------
 The following datasets at a 1.5 degree resolution have been made easily accessible:
 
-- `ERA5 <https://cds.climate.copernicus.eu/datasets/reanalysis-era5-pressure-levels?tab=overview>`_ data (1979 - 2024):
+- `ERA5 <https://cds.climate.copernicus.eu/datasets/reanalysis-era5-pressure-levels?tab=overview>`_ data:
    - Weekly-mean temperature (K)
    - Weekly-mean mean sea level pressure (Pa)
-- `MSWEP <https://www.gloh2o.org/mswep/>`_ data (1979 - 2024):
+- `MSWEP <https://www.gloh2o.org/mswep/>`_ data:
    - Weekly-accumulated precipitation (mm week\ :sup:`-1`)
 
 .. important::  
