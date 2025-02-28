@@ -93,10 +93,10 @@ The following is a Python example that retrieves post-processed temperature, mea
    from AI_WQ_package import retrieve_training_data
 
    # Download temperature data
-   tas_2005 = retrieve_training_data.retrieve_annual_training_data(2005,'tas',password)
+   tas_2005 = retrieve_training_data.retrieve_annual_training_data(2005,'tas',<<password>>)
    # Download pressure data
-   mslp_2005 = retrieve_training_data.retrieve_annual_training_data(2005,'mslp',password)
+   mslp_2005 = retrieve_training_data.retrieve_annual_training_data(2005,'mslp',<<password>>)
    # Download precipitation data
-   pr_2005 = retrieve_training_data.retrieve_annual_training_data(2005,'pr',password)
+   pr_2005 = retrieve_training_data.retrieve_annual_training_data(2005,'pr',<<password>>)
 
 
