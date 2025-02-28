@@ -13,9 +13,7 @@ Installation
 --------------
 To install the *AI-WQ-package* on Linux, run the following command:
 
-.. code-block:: bash
-
-   python3 -m pip install AI-WQ-package
+**python3 -m pip install AI-WQ-package**
 
 For guidance on installing Python 3 or pip, refer to the official documentation.
 
@@ -37,10 +35,8 @@ Upgrading the Package
 ----------------------
 To upgrade to the latest version, run:
 
-.. code-block:: bash
+**python3 -m pip install --upgrade AI-WQ-package**
 
-   python3 -m pip install --upgrade AI-WQ-package
-
-This project is being actively developed. New updates may be released periodically with detailed annoucements given on the `ECMWF-hosted forum <https://forum.ecmwf.int/c/workshop-and-events/ai-weather-quest/41>`__.
+This project is being actively developed. New updates may be released periodically with detailed annoucements given on the ECMWF-hosted forum.
 
 
