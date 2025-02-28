@@ -2,10 +2,22 @@
 import xarray as xr
 import numpy as np
 import pandas as pd
-from datetime import datetime
+from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 from AI_WQ_package import check_fc_submission
 import ftplib
+
+def get_previous_monday(date_obj):
+    if date_obj.weekday() != 0:  # Monday is 0
+        prev_monday = date_obj - timedelta(days=date_obj.weekday())
+        print(f"Warning: The date provided ({date_obj.date()}) is not a Monday.")
+        print(f"Adjusting to the previous Monday: {prev_monday.date()}")
+        choice = input("Do you want to continue with this adjusted date? (y/n): ").strip().lower()
+        if choice != 'y':
+            print("Operation aborted.")
+            raise ValueError("Can only recieve historical observations for dates commencing on a Monday.")
+        return prev_monday
+    return date_obj
 
 def change_lat_long_coord_names(da):
     da = da.rename({'lat':'latitude'})
@@ -47,6 +59,10 @@ def retrieve_20yr_quintile_clim(date,variable,password,local_destination=None):
     check_fc_submission.is_valid_date(date)
     # get a data obj
     date_obj = datetime.strptime(date,'%Y%m%d')
+    # check that the date obj is a Monday and if not, check that the user wants the previous Monday's data
+    date_obj = get_previous_monday(date_obj)
+    date = datetime.strftime(date_obj,'%Y%m%d') # reload date in case it has changed
+
     # get the year component
     year = date_obj.year
     str_year = str(year)
@@ -92,6 +108,9 @@ def retrieve_weekly_obs(date,variable,password,local_destination=None):
     check_fc_submission.is_valid_date(date)
     # get a data obj
     date_obj = datetime.strptime(date,'%Y%m%d')
+    # check that the date obj is a Monday and if not, check that the user wants the previous Monday's data
+    date_obj = get_previous_monday(date_obj)
+    date = datetime.strftime(date_obj,'%Y%m%d') # reload date in case it has changed
 
     # check variable is valid
     check_fc_submission.check_variable_in_list(variable,['tas','mslp','pr'])

@@ -31,8 +31,8 @@ def create_ftp_dir_if_does_not_exist(ftp,dir_name):
             raise
 
 def AI_WQ_create_empty_dataarray(variable,fc_start_date,fc_period,teamname,modelname,password):
-    ''' A function that creates an 'empty' dataarray that supports forecast submission for the AI Weather Quest. 
-    The AI WQ advises that users use this function to output an empty dataarray and then fill it with their forecasted values. The function is also used during forecast submission to the FTP site to ensure all participants submit the same file structure.
+    ''' A function that creates an 'empty' dataarray and supports forecast submission for the AI Weather Quest. 
+    The AI WQ advises that users use this function to output an empty dataarray and then fill it with their forecasted values. The function is also used during forecast submission to the FTP site to ensure all participants have the same file structure.
     '''
 
     # Check filename characteristics and output a string version of fc_period
