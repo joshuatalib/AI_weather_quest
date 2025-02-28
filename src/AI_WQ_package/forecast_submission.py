@@ -50,6 +50,14 @@ def AI_WQ_create_empty_dataarray(variable,fc_start_date,fc_period,teamname,model
     elif variable == 'pr':
         data_specs = {**{'standard_name':'Total precipitation probability','cell_methods':'time: sum (interval: 24 hours)'},**standard_names_all_vars}
 
+    # add shortName
+    if variable == 'pr':
+        shortName = 'tp'
+    elif variable == 'tas':
+        shortName = 't2m'
+    elif variable == 'mslp':
+        shortName = 'mslp'
+
     # add a height dimension if tas
     if variable == 'tas':
         height = 2  # Assuming height is at near-surface level (2 m), modify if needed
@@ -66,17 +74,17 @@ def AI_WQ_create_empty_dataarray(variable,fc_start_date,fc_period,teamname,model
 
     # alongside defining the forecast issue date, define the forecasting period in days from forecasting issue date.
     if fc_period == '1':
-        forecast_period_start = 19.0
+        forecast_period_start = 18.0
         if variable == 'mslp' or variable == 'tas':
-            forecast_period_end = 25.75
+            forecast_period_end = 24.75
         elif variable == 'pr':
-            forecast_period_end = 26.0
+            forecast_period_end = 25.0
     elif fc_period == '2':
-        forecast_period_start = 26.0
+        forecast_period_start = 25.0
         if variable == 'mslp' or variable == 'tas':
-            forecast_period_end = 32.75
+            forecast_period_end = 31.75
         elif variable == 'pr':
-            forecast_period_end = 33.0
+            forecast_period_end = 32.0
     forecast_period_bounds = [[forecast_period_start,forecast_period_end]]
 
     # empty data
@@ -107,8 +115,9 @@ def AI_WQ_create_empty_dataarray(variable,fc_start_date,fc_period,teamname,model
                 Conventions='CF-1.6',
                 forecast_period_bounds_units='days into forecast',
                 forecast_period_bounds=f"[{forecast_period_start},{forecast_period_end}]",
-                origin=origin_id,
-                expver_id=expver_id))
+                shortName=shortName,
+                originating_centre=origin_id,
+                expver=expver_id))
     # add the time attrs
     da.coords['forecast_issue_date'].attrs = {'standard_name': 'forecast_issue_time','long_name': 'forecast issue time','axis':'T'}
     da.coords['forecast_period_start'].attrs = {'long_name': 'forecast period start','axis':'T'} 

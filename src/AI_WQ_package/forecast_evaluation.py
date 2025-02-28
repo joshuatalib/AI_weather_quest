@@ -22,8 +22,8 @@ def weighted_mean_calc(score,weighted_only=False):
         score_weighted_mean = score_weighted.mean(('latitude','longitude'))
         return score_weighted_mean
 
-def conditional_obs_probs(obs,quintiles):
-    num_quantiles=quintiles['quantile'].shape[0]
+def conditional_obs_probs(obs,quintile_bounds):
+    num_quantiles=quintile_bounds['quantile'].shape[0]
 
     threshold_crit = []
 
@@ -31,13 +31,13 @@ def conditional_obs_probs(obs,quintiles):
         # if q == 0, check whether its lower than first quantile
         if q == 0:
             # need to transpose fc_data so ensemble member is first. 
-            threshold_crit.append((obs < quintiles.values[0]))
+            threshold_crit.append((obs < quintile_bounds.values[0]))
         elif q == num_quantiles:
             # if at highest value, is it bigger than top quartile
-            threshold_crit.append((obs > quintiles.values[-1]))
+            threshold_crit.append((obs > quintile_bounds.values[-1]))
         else: # is it bigger or equal to previous quartile and smaller or equal to current quartile (i.e. 0.33 <= x <= 0.66).
-            cond_1 = (quintiles.values[q-1] <= obs) # cond 1
-            cond_2 = (obs <= quintiles.values[q])  # cond 2
+            cond_1 = (quintile_bounds.values[q-1] <= obs) # cond 1
+            cond_2 = (obs <= quintile_bounds.values[q])  # cond 2
             both_conds = xr.concat([cond_1,cond_2],dim='cond') # concat between both conditions 
             threshold_crit.append(both_conds.all(dim='cond')) # both conditions must be true
 

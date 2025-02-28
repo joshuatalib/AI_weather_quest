@@ -1,6 +1,6 @@
 Metadata-Version: 2.2
 Name: AI_WQ_package
-Version: 0.2.21
+Version: 0.2.25
 Summary: A python package to support forecast submission, evaluation and access to FTP site for DESTIN-E S2S AI prediction project
 Author-email: Joshua Talib <joshuatalib@ecmwf.int>
 Project-URL: Homepage, https://github.com/joshuatalib/AI_weather_quest
@@ -12,9 +12,11 @@ Description-Content-Type: text/markdown
 License-File: LICENSE
 Requires-Dist: numpy>=1.23
 Requires-Dist: xarray>=2024.09.0
+Requires-Dist: dask>=2024.9.0
 Requires-Dist: pandas>=2.2.3
 Requires-Dist: scipy>=1.14.1
 Requires-Dist: netCDF4>=1.7.2
+Requires-Dist: requests>=2.32.2
 
 # AI_weather_quest
 Python code to support and participate in ECMWF-hosted AI Weather Quest
