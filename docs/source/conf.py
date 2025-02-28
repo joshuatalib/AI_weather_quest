@@ -8,7 +8,7 @@ import os
 # -- Project information
 
 project = 'AI_Weather_Quest'
-copyright = '2025, AI Weather Quest contributors'
+copyright = '2025, Joshua Talib + AI Weather Quest contributors'
 author = 'Joshua Talib'
 
 release = '1.0'
