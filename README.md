@@ -7,7 +7,7 @@ To participate in the AI Weather Quest, you will need to install the AI-WQ-packa
 - Evaluate sub-seasonal forecasts using tools developed by the AI Weather Quest.
 - Download training data for initially developing sub-seasonal forecast models. 
 
-The package leverages capability developed through `xarray <https://docs.xarray.dev/en/stable/>`__ for efficient data handling. *AI-WQ-package* requires `Python 3 <https://wiki.python.org/moin/BeginnersGuide/Download>`__, and its source code is available on `GitHub <https://github.com/joshuatalib/AI_weather_quest>`__. 
+The package leverages capability developed through xarray for efficient data handling.
 
 Installation
 --------------
@@ -17,13 +17,7 @@ To install the *AI-WQ-package* on Linux, run the following command:
 
    python3 -m pip install AI-WQ-package
 
-For guidance on installing `Python 3 <https://wiki.python.org/moin/BeginnersGuide/Download>`__ or `pip <https://pip.pypa.io/en/stable/installation/>`__, refer to the official documentation.
-
-.. toctree::
-   :maxdepth: 2
-
-   dependencies
-   upgrading
+For guidance on installing Python 3 or pip, refer to the official documentation.
 
 Dependencies
 ------------
@@ -47,8 +41,6 @@ To upgrade to the latest version, run:
 
    python3 -m pip install --upgrade AI-WQ-package
 
-.. note::
-
-   This project is being actively developed. New updates may be released periodically with detailed annoucements given on the `ECMWF-hosted forum <https://forum.ecmwf.int/c/workshop-and-events/ai-weather-quest/41>`__.
+This project is being actively developed. New updates may be released periodically with detailed annoucements given on the `ECMWF-hosted forum <https://forum.ecmwf.int/c/workshop-and-events/ai-weather-quest/41>`__.
 
 
