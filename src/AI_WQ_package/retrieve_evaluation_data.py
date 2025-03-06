@@ -143,7 +143,10 @@ def retrieve_weekly_obs(date,variable,password,local_destination=None):
 
     session.quit()
     # open file using xarray. # removes time bounds
-    weekly_obs = xr.open_dataset(local_filename).squeeze().drop_dims('bnds').drop_vars('time_bnds',errors='ignore').to_array().squeeze()
+    try:
+        weekly_obs = xr.open_dataset(local_filename).squeeze().drop_dims('bnds').drop_vars('time_bnds',errors='ignore').to_array().squeeze()
+    except:
+        weekly_obs = xr.open_dataset(local_filename).squeeze()
     # return the single day climatology.
     try: 
         weekly_obs = change_lat_long_coord_names(weekly_obs)
