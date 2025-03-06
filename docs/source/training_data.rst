@@ -10,16 +10,15 @@ The following datasets at a 1.5 degree resolution have been made easily accessib
 - `ERA5 <https://cds.climate.copernicus.eu/datasets/reanalysis-era5-pressure-levels?tab=overview>`_ data:
    - Weekly-mean temperature (K)
    - Weekly-mean mean sea level pressure (Pa)
-- `MSWEP <https://www.gloh2o.org/mswep/>`_ data:
-   - Weekly-accumulated precipitation (mm week\ :sup:`-1`)
+   - Weekly-accumulated total precipitation (mm week\ :sup:`-1`)
 
 .. important::  
    
-   At the launch of the AI Weather Quest, post-processed training data is available from the 2nd January 1979 to 31st December 2024. Updates to training data will be performed with a latency of three months.  
+   At the launch of the AI Weather Quest, post-processed training data is available from the 1st January 1979 to 31st December 2024. Updates to training data will be performed with a latency of three months.  
 
 Importing the Retrieve Training Data Module
 --------------------------------------------
-To download post-processed ERA5 or MSWEP data, you will need functions from the `retrieve_training_data.py` module. The key function within this module is:
+To download post-processed ERA5 data, you will need functions from the `retrieve_training_data.py` module. The key function within this module is:
 
 - **retrieve_annual_training_data**: Download annual files containing weekly statistics for temperature (tas), mean sea level pressure (mslp) or precipitation (pr).
 
@@ -54,18 +53,18 @@ Historical data, stored in annual files, can be retrieved using the `retrieve_an
 
 Understanding Data Processing Details
 --------------------------------------------
-ERA5 Data Processing
+Temperature and Pressure Data Processing
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 - Downloaded at six-hourly intervals (0, 6, 12 and 18 UTC) at a 1.5 degree resolution.
-- Seven-day rolling means are computed, with time axis labels indicating the start of each 7-day period. 
+- Seven-day rolling means are computed, with time axis labels indicating the start of each seven-day period. 
 
-MSWEP Data Processing
+Precipitation Data Processing
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-- Data before 2021 was sourced from the *Past* directory, whilst data from 2021 onwards is from the *NRT* directory. 
-- Daily rainfall accumulations are regridded to a 1.5-degree resolution using first-order conservative remapping (`CDO REMAPCON function <https://code.mpimet.mpg.de/projects/cdo/embedded/index.html#x1-7330002.12.5>`_).
-- Seven-day rolling accumulations are computed, with time axis labels denoting the start of each 7-day period. 
+- Downloaded daily-accumulated 'total precipitation' at a 1.5 degree resolution using the following `tool <https://cds.climate.copernicus.eu/datasets/derived-era5-single-levels-daily-statistics?tab=download>`_.
+- Daily accumulations are derived from hourly outputs of 12-hour background forecasts initialised at 0600 and 1800 UTC. 
+- Seven-day rolling accumulations are computed, with time axis labels denoting the start of each seven-day period. 
 
 Filename conventions
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
