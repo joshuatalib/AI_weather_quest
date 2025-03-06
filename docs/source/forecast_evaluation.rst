@@ -55,7 +55,7 @@ The **retrieve_weekly_obs** function downloads the requested set of observations
 - **password** (str): The forecast submission password provided in your registration email.
 - **local_destination** (*str*): The local destination for the downloaded dataset. If unspecified, the dataset is saved within the working directory.
 
-The **retrieve_weekly_obs** function returns a dataset containing observations used for forecast evaluation. Temperature and mean sea level pressure are based on **ERA5T** data, whilst precipitation data is sourced from the **MSWEP** *NRT* directory. Additionally, weekly-means of temperature and pressure are computed using six-hourly data (0, 6, 12 and 18 UTC), whilst for precipitation, weekly-accumulations are derived.
+The **retrieve_weekly_obs** function returns the dataset used for forecast evaluation. All variables are derived using **ERA5T** data. Weekly-mean temperature and pressure are calculated from six-hourly data (00, 06, 12, and 18 UTC), whilst hourly data is used for precipitation.
 
 **Filename Convention**
 
@@ -87,10 +87,6 @@ The *retrieve_20yr_quintile_clim* function downloads climatological quintile bou
 - **local_destination** (*str*): The local destination for the downloaded dataset. If unspecified, the dataset is saved within the working directory.
 
 The **retrieve_20yr_quintile_boundaries** function returns a dataset containing climatological quintile boundaries. Quintile boundaries have been calculated using the relevant weekly statistic (weekly-mean [tas, mslp]/weekly-sum [pr]) and collating observations from the past twenty years. To expand the sample size to 100 observations, we include data from +/- 4 days at two-day intervals around the requested date (i.e. Thursday (day -4), Saturday (day -2), Monday (day 0), Wednesday (day 2), Friday (day 4)). 
-
-.. note:: 
-
-  For temperature and pressure, ERA5 is used for computing quintile climatologies, whilst for precipitation, MSWEP data is utilised. 
 
 Land fraction data
 ^^^^^^^^^^^^^^^^^^^^^^^^
@@ -124,9 +120,9 @@ Example: Retrieving Requried Datasets
    from AI_WQ_package import retrieve_evaluation_data
 
    # Download weekly observations
-   obs = retrieve_evaluation_data.retrieve_weekly_obs(20250519,'tas',<<password>>)
+   obs = retrieve_evaluation_data.retrieve_weekly_obs('20250519','tas',<<password>>)
    # Download historical quintile boundaries 
-   quintile_clim = retrieve_evaluation_data.retrieve_20yr_quintile_clim(20250519,'tas',<<password>>)
+   quintile_clim = retrieve_evaluation_data.retrieve_20yr_quintile_clim('20250519','tas',<<password>>)
     
    # Download land-sea mask
    land_sea_mask = retrieve_evaluation_data.retrieve_land_sea_mask(<<password>>)
