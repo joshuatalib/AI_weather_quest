@@ -146,7 +146,7 @@ def retrieve_weekly_obs(date,variable,password,local_destination=None):
     try:
         weekly_obs = xr.open_dataset(local_filename).squeeze().drop_dims('bnds').drop_vars('time_bnds',errors='ignore').to_array().squeeze()
     except:
-        weekly_obs = xr.open_dataset(local_filename).squeeze()
+        weekly_obs = xr.open_dataset(local_filename).squeeze().to_array().squeeze()
     # return the single day climatology.
     try: 
         weekly_obs = change_lat_long_coord_names(weekly_obs)

@@ -11,7 +11,7 @@ def apply_land_sea_mask(score,land_sea_mask):
 def weighted_mean_calc(score,weighted_only=False):
     weights = np.cos(np.deg2rad(score.latitude))
     weights.name = 'weights'
-    # applky weights
+    # apply weights
     score_weighted = score.weighted(weights)
     if weighted_only:
         weights_2d = weights.broadcast_like(score)
@@ -33,13 +33,22 @@ def conditional_obs_probs(obs,quintile_bounds):
             # need to transpose fc_data so ensemble member is first. 
             threshold_crit.append((obs < quintile_bounds.values[0]))
         elif q == num_quantiles:
-            # if at highest value, is it bigger than top quartile
-            threshold_crit.append((obs > quintile_bounds.values[-1]))
+            # if at highest value, is it bigger or equal to top quartile
+            threshold_crit.append((obs >= quintile_bounds.values[-1]))
         else: # is it bigger or equal to previous quartile and smaller or equal to current quartile (i.e. 0.33 <= x <= 0.66).
-            cond_1 = (quintile_bounds.values[q-1] <= obs) # cond 1
-            cond_2 = (obs <= quintile_bounds.values[q])  # cond 2
-            both_conds = xr.concat([cond_1,cond_2],dim='cond') # concat between both conditions 
-            threshold_crit.append(both_conds.all(dim='cond')) # both conditions must be true
+            # 2nd Apr '25 - bug fixed in light of quintiles possibly having same value (i.e. 0 mm for quintile 0.2 and 0.4).
+            lower_bound = quintile_bounds.values[q-1]
+            upper_bound = quintile_bounds.values[q]
+            
+            in_range = (lower_bound <= obs) & (obs < upper_bound) # is the observation within the two bounds
+
+            # check that lower bound is not the same as higher bound. If it is, do not count as within quintile bound.
+            bound_neq = (lower_bound != upper_bound)
+
+            # check both
+            in_range_highest_bound = in_range & bound_neq
+
+            threshold_crit.append(in_range_highest_bound)# both conditions must be true
 
     all_crit = xr.concat(threshold_crit,dim='quintile')
     all_crit = all_crit.assign_coords({'quintile': ('quintile',np.arange(num_quantiles+1))})
@@ -60,7 +69,7 @@ def calculate_RPS(fc_pbs,obs_pbs,variable,land_sea_mask,quantile_dim='quintile',
     RPS_score = ((fc_pbs_cumsum-obs_pbs_cumsum)**2.0).sum(dim=quantile_dim)
 
     # work out weighted average
-    if weighted_only:
+    if weighted_only: # if you want to keep 2d lat/long grid with the weights multiplied into values
         RPS_score = weighted_mean_calc(RPS_score,weighted_only=True)
     else:
         RPS_score = weighted_mean_calc(RPS_score)
