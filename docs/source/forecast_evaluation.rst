@@ -197,17 +197,87 @@ Continuing from the example above, the following code illustrates the evaluation
    # compute global RPSS
    global_RPSS = forecast_evaluation.work_out_RPSS(submitted_forecast,obs_pbs,'tas',land_sea_mask)
 
-.. note::  
-   
-   As of March 2025, users can only compute RPSSs for individual forecasts. Future updates will enable users to compute average evaluation scores.
+Example computing period-aggregated scores
+^^^^^^^^^^^^^^^^^^^^^^^^
 
+Participants can compute period-aggregated scores by aggregating forecasts over multiple initialization dates within a competitive period. This requires retrieving a list of forecast initialization dates.
 
+The function **retrieve_all_period_fcdates** retrieves all initialisation dates within the same competitive period up to a given forecast initialisation date: 
 
+.. code-block:: python
 
+  all_fc_dates = retrieve_evaluation_data.retrieve_all_period_fcdates(<<fc_init_date>>,<<password>>)
 
+- **fc_init_date** (*str*): The latest forecast initialisation date in the format *YYYYMMDD* (e.g., ‘20250519’ for 19th May 2025). 
+- **password** (*str*): The forecast submission password provided in your registration email.
 
+Once the forecast initialization dates are retrieved, the period-aggregated score is computed by iterating through each date:
 
+.. code-block:: python
 
+   from AI_WQ_package import forecast_evaluation, retrieve_evaluation_data
+   import numpy as np
+   import xarray as xr
+   from datetime import datetime, timedelta
+
+   # user defined parameters
+   fc_init_date = '20250717' # example of 17th July 2025
+   variable = 'tas' # example of near-surface air temperature
+   lead_time = '1' # The selected forecasting window ('1': days 19 to 25, '2': days 26 to 32)
+   password = 'registration_password' # replace with the registration password recieved in your welcome email.
+
+   # retrieve forecast initialisation dates within the competitive period
+
+   all_fc_dates = retrieve_evaluation_data.retrieve_all_period_fcdates(fc_init_date,password)
+
+   # initialise arrays to store ranked probability scores (RPSs)
+   all_fc_RPS = []
+   all_clim_RPS = []
+
+   # retrieve land-sea mask
+   land_sea_mask = retrieve_evaluation_data.retrieve_land_sea_mask(password)
+
+   for fc_init in all_fc_dates: # loop through all the forecast dates within the competitive period
+       # TO DO: USER MUST RETRIEVE ACTUAL FORECAST DATA! Would recommend opening the submitted forecast as a xr.dataarray
+       submitted_forecast = submitted_forecast
+
+       # retrieve observations for the appropriate week
+       # work out forecast start date (i.e. Monday start - based on lead_time).
+       date_obj = datetime.strptime(fc_init,"%Y%m%d") # get initial date as a date obj 
+
+       # add number of days to date object depending on lead time
+       if lead_time == '1':
+           fc_valid_date_obj = date_obj + timedelta(days=4+(7*2)) # get to the next Monday then add number of weeks
+       elif lead_time == '2':
+           fc_valid_date_obj = date_obj + timedelta(days=4+(7*3))
+
+       fc_valid_date = fc_valid_date_obj.strftime("%Y%m%d") # convert date obj back to a string
+
+       # Download observations
+       obs = retrieve_evaluation_data.retrieve_weekly_obs(fc_valid_date,variable,password)
+       # Download climatology
+       quintile_clim = retrieve_evaluation_data.retrieve_20yr_quintile_clim(fc_valid_date,variable,password)
+
+       # work out which quintile bound the observation sits in
+       obs_pbs = forecast_evaluation.conditional_obs_probs(obs,quintile_clim)
+
+       # work out RPSs
+       RPS_fc = forecast_evaluation.calculate_RPS(submitted_forecast,obs_pbs,variable,land_sea_mask,weighted_only=True) # work out RPS for forecast but keep full 2D grid with weights included (weighted_only=True).
+       # work out RPS_clim. # create a climatological xarray with all values equal to 0.2
+       num_quants = submitted_forecast.shape[0]
+       clim_pbs = obs_pbs.where(False,1.0/num_quants)
+       RPS_clim = forecast_evaluation.calculate_RPS(clim_pbs,obs_pbs,variable,land_sea_mask,weighted_only=True)
+
+       all_fc_RPS.append(RPS_fc) # for each initialisation date, append the two arrays
+       all_clim_RPS.append(RPS_clim)
+
+# once all the RPSs have been calculated, compute final RPSS.
+all_fc_RPS_combined_avg = xr.concat(all_fc_RPS,dim="forecast_period_start").mean() # take an average across forecast initialisation date after concatenating all forecasts together. Averages temporally and spatially at the same time.
+
+all_clim_RPS_combined_avg = xr.concat(all_clim_RPS,dim="forecast_period_start").mean()
+
+# work out single RPSS score. This score is the computed period-aggregated score.  
+single_RPSS_score = 1-(all_fc_RPS_combined_avg.values/all_clim_RPS_combined_avg.values)
 
 
 
