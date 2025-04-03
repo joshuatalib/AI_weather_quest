@@ -173,7 +173,7 @@ The **work_out_RPSS** function executes the following tasks:
 - Computes a ranked probability score by comparing the cumulative sum of forecast and observed probabilities.
 - Calculates the climatological ranked probability score by comparing the cumulative sum of climatological and observed probabilities.
 - Determines the RPSS with respect to climatology. 
-- Applies a land-sea mask when the examined variable is either temperature or precipitation. Values are set to NaN at grid points with land fraction values less than 80%.
+- Applies a land-sea mask when the variable is either temperature or precipitation. Values are set to NaN at grid points with land fraction values less than 80%.
 - Computes the area-weighted RPSS.
 
 .. important::  
