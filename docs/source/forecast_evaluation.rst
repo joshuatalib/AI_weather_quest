@@ -270,7 +270,6 @@ Once the forecast initialization dates are retrieved, the period-aggregated scor
 
        all_fc_RPS.append(RPS_fc) # for each initialisation date, append the two arrays
        all_clim_RPS.append(RPS_clim)
-
 # once all the RPSs have been calculated, compute final RPSS.
 all_fc_RPS_combined_avg = xr.concat(all_fc_RPS,dim="forecast_period_start").mean() # take an average across forecast initialisation date after concatenating all forecasts together. Averages temporally and spatially at the same time.
 
