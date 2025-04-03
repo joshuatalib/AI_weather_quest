@@ -154,3 +154,42 @@ def retrieve_weekly_obs(date,variable,password,local_destination=None):
         pass
     return weekly_obs
 
+def retrieve_all_period_fcdates(fc_init_date,password):
+    # get csv file from AI Weather Quest site.
+    # log onto FTP session and download .csv file
+    session = ftplib.FTP('ftp.ecmwf.int','ai_weather_quest',password)
+    local_filename = f'competition_dates_may23_to_may27.csv'
+    remote_path = f'competition_dates_may23_to_may27.csv'
+    # retrieve the full year file 
+    with open(local_filename,'wb') as f:
+        session.retrbinary(f"RETR {remote_path}", f.write)
+
+    print(f"File '{remote_path}' has been downloaded to successfully.")
+
+    session.quit()
+
+    # use pandas to read the csv file. 
+    df = pd.read_csv(local_filename)
+    df['Start date'] = pd.to_datetime(df['Start date'],format='%A %d-%b-%Y %H:%M',errors='coerce')
+
+    # split into thirteen week chunks
+    chunk_size = 13
+    chunks = [df.iloc[i:i + chunk_size] for i in range(0, len(df), chunk_size)]
+
+    # use the forecast date to check which 13-week period the initialisation date is in.
+    target_date = pd.to_datetime(fc_init_date,format="%Y%m%d")
+
+    # Find which chunk contains the target date
+    for idx, chunk in enumerate(chunks):
+        if target_date in chunk['Start date'].values:
+            print(f"Target date found in chunk {idx+1}")
+            period_dates = chunk
+
+    # only collate dates where fc_init_date is smaller than or equal to Start date
+    selected_period_dates = period_dates[period_dates['Start date'] <= fc_init_date]
+    all_fc_init_dates = selected_period_dates['Start date'].dt.strftime('%Y%m%d').tolist()
+
+    os.remove(local_filename) # once all initialisation dates have been extracted, remove the downloaded .csv file
+
+    return all_fc_init_dates # return all the fc init dates
+
