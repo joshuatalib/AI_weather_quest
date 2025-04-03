@@ -149,7 +149,7 @@ The *conditional_obs_probs* function determines observed probabilities within a 
 - **obs** (*xarray.DataArray*): Weekly observations.
 - **quintile_bounds** (*xarray.DataArray*): Climatological quintile boundaries.
 
-Calculate Ranked Probability Skill Score:
+Calculate Ranked Probability Skill Score
 ^^^^^^^^^^^^^^^^^^^^^^^^
 The **work_out_RPSS** function computes the global area-weighted RPSS, measuring forecast accuracy against climatology. 
 
