@@ -155,7 +155,7 @@ The **work_out_RPSS** function computes the global area-weighted RPSS, measuring
 
 .. code-block:: python
 
-  RPSS_global_area_weighted = forecast_evaluation.work_out_RPSS(<<fc_pbs>>,<<obs_pbs>>,<<variable>>,land_sea_mask,quantile_dim='quintile')
+  RPSS_global_area_weighted = forecast_evaluation.work_out_RPSS(<<fc_pbs>>,<<obs_pbs>>,<<variable>>,<<land_sea_mask>>,quantile_dim='quintile')
 
 - **fc_pbs** (*xarray.DataArray*): Predicted probabilities between quintile boundaries.
 - **obs_pbs** (*xarray.DataArray*): Observed probabilities (computed using **conditional_obs_probs**).
@@ -165,8 +165,8 @@ The **work_out_RPSS** function computes the global area-weighted RPSS, measuring
   - ``'mslp'``: Mean sea level pressure
   - ``'pr'``: Precipitation
 
-- **land_sea_mask** (xarray.DataArray): Dataset containing land fraction values.
-- **quantile_dim** (str,default='quintile'): Dimension over which ranked probability scores are aggregated. It is recommended to keep this fixed as 'quintile'.
+- **land_sea_mask** (*xarray.DataArray*): Dataset containing land fraction values.
+- **quantile_dim** (*str, default='quintile'*): Dimension over which ranked probability scores are aggregated. It is recommended to keep this fixed as 'quintile'.
 
 The **work_out_RPSS** function executes the following tasks:
 
