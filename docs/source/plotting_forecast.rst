@@ -34,6 +34,7 @@ The figure filename is automatically created using forecast attributes. The form
     <<variable>>_<<fc_init_date}>>_p<<fcwin>>_<<teamname>>_<<modelname>>_quintile_<<quintile_value>>.jpg
 
 where:
+
 - **variable**: Forecasted variable (e.g. tas, mslp or pr).
 - **fc_init_date**: Forecast initialisation date in format *YYYYMMDD* (e.g. 20250403).
 - **fcwin**: The sub-seasonal forecasting window (either '1' or '2').
