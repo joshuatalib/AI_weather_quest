@@ -26,6 +26,7 @@ Contents
 
    installation
    submit_forecast
+   plotting_forecast
    forecast_evaluation
    training_data
 
