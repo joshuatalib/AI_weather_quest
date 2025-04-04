@@ -12,7 +12,7 @@ copyright = '2025, Joshua Talib + AI Weather Quest contributors'
 author = 'Joshua Talib'
 
 release = '1.0'
-version = '1.0.0'
+version = '1.1.4'
 
 # -- General configuration
 
