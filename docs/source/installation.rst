@@ -25,6 +25,8 @@ The AI-WQ-package requires the following dependencies:
 - **scipy** (version 1.14.1 or higher)
 - **netCDF4** (version 1.7.2 or higher)
 - **requests** (versions 2.32.2 or higher)
+- **matplotlib** (versions 3.8 or higher)
+- **cartopy** (versions 0.22 or higher)
 
 If these dependencies conflict with your current working environment, consider installing the package in a new virtual environment.
 
