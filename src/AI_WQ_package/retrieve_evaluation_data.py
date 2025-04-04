@@ -6,6 +6,7 @@ from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 from AI_WQ_package import check_fc_submission
 import ftplib
+import os
 
 def get_previous_monday(date_obj):
     if date_obj.weekday() != 0:  # Monday is 0
