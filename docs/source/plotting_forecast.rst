@@ -58,7 +58,7 @@ Here is how you might use the function to generate a forecast plot for the 60–
   # Plot the 4th quintile (60 to 80%) and save to a local folder ('/home/test_figures/')
   plot_forecast(submitted_forecast,4,local_destination='/home/test_figures/'
 
-Below is an example forecast figure showing predicted probabilities of mean sea level pressure being between 80.0 and 100.0% of climatological conditions for the week commencing 22nd January 2024. The forecast was initialised on the 4th January 2024 and based on ECMWF dynamical sub-seasonal forecasts:
+Below is an example forecast figure showing predicted probabilities of mean sea level pressure being between 80.0 and 100.0% of climatological conditions for the week commencing 22nd January 2024. The forecast was initialised on the 4th January 2024 and based on ECMWF dynamical sub-seasonal forecasts.
 
 .. figure:: mslp_20240104_p1_dynamicalECMWF_subseasonalFORECAST_quintile_100.jpg
    :alt: Forecast example for mean sea level pressure
