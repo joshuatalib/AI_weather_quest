@@ -74,9 +74,9 @@ Before populating the empty *DataArray* with forecasted probabilities, you shoul
 - **Longitude**: Ranges from `0.0°` to `358.5°` longitude with a step of `1.5°`.
 - **Quintile**: Divided into intervals of `0.2` within `[0, 1.0]`. Quintile values represent the upper limit of climatological conditions:
 
-- `0.2`: Includes probabilities <= 0.2.
-- `0.4`, `0.6`, `0.8`: Include probabilities where the lower limit is the previous quintile value (e.g., `0.4` includes probabilities `0.2 <= x < 0.4`).
-- `1.0`: Includes probabilities >= 0.8.
+  - `0.2`: Includes probabilities < 0.2.
+  - `0.4`, `0.6`, `0.8`: Include probabilities where the lower limit is the previous quintile value (e.g., `0.4` includes probabilities `0.2 <= x < 0.4`).
+  - `1.0`: Includes probabilities >= 0.8.
 
 The DataArray also has coordinates describing the forecast initialisation date and weekly forecast window. These time coordinates are stored in `np.datetime64` format.
 
