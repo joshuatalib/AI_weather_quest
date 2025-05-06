@@ -38,9 +38,10 @@ def all_plot_choices(ax,i):
 
 def create_colormap():
     # create a colorbar
-    levels = [3,6,9,12,15,25,30,35,40,45,50,55,60,65,70,75,80,85,90,95]
+    levels = [0,3,6,9,12,15,25,30,35,40,45,50,55,60,65,70,75,80,85,90,95,100]
 
-    colors = ['#36454F',
+    colors = [      '#2a2a2a',
+                    '#36454F',
                     'grey',
                     'silver',
                     'gainsboro',
@@ -58,7 +59,8 @@ def create_colormap():
                     'blueviolet',
                     'darkorchid',
                     'darkviolet',
-                    'purple'
+                    'purple',
+                    '#4b004b'
                     ]
     cmap = mcolors.LinearSegmentedColormap.from_list("ai_wq_cmap",list(zip(np.linspace(0,1,len(colors)),colors)))
 
@@ -122,7 +124,7 @@ def plot_forecast(forecast,quintile_num,local_destination=None):
     # generate colormap  
     ai_wq_cmap, levels = create_colormap()
     # plot forecast
-    CF = ax.contourf(single_quin.longitude,single_quin.latitude,single_quin*100.0,cmap=ai_wq_cmap,levels=levels,extend='both')
+    CF = ax.contourf(single_quin.longitude,single_quin.latitude,single_quin*100.0,cmap=ai_wq_cmap,levels=levels)
     all_plot_choices(ax,0)
     ax.set_title(fig_title,fontsize=8.0)
     fig.subplots_adjust(bottom=0.15)

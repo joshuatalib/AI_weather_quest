@@ -267,7 +267,7 @@ def all_checks(data,variable,fc_start_date,s2s_time_period,teamname,modelname):
 
     # (2) Check the submitted xarray dataset.
     # (2.a) check forecast date is within appropriate range
-    if teamname != 'dynamicalECMWF': # during testing period, enabling any submission for ECMWF. Will be removed in Aug '25
+    if teamname != 'dynamicalECMWF' and modelname != 'webinartest' and modelname != 'dynamicalEC': # during testing period, enabling any submission for ECMWF. Will be removed in Aug '25
         check_forecast_data_window(fc_start_date)
 
     # (2.b) check spatial components. - the components also check the domain size and the spacing between them (should be 1.0) for each.

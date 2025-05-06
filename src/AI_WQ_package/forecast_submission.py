@@ -117,7 +117,9 @@ def AI_WQ_create_empty_dataarray(variable,fc_start_date,fc_period,teamname,model
                 forecast_period_bounds=f"[{forecast_period_start},{forecast_period_end}]",
                 shortName=shortName,
                 originating_centre=origin_id,
-                expver=expver_id))
+                expver=expver_id,
+                teamname=teamname,
+                modelname=modelname))
     # add the time attrs
     da.coords['forecast_issue_date'].attrs = {'standard_name': 'forecast_issue_time','long_name': 'forecast issue time','axis':'T'}
     da.coords['forecast_period_start'].attrs = {'long_name': 'forecast period start','axis':'T'} 
