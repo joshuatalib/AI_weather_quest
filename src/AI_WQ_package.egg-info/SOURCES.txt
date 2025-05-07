@@ -8,6 +8,7 @@ src/AI_WQ_package/compute_20yr_quintile_climatology.py
 src/AI_WQ_package/download_ERA5_training_data.py
 src/AI_WQ_package/forecast_evaluation.py
 src/AI_WQ_package/forecast_submission.py
+src/AI_WQ_package/plotting_forecast.py
 src/AI_WQ_package/retrieve_evaluation_data.py
 src/AI_WQ_package/retrieve_training_data.py
 src/AI_WQ_package.egg-info/PKG-INFO

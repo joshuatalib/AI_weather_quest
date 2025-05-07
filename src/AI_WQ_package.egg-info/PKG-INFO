@@ -1,6 +1,6 @@
-Metadata-Version: 2.2
+Metadata-Version: 2.4
 Name: AI_WQ_package
-Version: 1.0.0
+Version: 2.0.0
 Summary: A python package to support forecast submission, evaluation and access to FTP site for DESTIN-E S2S AI prediction project
 Author-email: Joshua Talib <joshuatalib@ecmwf.int>
 Project-URL: Homepage, https://github.com/joshuatalib/AI_weather_quest
@@ -17,6 +17,9 @@ Requires-Dist: pandas>=2.2.3
 Requires-Dist: scipy>=1.14.1
 Requires-Dist: netCDF4>=1.7.2
 Requires-Dist: requests>=2.32.2
+Requires-Dist: matplotlib>=3.8
+Requires-Dist: cartopy>=0.22
+Dynamic: license-file
 
 # AI_weather_quest
 To participate in the AI Weather Quest, you will need to install the AI-WQ-package Python package. This package requires Python version 3, and its source code is available on GitHub.
@@ -50,6 +53,8 @@ The AI-WQ-package requires the following dependencies:
 - **scipy** (version 1.14.1 or higher)
 - **netCDF4** (version 1.7.2 or higher)
 - **requests** (versions 2.32.2 or higher)
+- **matplotlib** (versions 3.8 or higher)
+- **cartopy** (versions 0.22 or higher)
 
 If these dependencies conflict with your current working environment, consider installing the package in a new virtual environment.
 
