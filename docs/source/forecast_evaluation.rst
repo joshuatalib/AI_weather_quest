@@ -88,6 +88,10 @@ The *retrieve_20yr_quintile_clim* function downloads climatological quintile bou
 
 The **retrieve_20yr_quintile_boundaries** function returns a dataset containing climatological quintile boundaries. Quintile boundaries have been calculated using the relevant weekly statistic (weekly-mean [tas, mslp]/weekly-sum [pr]) and collating observations from the past twenty years. To expand the sample size to 100 observations, we include data from +/- 4 days at two-day intervals around the requested date (i.e. Thursday (day -4), Saturday (day -2), Monday (day 0), Wednesday (day 2), Friday (day 4)). 
 
+.. important::  
+   
+   Climatological quintile boundaries are only avaliable for every Monday from 1999 to present. 
+
 Land fraction data
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
