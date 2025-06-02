@@ -90,7 +90,7 @@ The **retrieve_20yr_quintile_boundaries** function returns a dataset containing 
 
 .. important::  
    
-   Climatological quintile boundaries are only avaliable for every Monday from 1999 to present. 
+   Climatological quintile boundaries are only avaliable for every Monday from 11th January 1999 to present. 
 
 Land fraction data
 ^^^^^^^^^^^^^^^^^^^^^^^^
