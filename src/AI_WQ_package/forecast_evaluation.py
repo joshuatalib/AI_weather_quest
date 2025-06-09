@@ -8,19 +8,34 @@ def apply_land_sea_mask(score,land_sea_mask):
     score = score.where(lsm_expanded>=0.8)
     return score
 
-def weighted_mean_calc(score,weighted_only=False):
-    weights = np.cos(np.deg2rad(score.latitude))
-    weights.name = 'weights'
+def apply_lat_weighting(score):
+    weights_1d = np.cos(np.deg2rad(score.latitude))
+    weights_1d.name = 'weights'
+
+    # broadcast to match 2D grid
+    weights_2d = weights_1d.broadcast_like(score)
+
     # apply weights
-    score_weighted = score.weighted(weights)
-    if weighted_only:
-        weights_2d = weights.broadcast_like(score)
-        score_weighted = score*weights_2d
-        return score_weighted
-    else:
-        # after weighting, extract selected lat region
-        score_weighted_mean = score_weighted.mean(('latitude','longitude'))
-        return score_weighted_mean
+    score_weighted = score*weights_2d
+    return score_weighted
+
+def calculate_global_mean(score):
+    score_mean = score.mean(('latitude','longitude'))
+    return score_mean
+
+#def weighted_mean_calc(score,weighted_only=False):
+#    weights = np.cos(np.deg2rad(score.latitude))
+#    weights.name = 'weights'
+#    # apply weights
+#    score_weighted = score.weighted(weights)
+#   if weighted_only:
+#        weights_2d = weights.broadcast_like(score)
+#        score_weighted = score*weights_2d
+#        return score_weighted
+#    else:
+#        # after weighting, extract selected lat region
+#        score_weighted_mean = score_weighted.mean(('latitude','longitude'))
+#       return score_weighted_mean
 
 def conditional_obs_probs(obs,quintile_bounds):
     num_quantiles=quintile_bounds['quantile'].shape[0]
@@ -55,7 +70,7 @@ def conditional_obs_probs(obs,quintile_bounds):
 
     return all_crit
 
-def calculate_RPS(fc_pbs,obs_pbs,variable,land_sea_mask,quantile_dim='quintile',weighted_only=False):
+def calculate_RPS(fc_pbs,obs_pbs,variable,land_sea_mask,quantile_dim='quintile',lat_weighting=True,global_mean=True):
     # cumulate across quantiles
     fc_pbs_cumsum = fc_pbs.cumsum(dim=quantile_dim)
     obs_pbs_cumsum = obs_pbs.cumsum(dim=quantile_dim)
@@ -72,13 +87,12 @@ def calculate_RPS(fc_pbs,obs_pbs,variable,land_sea_mask,quantile_dim='quintile',
     RPS_score = cum_pbs_diff.sum(dim=quantile_dim)
 
     # work out weighted average
-    if weighted_only: # if you want to keep 2d lat/long grid with the weights multiplied into values
-        RPS_score = weighted_mean_calc(RPS_score,weighted_only=True)
-    else:
-        RPS_score = weighted_mean_calc(RPS_score)
+    if lat_weighting:
+        RPS_score = apply_lat_weighting(RPS_score) # applies a weighting to the RPS so each point is considered based on area (i.e. greater weighting to equatorial grid points)
+    if global_mean:
+        RPS_score = calculate_global_mean(RPS_score) # average across latitude and longitude
 
     return RPS_score
-
 
 def work_out_RPSS(fc_pbs,obs_pbs,variable,land_sea_mask,quantile_dim='quintile'):
     # make both dataarray have same attribute sizes
@@ -97,4 +111,3 @@ def work_out_RPSS(fc_pbs,obs_pbs,variable,land_sea_mask,quantile_dim='quintile')
     RPSS_wrt_clim = 1-(RPS_score_fc/RPS_score_clim)
 
     return RPSS_wrt_clim
-
