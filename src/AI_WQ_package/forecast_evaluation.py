@@ -3,7 +3,7 @@ import numpy as np
 import xarray as xr
 
 def apply_land_sea_mask(score,land_sea_mask):
-    lsm_expanded = land_sea_mask.expand_dims(dim={"quintile":score.quintile},axis=0)
+    lsm_expanded = land_sea_mask.expand_dims(quintile=score.coords["quintile"])
     # load in land sea mask
     score = score.where(lsm_expanded>=0.8)
     return score
@@ -20,7 +20,7 @@ def apply_lat_weighting(score):
     return score_weighted
 
 def calculate_global_mean(score):
-    score_mean = score.mean(('latitude','longitude'))
+    score_mean = score.mean(('latitude','longitude'),skipna=True)
     return score_mean
 
 #def weighted_mean_calc(score,weighted_only=False):
@@ -84,6 +84,7 @@ def calculate_RPS(fc_pbs,obs_pbs,variable,land_sea_mask,quantile_dim='quintile',
     # work out squared value of cumulative difference
     cum_pbs_diff = fc_pbs_cumsum.copy()
     cum_pbs_diff.values = ((fc_pbs_cumsum.values-obs_pbs_cumsum.values)**2.0) # square the cumulative difference between forecast prob and obs prob. Call the actual data within the xarray.
+    print (cum_pbs_diff.mean().values)
     RPS_score = cum_pbs_diff.sum(dim=quantile_dim)
 
     # work out weighted average
