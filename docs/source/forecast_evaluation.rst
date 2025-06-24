@@ -90,7 +90,7 @@ The **retrieve_20yr_quintile_boundaries** function returns a dataset containing 
 
 .. important::  
    
-   Climatological quintile boundaries are avaliable at a daily resolution from 11th January 1999 to present. 
+   Climatological quintile boundaries are avaliable at a daily resolution from 11th January 1999 to present day plus eight months. 
 
 Land fraction data
 ^^^^^^^^^^^^^^^^^^^^^^^^
