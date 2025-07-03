@@ -2,10 +2,11 @@
 import numpy as np
 import xarray as xr
 
-def apply_land_sea_mask(score,land_sea_mask):
-    lsm_expanded = land_sea_mask.expand_dims(quintile=score.coords["quintile"])
+def apply_land_sea_mask(score,land_sea_mask,quintile_dim=None):
+    if quintile_dim:
+        land_sea_mask = land_sea_mask.expand_dims(quintile=score.coords["quintile"])
     # load in land sea mask
-    score = score.where(lsm_expanded>=0.8)
+    score = score.where(land_sea_mask>=0.5)
     return score
 
 def apply_lat_weighting(score):
@@ -74,18 +75,18 @@ def calculate_RPS(fc_pbs,obs_pbs,variable,land_sea_mask,quantile_dim='quintile',
     # cumulate across quantiles
     fc_pbs_cumsum = fc_pbs.cumsum(dim=quantile_dim)
     obs_pbs_cumsum = obs_pbs.cumsum(dim=quantile_dim)
-    # apply a land sea mask
-    if variable == 'tas' or variable == 'pr':
-        print ('applying land sea mask')
-        fc_pbs_cumsum = apply_land_sea_mask(fc_pbs_cumsum,land_sea_mask)
-        obs_pbs_cumsum = apply_land_sea_mask(obs_pbs_cumsum,land_sea_mask)
     
     # RPS score for forecast
     # work out squared value of cumulative difference
     cum_pbs_diff = fc_pbs_cumsum.copy()
     cum_pbs_diff.values = ((fc_pbs_cumsum.values-obs_pbs_cumsum.values)**2.0) # square the cumulative difference between forecast prob and obs prob. Call the actual data within the xarray.
     print (cum_pbs_diff.mean().values)
-    RPS_score = cum_pbs_diff.sum(dim=quantile_dim)
+    RPS_score = cum_pbs_diff.sum(dim=quantile_dim,skipna=True)
+
+    # apply a land sea mask
+    if variable == 'tas' or variable == 'pr':
+        print ('applying land sea mask')
+        RPS_score = apply_land_sea_mask(RPS_score,land_sea_mask)
 
     # work out weighted average
     if lat_weighting:
