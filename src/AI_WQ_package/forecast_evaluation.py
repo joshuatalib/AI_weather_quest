@@ -2,6 +2,29 @@
 import numpy as np
 import xarray as xr
 
+def apply_region_mask(score,nlat,slat,wlon,elon):
+    if wlon < elon:
+        region_mask = (
+                      (score.latitude >= slat) &
+                      (score.latitude <= nlat) &
+                      (score.longitude >= wlon) &
+                      (score.longitude <= elon)
+                      )
+    else:
+        # wrapped case, i.e. w=335 and e=60
+        region_mask = (
+                      (score.latitude >= slat) &
+                      (score.latitude <= nlat) &
+                      (
+                      (score.longitude >= wlon) | # OR instead of an AND
+                      (score.longitude <= elon)
+                      )
+                      )
+
+    score_masked = score.where(region_mask)
+
+    return score_masked
+
 def apply_land_sea_mask(score,land_sea_mask,quintile_dim=None):
     if quintile_dim:
         land_sea_mask = land_sea_mask.expand_dims(quintile=score.coords["quintile"])
