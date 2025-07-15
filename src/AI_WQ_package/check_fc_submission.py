@@ -23,16 +23,16 @@ def check_registered_teamname(teamname):
     while True:
         status_code = check_status(csv_check_status_url)
         if status_code == 200:
-#            print("Processing completed. Status code 200 received.")
+    # print("Processing completed. Status code 200 received.")
             break
         else:
-#            print("Processing not yet complete. Waiting 2 seconds before retrying...")
+    #print("Processing not yet complete. Waiting 2 seconds before retrying...")
             time.sleep(2)  # Wait for 2 seconds before checking again
 
     # once processing is complete, read the data.
     # read data within the url # saved webpage with team and model names
     df = pd.read_csv(csv_data_url)
-    reg_teamnames = df.iloc[:,0]
+    reg_teamnames = df['Team name']
     # check whether given teamname is within registered teamnames
     if teamname in reg_teamnames.values:
         print (f"{teamname} is registered to the AI Weather Quest. You may submit your forecast.")
@@ -51,18 +51,22 @@ def check_registered_modelname(modelname):
     while True:
         status_code = check_status(csv_check_status_url)
         if status_code == 200:
-#            print("Processing completed. Status code 200 received.")
+        # print("Processing completed. Status code 200 received.")
             break
         else:
-#            print("Processing not yet complete. Waiting 2 seconds before retrying...")
+        # print("Processing not yet complete. Waiting 2 seconds before retrying...")
             time.sleep(2)  # Wait for 2 seconds before checking again
     
     # read data within the url # saved webpage with team and model names
     df = pd.read_csv(csv_data_url)
-    reg_modelnames = df.iloc[:,2]
+    reg_modelnames = df['Models_model_name']
     # check whether given teamname is within registered teamnames
     if modelname in reg_modelnames.values:
-        print (f"{modelname} is registered to the AI Weather Quest. You may submit your forecast.")
+        model_row = df[df['Models_model_name']==modelname].iloc[0]
+        if model_row['withdraw'] == 'Active': # Need to check whether model has been withdrawn from the competition.
+            print (f"{modelname} is registered to the AI Weather Quest. You may submit your forecast.")
+        else:
+            raise ValueError(f"{modelname} is registered to the AI Weather Quest but has been withdrawn from the competition.")
     else:
         raise ValueError(f"{modelname} is not recognised as a registered AI Weather Quest teamname.")
 
