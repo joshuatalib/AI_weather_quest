@@ -63,7 +63,7 @@ def check_registered_modelname(modelname):
     # check whether given teamname is within registered teamnames
     if modelname in reg_modelnames.values:
         model_row = df[df['Models_model_name']==modelname].iloc[0]
-        if model_row['withdraw'] == 'Active': # Need to check whether model has been withdrawn from the competition.
+        if model_row['Status'] == 'Active': # Need to check whether model has been withdrawn from the competition.
             print (f"{modelname} is registered to the AI Weather Quest. You may submit your forecast.")
         else:
             raise ValueError(f"{modelname} is registered to the AI Weather Quest but has been withdrawn from the competition.")
