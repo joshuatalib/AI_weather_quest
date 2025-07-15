@@ -15,7 +15,7 @@ def retrieve_annual_training_data(year,variable,password,local_destination=None)
     check_fc_submission.check_variable_in_list(variable,['tas','mslp','pr'])
 
     # NEED TO CHECK YEAR IS BETWEEN 1979 TO (YEAR OF CURRENT DATE - FOUR MONTHS)
-    four_months_ago = datetime.datetime.now() - relativedelta(months=4)
+    four_months_ago = datetime.now() - relativedelta(months=4)
     four_mths_ago_YEAR = four_months_ago.year
     if not (1979 <= year <= four_mths_ago_YEAR):
         raise ValueError(f"Invalid year: {year}. Year must be between 1979 and {four_mths_ago_YEAR}.")

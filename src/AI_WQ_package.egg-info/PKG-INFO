@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: AI_WQ_package
-Version: 2.3.4
+Version: 2.3.5
 Summary: A python package to support forecast submission, evaluation and access to FTP site for DESTIN-E S2S AI prediction project
 Author-email: Joshua Talib <joshuatalib@ecmwf.int>
 Project-URL: Homepage, https://github.com/joshuatalib/AI_weather_quest
