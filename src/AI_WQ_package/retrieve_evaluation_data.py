@@ -71,19 +71,21 @@ def retrieve_20yr_quintile_clim(date,variable,password,local_destination=None):
     # check variable is valid
     check_fc_submission.check_variable_in_list(variable,['tas','mslp','pr'])
 
+    if variable == 'tas' or variable == 'mslp':
+        weekly_agg_str = 'WEEKLYMEAN'
+    elif variable == 'pr':
+        weekly_agg_str = 'WEEKLYSUM'
+
     #### copy across single day climatological file ####
     # create a local filename ###
     if local_destination == None:
-        local_filename = f'{variable}_20yrCLIM_WEEKLYMEAN_quintiles_{date}.nc'
+        local_filename = f'{variable}_20yrCLIM_{weekly_agg_str}_quintiles_{date}.nc'
     else:
-        local_filename = f'{local_destination}/{variable}_20yrCLIM_WEEKLYMEAN_quintiles_{date}.nc'
+        local_filename = f'{local_destination}/{variable}_20yrCLIM_{weekly_agg_str}_quintiles_{date}.nc'
 
     # log onto FTP session
     session = ftplib.FTP('ftp.ecmwf.int','ai_weather_quest',password) 
-    if variable == 'tas' or variable == 'mslp':
-        remote_path = f'/climatologies/{str_year}/{variable}_20yrCLIM_WEEKLYMEAN_quintiles_{date}.nc'
-    elif variable == 'pr':
-        remote_path = f'/climatologies/{str_year}/{variable}_20yrCLIM_WEEKLYSUM_quintiles_{date}.nc'
+    remote_path = f'/climatologies/{str_year}/{variable}_20yrCLIM_{weekly_agg_str}_quintiles_{date}.nc'
     # retrieve the full year file 
     with open(local_filename,'wb') as f:
         session.retrbinary(f"RETR {remote_path}", f.write)
