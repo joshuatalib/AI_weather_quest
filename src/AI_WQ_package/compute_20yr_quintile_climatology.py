@@ -25,9 +25,9 @@ def complete_20yr_quintiles(da,initial_rolling_window=7,date_window=[-4,-2,0,2,4
 
     # first compute weekly rolling mean or rolling sum for precip.
     if rolling_operation == 'mean':
-        weekly_rolling = da.rolling(time=initial_rolling_window,center=False).mean()
+        weekly_rolling = da.rolling(time=7,center=False).mean().shift(time=-6)
     elif rolling_operation == 'sum':
-        weekly_rolling = da.rolling(time=initial_rolling_window,center=False).sum()
+        weekly_rolling = da.rolling(time=7,center=False).sum().shift(time=-6)
     elif rolling_operation == 'none': # also given the option for none rolling, if it has already been performed. 
         weekly_rolling = da
 
