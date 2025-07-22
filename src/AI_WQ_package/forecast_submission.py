@@ -253,3 +253,31 @@ def update_table_unique_identifies(teamname,modelname,password):
 
     return str_identity, str_expver_id
 
+def AI_WQ_check_submission(variable,fc_start_date,fc_period,teamname,modelname,password):
+    ''' A function that checks whether a forecast has been successfully submitted to the FTP site. Please note, this function only checks the existence of a forecast and not whether the forecast will complete a full evaluation cycle.
+    '''
+    # Check filename characteristics and output a string version of fc_period
+    fc_period = check_fc_submission.check_filename_characteristics(variable,fc_start_date,fc_period,teamname,modelname)
+
+    # create filename
+    final_filename = variable+'_'+fc_start_date+'_p'+fc_period+'_'+teamname+'_'+modelname+'.nc'
+
+    # check whether file is present
+    session = ftplib.FTP('ftp.ecmwf.int','ai_weather_quest',password) # open FTP session
+    remote_path = f"/forecast_submissions/{fc_start_date}/{final_filename}"
+
+    file_exists=False
+    try:
+        session.cwd(f"/forecast_submissions/{fc_start_date}")
+        files = session.nlst() # get list of files
+        file_exists = final_filename in files
+        if file_exists:
+            print (f"File '{final_filename}' exists. You have successfully submitted to the AI Weather Quest")
+        else:
+            print (f"Could not find '{final_filename}'. Please try resubmitting to the AI Weather Quest.")
+    except ftplib.error_perm as e:
+        if "550" in str(e):
+            print(f"Directory '/forecast_submissions/{fc_start_date}' does not exist. Most likely not a valid forecast initialisation date")
+        else:
+            raise
+
