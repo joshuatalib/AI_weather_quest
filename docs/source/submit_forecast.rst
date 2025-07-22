@@ -140,6 +140,37 @@ After verification, the function populates a new *xarray.DataArray* that meets E
 
 In this case, team `EC` has used the model `extrange` to predict near-surface temperatures for the first sub-seasonal forecasting period (days 19 to 25) from 9th December 2024.
 
+Checking a successful forecast submission to the AI Weather Quest
+---------------------------------------------
+You can check whether your forecast has been successfully submitted to the AI Weather Quest by using the forecast_submission.AI_WQ_check_submission function. This function validates your registration details and confirms if a submitted forecast is present.
+
+.. code-block:: python
+
+   AI_WQ_check_submission(<<variable>>, <<fc_start_date>>, <<fc_period>>, <<teamname>>, <<modelname>>, <<password>>)
+
+**Parameters**:
+
+- All variables are the same as those used when creating the empty DataArray.
+
+The function will print out three lines. The first and second will state whether the teamname and modelname is registered to the AI Weather Quest, respectively, whilst the third will inform you whether your file has been successfully submitted to the Quest. If there is an issue, the third line will display an error message. The common issues will be:
+- If the file does not exist.
+- If the forecast initialisation date is invalid, and the directory is not found.
+
+**Example**:
+
+.. code-block:: python
+
+   from AI_WQ_package.forecast_submission import AI_WQ_check_submission
+   AI_WQ_check_submission('tas','20250717','1','ECMWFtest','dynamicalEC',password)
+
+Output:
+
+.. code-block::
+
+   ECMWFtest is registered to the AI Weather Quest. You may submit your forecast.
+   dynamicalEC is registered to the AI Weather Quest. You may submit your forecast.
+   File 'tas_20250717_p1_ECMWFtest_dynamicalEC.nc' exists. You have successfully submitted to the AI Weather Quest
+
 Summary
 -------
 Below is a complete Python code example for submitting a single forecast:
