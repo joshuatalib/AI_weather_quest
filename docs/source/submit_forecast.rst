@@ -140,7 +140,7 @@ After verification, the function populates a new *xarray.DataArray* that meets E
 
 In this case, team `EC` has used the model `extrange` to predict near-surface temperatures for the first sub-seasonal forecasting period (days 19 to 25) from 9th December 2024.
 
-Checking a successful forecast submission to the AI Weather Quest
+Checking for a successful forecast submission
 ---------------------------------------------
 You can check whether your forecast has been successfully submitted to the AI Weather Quest by using the forecast_submission.AI_WQ_check_submission function. This function validates your registration details and confirms if a submitted forecast is present.
 
