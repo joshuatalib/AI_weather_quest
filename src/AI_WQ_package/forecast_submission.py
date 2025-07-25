@@ -254,7 +254,7 @@ def update_table_unique_identifies(teamname,modelname,password):
     return str_identity, str_expver_id
 
 def AI_WQ_check_submission(variable,fc_start_date,fc_period,teamname,modelname,password):
-    ''' A function that checks whether a forecast has been successfully submitted to the FTP site. Please note, this function only checks the existence of a forecast and not whether the forecast will complete a full evaluation cycle.
+    ''' A function that checks whether a forecast has been successfully submitted to ECMWF. Please note, this function only checks the existence of a forecast and not whether the forecast will complete a full evaluation cycle.
     '''
     # Check filename characteristics and output a string version of fc_period
     fc_period = check_fc_submission.check_filename_characteristics(variable,fc_start_date,fc_period,teamname,modelname)
