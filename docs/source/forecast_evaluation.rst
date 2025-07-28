@@ -90,7 +90,7 @@ The **retrieve_20yr_quintile_boundaries** function returns a dataset containing 
 
 .. important::  
    
-   Climatological quintile boundaries are avaliable at a daily resolution from 11th January 1999 to present day plus eight months. 
+   Climatological quintile boundaries are available at a daily resolution from 11th January 1999 to present day plus eight months. 
 
 Land fraction data
 ^^^^^^^^^^^^^^^^^^^^^^^^
@@ -116,7 +116,7 @@ This dataset is used to mask oceanic grid points when evaluating temperature and
    
    Land fraction values are not used when evaluating forecasts of mean sea level pressure. 
 
-Example: Retrieving Requried Datasets
+Example: Retrieving Required Datasets
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code-block:: python
