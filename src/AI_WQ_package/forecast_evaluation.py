@@ -103,7 +103,6 @@ def calculate_RPS(fc_pbs,obs_pbs,variable,land_sea_mask,quantile_dim='quintile',
     # work out squared value of cumulative difference
     cum_pbs_diff = fc_pbs_cumsum.copy()
     cum_pbs_diff.values = ((fc_pbs_cumsum.values-obs_pbs_cumsum.values)**2.0) # square the cumulative difference between forecast prob and obs prob. Call the actual data within the xarray.
-    print (cum_pbs_diff.mean().values)
     RPS_score = cum_pbs_diff.sum(dim=quantile_dim,skipna=True)
 
     # apply a land sea mask
@@ -117,6 +116,7 @@ def calculate_RPS(fc_pbs,obs_pbs,variable,land_sea_mask,quantile_dim='quintile',
     if global_mean:
         RPS_score = calculate_global_mean(RPS_score) # average across latitude and longitude
 
+    print (RPS_score.values)
     return RPS_score
 
 def work_out_RPSS(fc_pbs,obs_pbs,variable,land_sea_mask,quantile_dim='quintile'):
@@ -127,12 +127,16 @@ def work_out_RPSS(fc_pbs,obs_pbs,variable,land_sea_mask,quantile_dim='quintile')
     num_quants = fc_pbs.shape[0]
 
     # RPS score for forecast
+    print ('RPS for submitted forecast')
     RPS_score_fc = calculate_RPS(fc_pbs,obs_pbs,variable,land_sea_mask)
 
     # create an xarray filled with climatological probs (i.e. 0.2).
-    clim_pbs = obs_pbs.where(False,1.0/num_quants) 
+    clim_pbs = obs_pbs.where(False,1.0/num_quants)
+    print ('RPS for climatology')
     RPS_score_clim = calculate_RPS(clim_pbs,obs_pbs,variable,land_sea_mask)
 
+    print ('RPSS with respect to climatology')
     RPSS_wrt_clim = 1-(RPS_score_fc/RPS_score_clim)
-
+    print (RPSS_wrt_clim.values)
+    
     return RPSS_wrt_clim
