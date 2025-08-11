@@ -42,10 +42,10 @@ def create_colormap():
 
     colors = [      '#2a2a2a',
                     '#36454F',
-                    'grey',
-                    'silver',
+                    'slategray',
+                    'darkgray',
                     'gainsboro',
-                    'white',
+                    'lightgrey',
                     'mediumaquamarine',
                     'lightseagreen',
                     'cadetblue',
