@@ -103,7 +103,7 @@ def AI_WQ_create_empty_dataarray(variable,fc_start_date,fc_period,teamname,model
     fc_issue_time = np.datetime64(fc_issue_date+'T00:00:00')
     # With the data, make a dataset array. Streamlining dataset creation so all submissions are the same.
     da = xr.DataArray(data=empty_data,dims=['quintile','latitude','longitude'],
-            coords=dict(quintile=(['quintile'],np.arange(0.2,1.1,0.2)), # outputs [0.2,0.4,0.6,0.8,1.0]
+            coords=dict(quintile=(['quintile'],np.arange(1,6)/5), # outputs [0.2,0.4,0.6,0.8,1.0]
                         latitude=(['latitude'],latitude,lat_attrs),
                         longitude=(['longitude'],longitude,lon_attrs),
                         forecast_issue_date=fc_issue_time,
