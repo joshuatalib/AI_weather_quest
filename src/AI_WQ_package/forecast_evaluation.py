@@ -38,6 +38,7 @@ def apply_lat_weighting(score):
 
     # broadcast to match 2D grid
     weights_2d = weights_1d.broadcast_like(score)
+    weights_2d = weights_2d/weights_2d.mean() # added on 30th Oct 2025 to standardise weights
 
     # apply weights
     score_weighted = score*weights_2d
