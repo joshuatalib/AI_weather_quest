@@ -74,7 +74,7 @@ The *retrieve_20yr_quintile_clim* function downloads climatological quintile bou
 
 .. code-block:: python
 
-  clim_quintile_bounds = retrieve_evaluation_data.retrieve_20yr_quintile_boundaries(<<date>>,<<variable>>,<<password>>,local_destination=None)
+  clim_quintile_bounds = retrieve_evaluation_data.retrieve_20yr_quintile_clim(<<date>>,<<variable>>,<<password>>,local_destination=None)
 
 - **date** (*str*): The requested date for climatological quintile boundaries in format `YYYYMMDD` (e.g., `'20250519'` for 19th May 2025).
 - **variable** (*str*): The requested variable. Options are:
@@ -86,7 +86,7 @@ The *retrieve_20yr_quintile_clim* function downloads climatological quintile bou
 - **password** (str): The forecast submission password provided in your registration email.
 - **local_destination** (*str*): The local destination for the downloaded dataset. If unspecified, the dataset is saved within the working directory.
 
-The **retrieve_20yr_quintile_boundaries** function returns a dataset containing climatological quintile boundaries. Quintile boundaries have been calculated using the relevant weekly statistic (weekly-mean [tas, mslp]/weekly-sum [pr]) and collating observations from the past twenty years. To expand the sample size to 100 observations, we include data from +/- 4 days at two-day intervals around the requested date (i.e. Thursday (day -4), Saturday (day -2), Monday (day 0), Wednesday (day 2), Friday (day 4)). 
+The **retrieve_20yr_quintile_clim** function returns a dataset containing climatological quintile boundaries. Quintile boundaries have been calculated using the relevant weekly statistic (weekly-mean [tas, mslp]/weekly-sum [pr]) and collating observations from the past twenty years. To expand the sample size to 100 observations, we include data from +/- 4 days at two-day intervals around the requested date (i.e. Thursday (day -4), Saturday (day -2), Monday (day 0), Wednesday (day 2), Friday (day 4)). 
 
 .. important::  
    
