@@ -72,7 +72,7 @@ def compute_20yr_avg(weekly_means, current_year,start_date,end_date,date_window=
         for year_change in np.arange(-20,0): # go through past 20 years
             for day_change in date_window: # +/- 2 and 4 days - determined by date_rolling_window. 
                 new_date = date + relativedelta(years=year_change) + relativedelta(days=float(day_change))
-                clim_data.append(weekly_means.sel(time=new_date,method='nearest'))
+                clim_data.append(weekly_means.sel(time=new_date))
         full_clim_set = xr.concat(clim_data,dim='time')
         # use full clim set (100 days), work out quintiles. need to rechunk due to dask handling
         quintile_clim = full_clim_set.chunk(dict(time=-1)).quantile(q=[0.2,0.4,0.6,0.8],dim='time')
