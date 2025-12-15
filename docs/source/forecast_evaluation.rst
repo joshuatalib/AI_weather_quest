@@ -194,7 +194,7 @@ Regional masking is applied by specifying a latitude–longitude bounding box:
 
 .. code-block:: python
 
-  masked_score = forecast_evaluation.work_out_RPSS(<<RPS>>,<<N>>,<<S>>,<<W>>,<<E>>)
+  masked_score = forecast_evaluation.apply_region_mask(<<RPS>>,<<N>>,<<S>>,<<W>>,<<E>>)
 
 - **RPS** (*xarray.DataArray*): Global ranked probability scores.
 - **N,S,W,E** (*float*): Northern, southern, western, and eastern boundaries of the region (in degrees, 0 to 360 longitude).
