@@ -188,7 +188,7 @@ The final output is the same RPSS displayed on the AI Weather Quest website.
 
 Calculate regional skill scores
 ^^^^^^^^^^^^^^^^^^^^^^^^
-  In addition to globally-averaged metrics, regional RPSSs can be computed using the function **apply_region_mask**. This allows skill to be evaluated over user-defined geographic domains. 
+In addition to globally-averaged metrics, regional RPSSs can be computed using the function **apply_region_mask**. This allows skill to be evaluated over user-defined geographic domains. 
 
 Regional masking is applied by specifying a latitude–longitude bounding box:
 
