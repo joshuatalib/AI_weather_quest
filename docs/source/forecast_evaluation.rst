@@ -194,7 +194,7 @@ Regional masking is applied by specifying a latitude–longitude bounding box:
 
 .. code-block:: python
 
-  masked_score = forecast_evaluation.work_out_RPSS(<<RPS>>,N,S,W,E)
+  masked_score = forecast_evaluation.work_out_RPSS(<<RPS>>,<<N>>,<<S>>,<<W>>,<<E>>)
 
 - **RPS** (*xarray.DataArray*): Global ranked probability scores.
 - **N,S,W,E** (*float*): Northern, southern, western, and eastern boundaries of the region (in degrees, 0 to 360 longitude).
@@ -204,7 +204,7 @@ For regional skill evaluation, we recommend computing the Ranked Probability Sco
 The RPSS is computed as:
 
 .. math::
-\mathrm{RPSS} = 1 - \frac{\mathrm{RPS}{\text{forecast}}}{\mathrm{RPS}{\text{climatology}}}
+    \mathrm{RPSS} = 1 - \frac{\mathrm{RPS}{\text{forecast}}}{\mathrm{RPS}{\text{climatology}}}
 
 A complete example demonstrating this workflow is provided below.
 
