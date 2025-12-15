@@ -204,6 +204,7 @@ For regional skill evaluation, we recommend computing the Ranked Probability Sco
 The RPSS is computed as:
 
 .. math::
+
     \mathrm{RPSS} = 1 - \frac{\mathrm{RPS}{\text{forecast}}}{\mathrm{RPS}{\text{climatology}}}
 
 A complete example demonstrating this workflow is provided below.
