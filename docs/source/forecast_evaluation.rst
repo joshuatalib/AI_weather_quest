@@ -205,7 +205,7 @@ The RPSS is computed as:
 
 .. math::
 
-    \mathrm{RPSS} = 1 - \frac{\mathrm{RPS}{\text{forecast}}}{\mathrm{RPS}{\text{climatology}}}
+    \mathrm{RPSS} = 1 - \frac{\mathrm{RPS}_{\text{fcst}}}{\mathrm{RPS}_{\text{clim}}}
 
 A complete example demonstrating this workflow is provided below.
 
@@ -304,3 +304,12 @@ Once the forecast initialization dates are retrieved, the period-aggregated scor
 
    # work out single RPSS score. This score is the computed period-aggregated score.  
    single_RPSS_score = 1-(all_fc_RPS_combined_avg.values/all_clim_RPS_combined_avg.values)
+
+To compute a period-aggregated RPSS over a specific region, you can apply a regional mask to the RPS values before appending them to the ``all_fc_RPS`` and ``all_clim_RPS`` lists. This ensures that the RPSS reflects skill over the chosen geographic domain.
+
+For example, the following code would be used to compute RPSSs across the Tropics.
+
+.. code-block:: python
+
+  RPS_fc_region = forecast_evaluation.apply_region_mask(RPS_fc,30.0,-30.0,0.0,360.0)
+  RPS_clim_region = forecast_evaluation.apply_region_mask(RPS_clim,30.0,-30.0,0.0,360.0)
