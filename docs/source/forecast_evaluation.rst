@@ -186,6 +186,28 @@ The **work_out_RPSS** function executes the following tasks:
 
 The final output is the same RPSS displayed on the AI Weather Quest website.
 
+Calculate regional skill scores
+^^^^^^^^^^^^^^^^^^^^^^^^
+  In addition to globally-averaged metrics, regional RPSSs can be computed using the function **apply_region_mask**. This allows skill to be evaluated over user-defined geographic domains. 
+
+Regional masking is applied by specifying a latitude–longitude bounding box:
+
+.. code-block:: python
+
+  masked_score = forecast_evaluation.work_out_RPSS(<<RPS>>,N,S,W,E)
+
+- **RPS** (*xarray.DataArray*): Global ranked probability scores.
+- **N,S,W,E** (*float*): Northern, southern, western, and eastern boundaries of the region (in degrees, 0 to 360 longitude).
+
+For regional skill evaluation, we recommend computing the Ranked Probability Scores (RPS) separately for the forecast and the climatology, applying the regional mask to each, and then calculating the RPSS explicitly. This ensures consistency with the standard RPSS definition and allows greater flexibility in post-processing.
+
+The RPSS is computed as:
+
+.. math::
+\mathrm{RPSS} = 1 - \frac{\mathrm{RPS}{\text{forecast}}}{\mathrm{RPS}{\text{climatology}}}
+
+A complete example demonstrating this workflow is provided below.
+
 Example evaluating a single forecast
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
