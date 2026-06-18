@@ -28,7 +28,12 @@ The module includes three overarching plotting functions:
 3. **plot_MJO_forecast**  
    Creates a collection of Wheeler–Hendon phase-space diagrams illustrating forecasted probabilities for each phase of the Madden–Julian Oscillation (MJO). 
 
-All three functions generate figures that match the visual standards, colour schemes, and layout conventions of the AI Weather Quest forecast portal, ensuring consistency between locally generated outputs and publicly displayed forecasts.
+All three functions generate figures that match the visual standards, colour schemes, and layout conventions of the AI Weather Quest forecast portal, ensuring consistency between locally generated outputs and publicly displayed forecasts. 
+
+Each function also supports the following optional arguments:
+
+- **local_destination** (*str*, optional): The path to the local folder where the figure will be saved. If not provided, the figure will be saved in the current working directory.
+- **format** (*str*, optional, default = `'jpg'`): The output file format (e.g. `'jpg'`, `'png'`, `'pdf'`).
 
 1. Plotting quintile-based probabilistic forecasts
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -39,11 +44,10 @@ The *plot_forecast* function only has three inputs:
 
 .. code-block:: python
 
-  plot_forecast(<<forecast>>,<<quintile_num>>,local_destination=None)
+  plot_forecast(<<forecast>>,<<quintile_num>>,local_destination=None,format=`'jpg'`)
 
 - **forecast** (*xarray.dataarray*): Your submitted forecast to the AI Weather Quest.
 - **quintile_num** (*int* or *str*): The selected quintile where 1 refers to  < 20%, 2 refers to 20 <= x < 40% etc.
-- **local_destination** (*str*, optional): Path to the local folder where the figure will be saved. If not provided, the figure will be saved in the current working directory.
 
 The figure filename is automatically created using forecast attributes. The format is:
 
@@ -94,15 +98,11 @@ The *plot_TS_forecast* function has two inputs:
 
 .. code-block:: python
 
-   plot_TS_forecast(<<forecast>>, local_destination=None)
+   plot_TS_forecast(<<forecast>>, local_destination=None, format=`'jpg'`)
 
 - **forecast** (*xarray.DataArray*):  
   A submitted tropical storm forecast following the AI Weather Quest data template.  
   The data are expected to represent tercile-based probabilities for each basin.
-
-- **local_destination** (*str*, optional):  
-  Path to the local directory where the generated figure will be saved.  
-  If not provided, the figure is saved in the current working directory.
 
 The figure filename is automatically generated using metadata extracted from the forecast object and follows the format:
 
@@ -154,15 +154,11 @@ The *plot_MJO_forecast* function has two inputs:
 
 .. code-block:: python
 
-   plot_MJO_forecast(<<forecast>>, local_destination=None)
+   plot_MJO_forecast(<<forecast>>, local_destination=None, format=`'jpg'`)
 
 - **forecast** (*xarray.DataArray*):  
   A submitted MJO forecast following the AI Weather Quest data template.  
   The array is expected to contain probabilistic values for MJO phases 1 to 8 and the inactive state, for multiple forecast lead times.
-
-- **local_destination** (*str*, optional):  
-  Path to the local directory where the generated figure will be saved.  
-  If not provided, the figure is saved in the current working directory.
 
 The figure filename is automatically generated using forecast metadata and follows the format:
 
