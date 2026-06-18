@@ -25,7 +25,7 @@ Retrieving Datasets for Forecast Evaluation
 In addition to forecasted probabilities, three datasets are required for forecast evaluation. These datasets, and the important functions within the **retrieve_evaluation_data** module for downloading such data, include:
 
 - Weekly statistics of observed atmospheric characteristics: **retrieve_weekly_obs**.
-- Climatological quintile boundaries which are compared against observed conditions: **retrieve_20yr_quintile_clim**
+- Climatological quantile boundaries which are compared against observed conditions: **retrieve_20yr_quintile_clim**
 - Land fraction values which are used to exclude oceanic grid points: **retrieve_land_sea_mask**
 
 .. important::  
@@ -51,11 +51,17 @@ The **retrieve_weekly_obs** function downloads the requested set of observations
   - ``'tas'``: Near-surface temperature
   - ``'mslp'``: Mean sea level pressure
   - ``'pr'``: Precipitation
+  - ``'TS'``: Number of tropical storm days
+  - ``'MJO'``: Daily MJO characteristics within that week
 
 - **password** (str): The forecast submission password provided in your registration email.
 - **local_destination** (*str*): The local destination for the downloaded dataset. If unspecified, the dataset is saved within the working directory.
 
-The **retrieve_weekly_obs** function returns the dataset used for forecast evaluation. All variables are derived using **ERA5T** data. Weekly-mean temperature and pressure are calculated from six-hourly data (00, 06, 12, and 18 UTC), whilst hourly data is used for precipitation.
+The **retrieve_weekly_obs** function returns the dataset used for forecast evaluation. 
+
+With the exception of **TS**, all variables are derived using **ERA5T** data. Weekly-mean temperature and mean sea level pressure are calculated from six-hourly data (00, 06, 12, and 18 UTC), while hourly data is used for precipitation and MJO characteristics. 
+
+The number of tropical storm days (**TS**) is derived from the latest release of **IBTRACS v04r01**. These values are cross-checked against tropical storm observation files received at ECMWF from Regional Specialised Meteorological Centres (RSMCs) in BUFR format to ensure consistency.
 
 **Filename Convention**
 
@@ -63,9 +69,9 @@ Downloaded observations follow this naming pattern:
 
 .. code-block:: bash
 
-   <<variable>>_obs_<<weekly_statistic>>_<<date>>
+   <<variable>>_obs_<<temporal_statistic>>_<<date>>
 
-where **weekly_statistic** is either 'WEEKLYMEAN' (for temperature and pressure) or 'WEEKLYSUM' (for precipitation). 
+where **temporal_statistic** is either 'WEEKLYMEAN' (for temperature and pressure), 'WEEKLYSUM' (for precipitation and TSdays) or 'DAILY (for MJO). 
 
 Climatological quintile boundaries
 ^^^^^^^^^^^^^^^^^^^^^^^^
@@ -82,6 +88,8 @@ The *retrieve_20yr_quintile_clim* function downloads climatological quintile bou
   - ``'tas'``: Near-surface temperature
   - ``'mslp'``: Mean sea level pressure
   - ``'pr'``: Precipitation
+  - ``'TSdays'``: Number of tropical storm days
+  - ``'MJO'``: Daily MJO characteristics within that week
 
 - **password** (str): The forecast submission password provided in your registration email.
 - **local_destination** (*str*): The local destination for the downloaded dataset. If unspecified, the dataset is saved within the working directory.
