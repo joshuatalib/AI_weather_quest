@@ -44,7 +44,7 @@ The *plot_forecast* function only has three inputs:
 
 .. code-block:: python
 
-  plot_forecast(<<forecast>>,<<quintile_num>>,local_destination=None,format=`'jpg'`)
+  plot_forecast(<<forecast>>,<<quintile_num>>,local_destination=None,format='jpg')
 
 - **forecast** (*xarray.dataarray*): Your submitted forecast to the AI Weather Quest.
 - **quintile_num** (*int* or *str*): The selected quintile where 1 refers to  < 20%, 2 refers to 20 <= x < 40% etc.
@@ -98,7 +98,7 @@ The *plot_TS_forecast* function has two inputs:
 
 .. code-block:: python
 
-   plot_TS_forecast(<<forecast>>, local_destination=None, format=`'jpg'`)
+   plot_TS_forecast(<<forecast>>, local_destination=None, format='jpg')
 
 - **forecast** (*xarray.DataArray*):  
   A submitted tropical storm forecast following the AI Weather Quest data template.  
@@ -154,7 +154,7 @@ The *plot_MJO_forecast* function has two inputs:
 
 .. code-block:: python
 
-   plot_MJO_forecast(<<forecast>>, local_destination=None, format=`'jpg'`)
+   plot_MJO_forecast(<<forecast>>, local_destination=None, format='jpg')
 
 - **forecast** (*xarray.DataArray*):  
   A submitted MJO forecast following the AI Weather Quest data template.  
