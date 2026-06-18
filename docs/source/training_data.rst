@@ -17,13 +17,12 @@ The following datasets have been made easily accessible:
 
 .. important::  
    
-   Updates to training data will be performed with a latency of three months.  
-
+   Updates to ERA5 and IBTrACS-derived training data will be performed with a latency of three and twelve months respectively.  
 Importing the Retrieve Training Data Module
 --------------------------------------------
 To download post-processed data, you will need functions from the `retrieve_training_data.py` module. The key function within this module is:
 
-- **retrieve_annual_training_data**: Download annual files containing either: weekly statistics for temperature (tas), mean sea level pressure (mslp) or precipitation (pr); daily MJO characteristics; or weekly totals of tropical storm days.
+- **retrieve_annual_training_data**: Download annual files containing either: weekly statistics for temperature, mean sea level pressure or precipitation; daily MJO characteristics; or weekly totals of tropical storm days.
 
 To import the necessary module, use the following Python code:
 
