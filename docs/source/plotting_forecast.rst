@@ -138,7 +138,7 @@ The following example demonstrates how to generate and save a tropical storm pro
 
 Below is an example figure showing tercile-based probabilities of tropical storm days for each active basin during the forecast period. The template forecast was initialised on 28th May 2026.
 
-.. figure:: TS_20260528_p1_ECMWFtest_ECtesting.pdf
+.. figure:: TS_20260528_p1_ECMWFtest_ECtesting.jpg
    :alt: Tercile-based tropical storm probability forecast
    :width: 85%
    :align: center
@@ -199,7 +199,7 @@ The following example demonstrates how to generate and save an MJO phase probabi
 
 Below is an example figure showing forecast probabilities for each MJO phase at multiple lead times. The forecast was initialised on 28th May 2026 and is based on ECMWF dynamical sub-seasonal predictions.
 
-.. figure:: MJO_20260528_ECMWFtest_ECtesting.pdf
+.. figure:: MJO_20260528_ECMWFtest_ECtesting.jpg
    :alt: Wheeler–Hendon diagram showing MJO phase probabilities
    :width: 85%
    :align: center
