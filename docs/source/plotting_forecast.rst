@@ -4,7 +4,7 @@ Forecast Plotting
 Importing the Forecast Plotting Module
 ----------------------------------------
 
-To help participants visualize their sub-seasonal forecasts, the *AI-WQ-Package* includes a dedicated module called **plotting_forecast**. This module allows you to easily plot Quest-compatiable forecasts.
+To help participants visualize their sub-seasonal forecasts, the *AI-WQ-Package* includes a dedicated module called **plotting_forecast**. This module allows you to easily plot Quest-compatible forecasts.
 
 To import the necessary plotting function, use:
 
@@ -136,9 +136,9 @@ The following example demonstrates how to generate and save a tropical storm pro
    plot_TS_forecast(submitted_TS_forecast,
                     local_destination="/home/test_figures/")
 
-Below is an example figure showing tercile-based probabilities of tropical storm days for each active basin during the forecast period. The forecast was initialised on 4 January 2024 and corresponds to ECMWF dynamical sub-seasonal predictions.
+Below is an example figure showing tercile-based probabilities of tropical storm days for each active basin during the forecast period. The template forecast was initialised on 28th May 2026.
 
-.. figure:: mslp_20240104_p1_dynamicalECMWF_subseasonalFORECAST_quintile_100.jpg
+.. figure:: TS_20260528_p1_ECMWFtest_ECtesting.pdf
    :alt: Tercile-based tropical storm probability forecast
    :width: 85%
    :align: center
@@ -197,9 +197,9 @@ The following example demonstrates how to generate and save an MJO phase probabi
    plot_MJO_forecast(submitted_MJO_forecast,
                      local_destination="/home/test_figures/")
 
-Below is an example figure showing forecast probabilities for each MJO phase at multiple lead times. The forecast was initialised on 4 January 2024 and is based on ECMWF dynamical sub-seasonal predictions.
+Below is an example figure showing forecast probabilities for each MJO phase at multiple lead times. The forecast was initialised on 28th May 2026 and is based on ECMWF dynamical sub-seasonal predictions.
 
-.. figure:: mslp_20240104_p1_dynamicalECMWF_subseasonalFORECAST_quintile_100.jpg
+.. figure:: MJO_20260528_ECMWFtest_ECtesting.pdf
    :alt: Wheeler–Hendon diagram showing MJO phase probabilities
    :width: 85%
    :align: center
