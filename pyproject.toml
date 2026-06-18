@@ -1,10 +1,10 @@
 [project]
-name = "AI_WQ_package"
+name = "AI_WQ_package_Edition2"
 authors = [
   { name="Joshua Talib", email="joshuatalib@ecmwf.int" },
 ]
-version = "3.0.4"
-description = "A python package to support forecast submission, evaluation and access to FTP site for DESTIN-E S2S AI prediction project"
+version = "1.0.6"
+description = "EDITION2! A python package to support forecast submission, evaluation and access to FTP site for DESTIN-E S2S AI prediction project"
 readme = "README.md"
 requires-python = ">=3.8"
 classifiers = [
@@ -22,11 +22,11 @@ dependencies = [
                 "netCDF4>=1.7.2",
                 "requests>=2.32.2",
                 "matplotlib>=3.8",
-                "cartopy>=0.22",
+                "cartopy>=0.22"
 ]
 
 [project.urls]
-Homepage = "https://github.com/joshuatalib/AI_weather_quest"
+Homepage = "https://github.com/joshuatalib/AI_weather_quest_EDITION2"
 
 # build system
 [build-system]
