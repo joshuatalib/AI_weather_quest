@@ -197,7 +197,7 @@ The following example demonstrates how to generate and save an MJO phase probabi
    plot_MJO_forecast(submitted_MJO_forecast,
                      local_destination="/home/test_figures/")
 
-Below is an example figure showing forecast probabilities for each MJO phase at multiple lead times. The forecast was initialised on 28th May 2026 and is based on ECMWF dynamical sub-seasonal predictions.
+Below is an example figure showing forecast probabilities for each MJO phase at multiple lead times. The template forecast was initialised on 28th May 2026.
 
 .. figure:: MJO_20260528_ECMWFtest_ECtesting.jpg
    :alt: Wheeler–Hendon diagram showing MJO phase probabilities
