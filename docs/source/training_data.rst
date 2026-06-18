@@ -1,8 +1,7 @@
 Training Data
 ======================================
 
-Participants can use any observational, forecast or reanalysis dataset to develop their AI/ML sub-seasonal forecasting models. To facilitate initial model development, registered participants can download post-processed ERA5 or IBTrACS data. 
-
+Participants can use any observational, forecast or reanalysis dataset to develop their AI/ML sub-seasonal forecasting models. To facilitate initial model development, registered participants can download post-processed  `ERA5 <https://cds.climate.copernicus.eu/datasets/reanalysis-era5-pressure-levels?tab=overview>`_ or `IBTrACS <https://www.ncei.noaa.gov/products/international-best-track-archive>`_ data. 
 
 Accessing Available Data
 --------------------------------------
@@ -82,7 +81,8 @@ The MJO index is computed following the Wheeler and Hendon (2004) methodology, a
 - Computed a cosine-weighted meridional mean over the ±15 degrees latitude band, resulting in 144 longitude points per day for each variable. Longitudes are defined on a regular −180 to 177.5 degree grid (2.5 degree spacing), without duplicated endpoints, and are treated as a cyclic zonal dimension when computing EOFs and projecting anomalies.
 - Normalised each anomaly field by dividing each anomaly field by an observed normalisation factor computed in Wheeler and Hendon (2004) using data from 1979 to 2001. Normalisation factors are 15.1 W m-2 for OLR, and 1.81 and 4.81 m s-1 for zonal wind at 850 and 200 hPa respectively.
 - MJO characteristics are computed by projecting daily normalised ERA5 anomalies onto the observed climatological combined EOFs of Wheeler and Hendon (2004). Each computed PC index is normalised by observed standard deviations of RMM1 and RMM2.
-- Individual MJO files contain the following diagnostics:
+
+Individual MJO files contain the following diagnostics:
   - **RMM1 and RMM2**: The first two principal components obtained when projecting daily anomaly fields onto climatological EOF1 and EOF2.
   - **MJO amplitude**: Defined as sqrt(RMM1**2.0+RMM2**2.0)
   - **Phase angle**: The continuous angular position in (RMM1, RMM2) phase space. Phase angle is computed as arctan2(RMM2, RMM1).
@@ -90,28 +90,48 @@ The MJO index is computed following the Wheeler and Hendon (2004) methodology, a
 
 Tropical Storm Days Data Processing
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Tropical storm (TS) activity is derived from the IBTrACS v4.01 dataset using three-hourly observations. Sub-daily storm track data is processed to produce weekly counts of TS presence within predefined ocean basins.
 
-**NEED TO EXPLAIN TROPICAL STORM DAY PROCESSING**
+- Storm tracks are filtered to retain only observations with valid *usa_wind* values and wind speeds ≥ 17 m s⁻¹, consistent with the tropical storm threshold.
+- Storms days are analysed across four ocean basins:
+  - North Atlantic (ATL, 0° to 40°N, 100° to 20°W) 
+  - North-West Pacific (NWP, 0° to 40°N, 100° to 180°E)
+  - South-West Indian Ocean (SWIO, 0° to 40°S, 20° to 90°E) 
+  - South-East Indian Ocean (SEIO, 0° to 40°S, 90° to 160°E)
+- Three-hourly observations are aggregated to daily storm presence:
+  - A day is classified as a storm day if at least one three-hourly record within that day satisfies the wind threshold.
+  - Multiple qualifying observations within the same day are counted only once, preventing double counting.
+- A seven-day window is defined from the initial date. Daily storm presence is summed over seven days to compute the number of tropical storm days per basin per week.
 
+.. note::  
+   
+    Unlike ERA5-derived variables, the tropical storm days diagnostic is produced with an approximately one-year latency, reflecting the extended time required to verify and consolidate tropical storm characteristics within the IBTrACS dataset.
 
 Filename conventions
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-For each post-processed historical file, the following filename convention is used:
+With the exception of MJO characteristics, the following filename convention is used for each post-processed historical file:
 
 .. code-block:: linux
    
    <<variable>>_sevenday_<<weekly_statistic>>_<<year>>.nc
 
-- **variable** (*str*): The requested variable (tas, mslp or pr).
+- **variable** (*str*): The requested variable.
 - **weekly_statistic** (*str*): The statistic performed across a seven-day timescales. Options include:
 
   - ``'WEEKLYMEAN'``: Seven-day mean.
   - ``'WEEKLYSUM'``: Seven-day sum.
+  - ``'WEEKLYTSDAYS'``: Weekly totals of tropical storm days.
 
 - **year** (int): The corresponding year associated with the dataset.
 
-**ADD FILENAME CONVENTION FOR MJO AND TS.**
+For daily MJO characteristics, the following filename convention is used:
+
+.. code-block:: linux
+
+   MJO_DAILY_<<year>>.nc
+
+- **year** (int): The corresponding year associated with the dataset.
 
 Summary
 -------------
