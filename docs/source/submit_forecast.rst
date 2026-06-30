@@ -6,7 +6,7 @@ Importing Forecast Submission Functions
 To submit a forecast to the AI Weather Quest, you will need to use two key functions provided in the `forecast_submission.py` module of the `AI_WQ_package`. Important functions include:
 
 - **AI_WQ_create_empty_dataarray**: Create an empty *xarray.DataArray* for forecast submission.
-- **AI_WQ_forecast_submission**: Submit your populated DataArray to the AI Weather Quest.
+- **AI_WQ_forecast_submission**: Submit your populated *xarray.DataArray* to the AI Weather Quest.
 
 Use the following line to import these necessary functions:
 
@@ -36,7 +36,7 @@ Use the `AI_WQ_create_empty_dataarray` function to generate a suitable DataArray
 
 .. note::  
   
-   To create an empty *xarray.DataArray*, a forecast initialisation date that occurs on a Thursday must be given. 
+   The forecast initialisation date must correspond to a Thursday (see `forecast submission schedule <https://aiweatherquest.ecmwf.int/submitting-forecasts/>`__).
 
 - **fc_period** (*str* or *int*): The selected forecasting window (`more details on the forecast submission schedule <https://aiweatherquest.ecmwf.int/submitting-forecasts/>`__). Valid options are:
   
@@ -56,7 +56,7 @@ Use the `AI_WQ_create_empty_dataarray` function to generate a suitable DataArray
 
 .. note::  
   
-   Your latest team name and model name can be viewed on your team’s login page. 
+   Your latest team name and model name can be viewed on your team’s dashboard. 
 
 - **password** (*str*): The forecast submission password provided in your registration email.
 
@@ -74,15 +74,15 @@ Use the `AI_WQ_create_empty_dataarray` function to generate a suitable DataArray
 
    tas_p1_fc = forecast_submission.AI_WQ_create_empty_dataarray('tas', '20260813', '1', 'EC', 'extrange', <<password>>)
 
-This creates an empty DataArray for near-surface (2 m) temperature predictions issued on 13th August 2026 for the first sub-seasonal forecasting window under the team name *EC* and associated with the model name *extrange*.
+This creates an empty *DataArray* for near-surface (2 m) temperature predictions issued on 13th August 2026 for the first sub-seasonal forecasting window under the team name *EC* and associated with the model name *extrange*.
 
 Understanding Empty DataArray Coordinates
 -----------------------------------------
-Before populating the empty *DataArray* with forecasted probabilities, you should understand key components of its coordinate structure. Below we outline specifics of each variable, however each DataArray also contains coordinates describing the forecast initialisation date and weekly forecast window. These time coordinates are stored in `np.datetime64` format.
+Before populating the empty *DataArray* with forecasted probabilities, you should understand key components of its coordinate structure. Below we outline specifics of each variable, however each *DataArray* also contains coordinates describing the forecast initialisation date and weekly forecast window. These time coordinates are stored in `np.datetime64` format.
 
 .. important::
 
-   When populating the DataArray with forecasted probabilities, adhere to these predefined coordinates to maintain compatibility with the AI Weather Quest submission process and plotting tools.
+   When populating the *DataArray* with forecasted probabilities, adhere to these predefined coordinates to maintain compatibility with the AI Weather Quest submission process and plotting tools.
 
 Global quintile-based probabilistic forecasts (tas, mslp and pr)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -95,7 +95,7 @@ Global quintile-based probabilistic forecasts (tas, mslp and pr)
   - `0.4`, `0.6`, `0.8`: Include probabilities where the lower limit is the previous quintile value (e.g., `0.4` includes probabilities `0.2 <= x < 0.4`).
   - `1.0`: Includes probabilities >= 0.8.
 
-The DataArray also has coordinates describing the forecast initialisation date and weekly forecast window. These time coordinates are stored in `np.datetime64` format.
+The *DataArray* also has coordinates describing the forecast initialisation date and weekly forecast window. These time coordinates are stored in `np.datetime64` format.
 
 Tercile-based probabilities of tropical storm days (TS)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -145,7 +145,7 @@ The coordinate structure is defined as follows:
 
 - **valid_time**: A sequence of valid forecast times corresponding to fixed lead times from the forecast issue date. These are provided as `np.datetime64` values and represent forecasts at days 8, 15, 22 and 29. Whilst we accept forecasts at week 1 and 2 lead times, only weeks 3 and 4 will be evaluated for public leaderboards.
 
-Each element of the DataArray should contain the probability that the MJO is in a given phase at a given lead time. For each valid time, probabilities across the *MJO_phase* dimension are expected to sum to 1. These values can be subsequently visualised using Wheeler–Hendon phase-space diagrams via the *plot_MJO_forecast* function.
+Each element of the *DataArray* should contain the probability that the MJO is in a given phase at a given lead time. For each valid time, probabilities across the *MJO_phase* dimension are expected to sum to 1. These values can be subsequently visualised using Wheeler–Hendon phase-space diagrams via the *plot_MJO_forecast* function.
 
 Populating the DataArray
 ------------------------
@@ -157,11 +157,11 @@ Once an empty *DataArray* is created and its structure is understood, fill the *
 
    tas_p1_fc.values = forecast_array
 
-Here, the `tas_p1_fc.values` attribute is filled with the data stored in `forecast_array`. For global forecast variables (tas, mslp and pr), the input array must have the shape `(5, 121, 240)` corresponding to the quintile, latitude, and longitude coordinates respectively, For predictions of tropical storm daysand MJO phase probabilities, the input arrays must have shape dimensions `(3,4)`, `(9,4)` respectively.
+Here, the `tas_p1_fc.values` attribute is filled with the data stored in `forecast_array`. For global forecast variables (tas, mslp and pr), the input array must have the shape `(5, 121, 240)` corresponding to the quintile, latitude, and longitude coordinates respectively. For predictions of tropical storm days and MJO phase probabilities, the input arrays must have shape dimensions `(3,4)`, `(9,4)` respectively.
 
 Submitting a Forecast to the AI Weather Quest
 ---------------------------------------------
-Once you have populated the DataArray with forecasted probabilities, you can submit your forecast to the AI Weather Quest. Use the `AI_WQ_forecast_submission` function:
+Once you have populated the *DataArray* with forecasted probabilities, you can submit your forecast to the AI Weather Quest. Use the `AI_WQ_forecast_submission` function:
 
 .. code-block:: python
 
@@ -169,8 +169,8 @@ Once you have populated the DataArray with forecasted probabilities, you can sub
 
 **Parameters**:
 
-- **populated_DataArray** (*xarray.DataArray*): The filled DataArray.
-- All other variables are the same as those used when creating the empty DataArray.
+- **populated_DataArray** (*xarray.DataArray*): The filled *DataArray*.
+- All other variables are the same as those used when creating the empty *DataArray*.
 
 .. warning::
 
@@ -201,14 +201,13 @@ For *MJO* forecasts:
 - The MJO_phase coordinate contains 9 integer values: 0 (inactive) and 1 to 8 (active phases).
 - When summed across the first axis (the MJO_phase axis), the total probability equals 1.0.
 
-After verification, the function returns a validated *xarray.DataArray* and generates the corresponding submission filename. The DataArray conforms to ECMWF submission requirements and can then be transferred to the ECMWF-hosted ECBox service.
+After verification, the function returns a validated *xarray.DataArray* and generates the corresponding submission filename. The *DataArray* conforms to ECMWF submission requirements and can then be transferred to the ECMWF-hosted ECBox service.
 
 .. note::
 
    When you submit a forecast, it will be assigned an *origin* ID and an *expver* ID:
-      - The origin ID is derived from the first four and last two characters of your team name, followed by your model submission number.
-      - The expver ID consists of your full team name followed by your model submission number.
-   On the ECMWF-hosted sub-seasonal forecast portal, your forecast will be identified by the expver ID. Additionally, a temporary *netcdf* file will be saved in your working directory during submission. 
+      - The origin ID is derived from the first four and last two characters of your team name, followed by a two-digit number.
+      - The expver ID consists of your full team name followed by a two-digit number.
 
 **Example**:
 
@@ -228,9 +227,10 @@ You can check whether your forecast has been successfully submitted to the AI We
 
 **Parameters**:
 
-- All variables are the same as those used when creating the empty DataArray.
+- All variables are the same as those used when creating the empty *DataArray*.
 
 The function will print out three lines. The first and second will state whether the teamname and modelname is registered to the AI Weather Quest, respectively, whilst the third will inform you whether your file has been successfully submitted to the Quest. If there is an issue, the third line will display an error message. The common issues will be:
+
 - If the file does not exist.
 - If the forecast initialisation date is invalid, and the directory is not found.
 
