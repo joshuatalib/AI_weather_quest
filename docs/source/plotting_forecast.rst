@@ -15,12 +15,12 @@ To import the necessary plotting function, use:
 Plotting a forecast
 ---------------------------------------
 
-The ``plotting_forecast`` module provides a set of high-level plotting functions designed to visualise forecasts contributed to the AI Weather Quest. These functions generate figures that are consistent with the format and styling used on the AI Weather Quest forecast portal.
+The ``plotting_forecast`` module provides a set of high-level plotting functions designed to visualise forecasts contributed to the AI Weather Quest. 
 
 The module includes three overarching plotting functions:
 
 1. **plot_forecast**  
-   Generates a spatial map displaying probabilistic forecasts for a specified quantile range.
+   Generates a spatial map displaying probabilistic forecasts of near-surface temperature (tas), mean sea level pressure (mslp) or precipitation (pr) for a specified quantile range.
 
 2. **plot_TS_forecast**  
    Produces a map showing tercile-based forecast probabilities for the number of tropical storm days across each active ocean basin. 
@@ -28,7 +28,7 @@ The module includes three overarching plotting functions:
 3. **plot_MJO_forecast**  
    Creates a collection of Wheeler–Hendon phase-space diagrams illustrating forecasted probabilities for each phase of the Madden–Julian Oscillation (MJO). 
 
-All three functions generate figures that match the visual standards, colour schemes, and layout conventions of the AI Weather Quest forecast portal, ensuring consistency between locally generated outputs and publicly displayed forecasts. 
+All three functions generate figures that match the visual standards, colour schemes, and layout conventions of the `AI Weather Quest forecast portal <https://charts.ecmwf.int/ai-weather-quest/>`_, ensuring consistency between locally generated outputs and publicly displayed forecasts. 
 
 Each function also supports the following optional arguments:
 
@@ -38,9 +38,9 @@ Each function also supports the following optional arguments:
 1. Plotting quintile-based probabilistic forecasts
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The *plot_forecast* function generates a map showing the probability forecast for a given quantile range. 
+The *plot_forecast* function generates a map showing a probability forecast of either tas, mslp or pr for a given quantile range. 
 
-The *plot_forecast* function only has three inputs:
+The *plot_forecast* function only has two necessary inputs:
 
 .. code-block:: python
 
@@ -66,7 +66,7 @@ where:
 
 .. note::  
    
-   The *plot_forecast* function only works with dataarray templates provided through the *AI-WQ-package*.
+   The *plot_forecast* function only works with *Dataarray* templates provided through the *AI-WQ-package*.
 
 Example Usage
 """"""""""""""""""""""""""""""""""""""""
@@ -94,7 +94,7 @@ The *plot_TS_forecast* function generates a global map showing tercile-based pro
 
 The function displays forecast probabilities using coloured bars within predefined ocean basin regions. Basins that are seasonally inactive during the forecast period are highlighted using a greyed-out box labelled *Inactive*.
 
-The *plot_TS_forecast* function has two inputs:
+The *plot_TS_forecast* function has a single necessary input:
 
 .. code-block:: python
 
@@ -136,7 +136,7 @@ The following example demonstrates how to generate and save a tropical storm pro
    plot_TS_forecast(submitted_TS_forecast,
                     local_destination="/home/test_figures/")
 
-Below is an example figure showing tercile-based probabilities of tropical storm days for each active basin during the forecast period. The template forecast was initialised on 28th May 2026.
+Below is an example figure showing tercile-based probabilities of tropical storm days for each active basin during the forecast period. The template forecast was initialised on 28th May 2026 and shows predicted probabilities of tercile-based tropical storm days for week commencing 15th June 2026.
 
 .. figure:: TS_20260528_p1_ECMWFtest_ECtesting.jpg
    :alt: Tercile-based tropical storm probability forecast
@@ -150,7 +150,7 @@ The *plot_MJO_forecast* function generates a figure with multiple Wheeler–Hend
 
 Each panel represents a different forecast lead time and displays the probability (%) of the MJO occupying each of the eight standard phases, along with the probability of an inactive MJO state. Phase probabilities are visualised using shaded sectors coloured according to a predefined probability colour scale.
 
-The *plot_MJO_forecast* function has two inputs:
+The *plot_MJO_forecast* function has a single necessary input:
 
 .. code-block:: python
 
