@@ -70,8 +70,7 @@ The **retrieve_weekly_obs** function returns the dataset used for forecast evalu
 
 All variables mentioned above are derived using **ERA5T** data. Weekly-mean temperature and mean sea level pressure are calculated from six-hourly data (00, 06, 12, and 18 UTC), while hourly data is used for precipitation. 
 
-**Filename Convention**
-
+****Filename convention****
 Downloaded observations follow this naming pattern:
 
 .. code-block:: bash
@@ -152,7 +151,7 @@ After downloading the required weekly observations, climatological quintile boun
 
 The **forecast evaluation** module provides two key functions for computing Ranked Probability Skill Scores (RPSSs):
 
-- **conditional_obs_probs**: Generates an **xarray.dataarray** containing observed probabilities within climatological quintile boundaries.
+- **conditional_obs_probs**: Generates an **xarray.DataArray** containing observed probabilities within climatological quintile boundaries.
 - **work_out_RPSS**: Computes the global area-weighted ranked probability skill score, benchmarking forecasts against climatology.
 
 Compute observed probabilities
@@ -187,7 +186,7 @@ The **work_out_RPSS** function computes the global area-weighted RPSS, measuring
 
 The **work_out_RPSS** function executes the following tasks:
 
-- Computes a ranked probability score by comparing the cumulative sum of forecast and observed probabilities.
+- Computes the Ranked Probability Score (RPS) from the cumulative forecast and observed probability distributions.
 - Calculates the climatological ranked probability score by comparing the cumulative sum of climatological and observed probabilities.
 - Determines the RPSS with respect to climatology.
 - Applies a land-sea mask when the variable is either temperature or precipitation. Values are set to NaN at grid points with land fraction values less than 50%.
@@ -240,7 +239,7 @@ Continuing from the example above, the following code illustrates the evaluation
 Example computing period-aggregated scores
 """""""""""""""""""""""""""""""""""""""""""""""""""""
 
-Participants can compute period-aggregated scores by aggregating forecasts over multiple initialization dates within a competitive period. This requires retrieving a list of forecast initialization dates.
+Participants can compute period-aggregated scores by aggregating forecasts over multiple initialisation dates within a competitive period. This requires retrieving a list of forecast initialisation dates.
 
 The function **retrieve_all_period_fcdates** retrieves all initialisation dates within the same competitive period up to a given forecast initialisation date:
 
@@ -251,7 +250,7 @@ The function **retrieve_all_period_fcdates** retrieves all initialisation dates 
 - **fc_init_date** (*str*): The latest forecast initialisation date in the format *YYYYMMDD* (e.g., ‘20250519’ for 19th May 2025).
 - **password** (*str*): The forecast submission password provided in your registration email.
 
-Once the forecast initialization dates are retrieved, the period-aggregated score is computed by iterating through each date:
+Once the forecast initialisation dates are retrieved, the period-aggregated score is computed by iterating through each date:
 
 .. code-block:: python
 
@@ -359,15 +358,13 @@ The **retrieve_daily_MJO_obs** function downloads observed MJO characteristics f
     * Phase 0: Weak MJO (amplitude < 1)
     * Phases 1–8: Active MJO phases
 
-    If ``False``, returns the raw daily MJO observation dataset for the requested date.
+    If ``False``, returns raw daily MJO diagnostics for the requested date.
 
 The ``retrieve_daily_MJO_obs`` function returns the observed MJO state for the requested day. Observations are derived from ERA5T-based MJO diagnostics and are downloaded from the weekly observation file corresponding to the Monday of the requested week.
 
 When ``phase_probs=True``, the output is returned as an ``xarray.DataArray`` containing probabilities for each MJO phase. The observed phase is assigned a probability of ``1.0`` and all other phases ``0.0``.
 
-Filename Convention
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
+**Filename convention**
 Downloaded daily MJO observation files follow this naming pattern:
 
 .. code-block:: text
@@ -398,9 +395,7 @@ The returned data contain probabilities for:
 
 These probabilities sum to one and represent the climatological likelihood of observing each MJO phase on the requested date.
 
-Filename Convention
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
+**Filename convention**
 Downloaded MJO climatology files follow this naming pattern:
 
 .. code-block:: text
@@ -425,7 +420,7 @@ This example retrieves all necessary datasets for evaluating MJO forecasts on 18
 
 Evaluating MJO forecasts using retrieved data
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-Once downloading both observed and climatological MJO characteristics, it is trivial to compute the Brier Skill Score for a single forecast.
+Once both observed and climatological MJO characteristics have been downloaded, it is trivial to compute the Brier Skill Score for a single forecast.
 
 The **forecast evaluation** module contains the **calculate_MJO_brier_score** function for computing the Brier Score for both forecasted and climatological predictions.
 
@@ -439,7 +434,6 @@ The **calculate_MJO_brier_score** function computes the Brier Score for MJO phas
    bs = forecast_evaluation.calculate_MJO_brier_score(<<fc_pbs>>,<<obs_pbs>>)
 
 - **fc_pbs (xarray.DataArray):** Forecast probabilities for each MJO phase. Probabilities should be defined over the ``MJO_phase`` dimension.
-
 - **obs_pbs (xarray.DataArray):** Observed MJO phase probabilities.
 
 The ``calculate_MJO_brier_score`` function returns an ``xarray.DataArray`` containing the Brier Score, calculated as the mean squared error between the forecast and observed probabilities across all MJO phases.
@@ -471,7 +465,7 @@ Example evaluating an MJO forecast
    # compute global RPSS
    BSS = 1 - BS_fc/BS_clim
 
-Period-averaged BSSs are calculated by averaging all BSSs at each individual forecast lead time.
+Period-averaged BSSs are calculated as the mean of individual forecast BSS values over all forecast initialisation dates within the competitive period.
 
 Tropical storm days (TS)
 ---------------------------------------------------
@@ -512,8 +506,7 @@ The **retrieve_weekly_obs** function returns the dataset used for forecast evalu
 
 The number of tropical storm days (**TS**) is derived from the latest release of **IBTRACS v04r01**. These values are cross-checked against tropical storm observation files received at ECMWF from Regional Specialised Meteorological Centres (RSMCs) in BUFR format to ensure consistency.
 
-**Filename Convention**
-
+****Filename convention****
 Downloaded observations follow this naming pattern:
 
 .. code-block:: bash
@@ -554,16 +547,16 @@ Example: Retrieving required datasets
    # Download historical tercile boundaries 
    tercile_clim = retrieve_evaluation_data.retrieve_20yr_quantile_clim('20260615','TS',<<password>>)
 
-This example retrieves all necessary datasets for evaluating tropical storm day forecasts for the week starting June 19th 2026.
+This example retrieves all necessary datasets for evaluating tropical storm day forecasts for the week starting June 15th 2026.
 
 
 Evaluating TS forecasts using retrieved data
----------------------------------------------------
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 After downloading weekly observations of tropical storm days and climatological tercile boundaries, you can evaluate your forecast.
 
 The **forecast evaluation** module provides two key functions for computing Ranked Probability Skill Scores (RPSSs) for tropical storm days:
 
-- **conditional_obs_probs**: Generates an **xarray.dataarray** containing observed probabilities within climatological tercile boundaries.
+- **conditional_obs_probs**: Generates an **xarray.DataArray** containing observed probabilities within climatological tercile boundaries.
 - **calculate_RPSS_TS**: Computes ranked probability skill score for each tropical storm basin, benchmarking forecasts against climatology.
 
 Compute observed probabilities
@@ -572,10 +565,10 @@ The *conditional_obs_probs* function determines observed probabilities within a 
 
 .. code-block:: python
 
-  obs_pbs = forecast_evaluation.conditional_obs_probs(<<obs>>,<<quintile_bounds>>)
+  obs_pbs = forecast_evaluation.conditional_obs_probs(<<obs>>,<<tercile_bounds>>)
 
 - **obs** (*xarray.DataArray*): Weekly observations.
-- **quintile_bounds** (*xarray.DataArray*): Climatological tercile boundaries.
+- **tercile_bounds** (*xarray.DataArray*): Climatological tercile boundaries.
 
 Calculate Ranked Probability Skill Score
 """""""""""""""""""""""""""""""""""""""""""""""""
@@ -583,9 +576,9 @@ The **calculate_RPSS_TS** function computes RPSS for each tropical storm basin i
 
 .. code-block:: python
 
-  RPSS_global_area_weighted = forecast_evaluation.calculate_RPSS_TS(<<fc_pbs>>,<<obs_pbs>>)
+  RPSS = forecast_evaluation.calculate_RPSS_TS(<<fc_pbs>>,<<obs_pbs>>)
 
-- **fc_pbs** (*xarray.DataArray*): Predicted probabilities between quintile boundaries.
+- **fc_pbs** (*xarray.DataArray*): Predicted probabilities between tercile boundaries.
 - **obs_pbs** (*xarray.DataArray*): Observed probabilities (computed using **conditional_obs_probs**).
 
 The **calculate_RPSS_TS** function computes a ranked probability score by comparing the cumulative sum of forecast and observed probabilities. It also calculates the climatological ranked probability score by comparing the cumulative sum of climatological and observed probabilities. With both these ranked probability scores, it then determines the RPSS with respect to climatology.
