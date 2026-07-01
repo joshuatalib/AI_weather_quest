@@ -594,7 +594,6 @@ The final output for each basin should be the same RPSS displayed on the AI Weat
 
 Example evaluating a TS forecast
 """""""""""""""""""""""""""""""""""""""""
-
 .. code-block:: python
 
    from AI_WQ_package import forecast_evaluation
