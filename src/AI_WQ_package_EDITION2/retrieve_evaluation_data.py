@@ -18,13 +18,15 @@ def get_previous_monday(date_obj):
     return date_obj
 
 def get_previous_monday_with_choice(date_obj):
-    prev_monday = get_previous_monday(date_obj)
-    choice = input("Do you want to continue with this adjusted date? (y/n): ").strip().lower()
-    if choice != 'y':
-        print("Operation aborted.")
-        raise ValueError("Can only recieve historical observations for dates commencing on a Monday.")
-        return date_obj
-    return prev_monday
+    if date_obj.weekday() != 0:
+        prev_monday = get_previous_monday(date_obj)
+        choice = input("Do you want to continue with this adjusted date? (y/n): ").strip().lower()
+        if choice != 'y':
+            print("Operation aborted.")
+            raise ValueError("Can only recieve historical observations for dates commencing on a Monday.")
+            return date_obj
+        return prev_monday
+    return date_obj
 
 def change_lat_long_coord_names(da):
     da = da.rename({'lat':'latitude'})
@@ -85,7 +87,7 @@ def retrieve_land_sea_mask(password,local_destination=None):
 
 def retrieve_20yr_quantile_clim(date,variable,password,local_destination=None):
     '''
-    For Edition 2, changing function name to quantile climatology as introducing TS storm days terciles and MJO probabilities. All other variables, near-surface temperature, mean sea level pressure and precipitation remain as quintile probabilites.
+    For Edition 2, changing function name to quantile climatology as introducing TS storm days terciles. All other variables, near-surface temperature, mean sea level pressure and precipitation remain as quintile probabilites.
     '''
     # get year of date variable. #######
     
@@ -108,7 +110,7 @@ def retrieve_20yr_quantile_clim(date,variable,password,local_destination=None):
     elif variable == 'pr':
         filename = f'{variable}_20yrCLIM_WEEKLYSUM_quintiles_{date}.nc'
     elif variable == 'TS': # added TS metric
-        filename == '{variable}_20yrCLIM_WEEKLYTSDAYS_terciles_{date}.nc'
+        filename = f'{variable}_20yrCLIM_WEEKLYTSDAYS_terciles_{date}.nc'
 
     if local_destination:
         local_filename = f'{local_destination}/{filename}'
@@ -173,7 +175,7 @@ def retrieve_weekly_obs(date,variable,password,local_destination=None):
     date = datetime.strftime(date_obj,'%Y%m%d') # reload date in case it has changed
 
     # check variable is valid
-    check_fc_submission.check_variable_in_list(variable,['tas','mslp','pr','MJO','TS']) # Edition 2 includes MJO and TCfreq
+    check_fc_submission.check_variable_in_list(variable,['tas','mslp','pr','TS']) # Edition 2 includes TS
 
     #### copy across single day climatological file ####
     # create a local filename ###
