@@ -70,7 +70,7 @@ The **retrieve_weekly_obs** function returns the dataset used for forecast evalu
 
 All variables mentioned above are derived using **ERA5T** data. Weekly-mean temperature and mean sea level pressure are calculated from six-hourly data (00, 06, 12, and 18 UTC), while hourly data is used for precipitation. 
 
-****Filename convention****
+**Filename convention**
 Downloaded observations follow this naming pattern:
 
 .. code-block:: bash
