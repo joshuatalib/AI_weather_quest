@@ -7,18 +7,24 @@ from dateutil.relativedelta import relativedelta
 from AI_WQ_package_EDITION2 import check_fc_submission
 import ftplib
 import os
+from pathlib import Path
 
 def get_previous_monday(date_obj):
     if date_obj.weekday() != 0:  # Monday is 0
         prev_monday = date_obj - timedelta(days=date_obj.weekday())
         print(f"Warning: The date provided ({date_obj.date()}) is not a Monday.")
         print(f"Adjusting to the previous Monday: {prev_monday.date()}")
-        choice = input("Do you want to continue with this adjusted date? (y/n): ").strip().lower()
-        if choice != 'y':
-            print("Operation aborted.")
-            raise ValueError("Can only recieve historical observations for dates commencing on a Monday.")
         return prev_monday
     return date_obj
+
+def get_previous_monday_with_choice(date_obj):
+    prev_monday = get_previous_monday(date_obj)
+    choice = input("Do you want to continue with this adjusted date? (y/n): ").strip().lower()
+    if choice != 'y':
+        print("Operation aborted.")
+        raise ValueError("Can only recieve historical observations for dates commencing on a Monday.")
+        return date_obj
+    return prev_monday
 
 def change_lat_long_coord_names(da):
     da = da.rename({'lat':'latitude'})
@@ -87,8 +93,6 @@ def retrieve_20yr_quantile_clim(date,variable,password,local_destination=None):
     check_fc_submission.is_valid_date(date)
     # get a data obj
     date_obj = datetime.strptime(date,'%Y%m%d')
-    # check that the date obj is a Monday and if not, check that the user wants the previous Monday's data
-    #date_obj = get_previous_monday(date_obj) # no longer need to check whether it is a Monday. Daily quintile climatologies are uploaded!
     date = datetime.strftime(date_obj,'%Y%m%d') # reload date in case it has changed
 
     # get the year component
@@ -125,6 +129,37 @@ def retrieve_20yr_quantile_clim(date,variable,password,local_destination=None):
     # return the single day climatology.
     return single_day_clim
 
+def retrieve_20yr_MJO_clim(date,password,local_destination=None):
+    """
+    Download the 20-year daily MJO phase probability climatology
+    corresponding to a forecast start date.
+    """
+    # check date input in valid
+    check_fc_submission.is_valid_date(date)
+    # get a data obj
+    date_obj = datetime.strptime(date,'%Y%m%d')
+
+    # get the year component
+    year = date_obj.year
+    str_year = str(year)
+
+    filename = f'MJO_20yrCLIM_DAILYprobs_{date}.nc'
+
+    if local_destination:
+        local_filename = f'{local_destination}/{filename}'
+    else:
+        local_filename = filename
+
+    remote_path = f'/climatologies/{str_year}/{filename}'
+
+    ftp_or_ecbox_loading(remote_path,local_filename,password)
+
+    # downloaded single climatological file #### 
+    # open file using xarray.
+    MJO_clim = xr.open_dataarray(local_filename).squeeze().load()
+    # return the MJO climatological probs.
+    return MJO_clim
+
 def retrieve_weekly_obs(date,variable,password,local_destination=None):
     '''
     date = date of observational week
@@ -134,7 +169,7 @@ def retrieve_weekly_obs(date,variable,password,local_destination=None):
     # get a data obj
     date_obj = datetime.strptime(date,'%Y%m%d')
     # check that the date obj is a Monday and if not, check that the user wants the previous Monday's data
-    date_obj = get_previous_monday(date_obj)
+    date_obj = get_previous_monday_with_choice(date_obj)
     date = datetime.strftime(date_obj,'%Y%m%d') # reload date in case it has changed
 
     # check variable is valid
@@ -148,8 +183,6 @@ def retrieve_weekly_obs(date,variable,password,local_destination=None):
         filename = f'{variable}_obs_WEEKLYSUM_{date}.nc'
     elif variable == 'TS':
         filename = f'TSdays_obs_WEEKLYSUM_{date}.nc'
-    elif variable == 'MJO':
-        filename = f'{variable}_obs_DAILY_{date}.nc'
 
     if local_destination:
         local_filename = f'{local_destination}/{filename}'
@@ -171,6 +204,58 @@ def retrieve_weekly_obs(date,variable,password,local_destination=None):
     except:
         pass
     return weekly_obs
+
+def retrieve_daily_MJO_obs(date, password, local_destination=None,phase_probs=True):
+    """
+    Download and return the daily MJO observation for a given date.
+    """
+
+    # Validate requested date
+    check_fc_submission.is_valid_date(date)
+
+    requested_date = datetime.strptime(date, "%Y%m%d")
+
+    # Files are stored under the previous Monday
+    monday_date = get_previous_monday(requested_date)
+    monday_str = monday_date.strftime("%Y%m%d")
+
+    filename = f"MJO_obs_DAILY_{monday_str}.nc"
+
+    if local_destination:
+        local_filename = str(Path(local_destination) / filename)
+    else:
+        local_filename = filename
+
+    remote_path = f"/observations/{monday_str}/{filename}"
+
+    ftp_or_ecbox_loading(remote_path, local_filename, password)
+
+    # Open and select requested day
+    ds = xr.open_dataset(local_filename)
+
+    # Remove time bounds if present
+    ds = ds.drop_vars("time_bnds", errors="ignore")
+
+    daily_obs = ds.sel(time=requested_date)
+    daily_obs = daily_obs.load()
+
+    if phase_probs:
+        probs = np.zeros(9, dtype=float)
+
+        if daily_obs["amplitude"].item() < 1.0:
+            probs[0] = 1.0
+        else:
+            phase = int(daily_obs["phase"].item())
+            probs[phase] = 1.0
+        # return as xarray, same format as MJO climatology
+        probs_xr = xr.DataArray(probs,dims=["MJO_phase"],
+                coords={"MJO_phase": np.arange(9),"time": daily_obs.time},
+                name="MJO_obs_prob",
+                attrs={"Conventions": "CF-1.6","shortName": "MJOphase","units": "MJO_observed_probabilities"})
+
+        return probs_xr       
+    else:
+        return daily_obs
 
 def retrieve_all_period_fcdates(fc_init_date,password):
     local_filename = f'competition_dates_ED2_Aug25_Aug31.csv' # need to update competition dates file so it goes out further.

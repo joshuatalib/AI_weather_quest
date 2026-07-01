@@ -136,3 +136,8 @@ def work_out_RPSS(fc_pbs,obs_pbs,variable,land_sea_mask,quantile_dim='quintile')
     print (RPSS_wrt_clim.values)
     
     return RPSS_wrt_clim
+
+def calculate_MJO_brier_score(fc_pbs,obs_pbs):
+    return ((fc_pbs-obs_pbs)**2.0).mean('MJO_phase')
+
+

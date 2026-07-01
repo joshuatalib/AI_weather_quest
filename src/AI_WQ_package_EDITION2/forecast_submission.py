@@ -182,10 +182,10 @@ def AI_WQ_create_empty_dataarray(variable,fc_start_date,fc_period,teamname,model
         fc_issue_date = fc_start_date[:4]+'-'+fc_start_date[4:6]+'-'+fc_start_date[6:]
 
         # alongside defining the forecast issue date, define the forecasting period in days from forecasting issue date.
-        forecast_lags = np.array((8,15,22,29))
+        forecast_lags = np.array((7,14,21,28))
 
         # empty data
-        empty_data = np.empty((9,4)) # time, day 8, 15, 22 and 29
+        empty_data = np.empty((9,4)) # time, day 7, 14, 21, 28
 
         # dimension attributes
         MJO_phases = np.arange(9) # Zero = inactive, one to eight = MJO phases
@@ -205,7 +205,7 @@ def AI_WQ_create_empty_dataarray(variable,fc_start_date,fc_period,teamname,model
                             MJO_phase=(['MJO_phase'],MJO_phases,MJO_attrs),
                             forecast_issue_date=fc_issue_time,
                             ),
-                attrs=dict(**data_specs,description=variable+' prediction from '+teamname+' using '+modelname+' for forecasts at day 8, 15, 22 and 29',
+                attrs=dict(**data_specs,description=variable+' prediction from '+teamname+' using '+modelname+' for forecasts at day 7, 14, 21, 28',
                     Conventions='CF-1.6',
                     shortName=shortName,
                     originating_centre=origin_id,
