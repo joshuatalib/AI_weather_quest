@@ -13,7 +13,7 @@ The following datasets have been made easily accessible:
    - Weekly-accumulated total precipitation (mm week\ :sup:`-1`)
 
 - `ERA5 <https://cds.climate.copernicus.eu/datasets/reanalysis-era5-pressure-levels?tab=overview>`_-derived Madden-Julian Oscillation (MJO) characteristics.
-- `IBTrACS <https://www.ncei.noaa.gov/products/international-best-track-archive>`_ weekly-total of tropical storm days. 
+- `IBTrACS <https://www.ncei.noaa.gov/products/international-best-track-archive>`_ weekly-total of tropical storm days per defined basin. 
 
 .. important::  
    
@@ -97,7 +97,7 @@ Tropical storm (TS) activity is derived from the IBTrACS v4.01 dataset using thr
   - North-West Pacific (NWP, 0° to 40°N, 100° to 180°E)
   - South-West Indian Ocean (SWIO, 0° to 40°S, 20° to 90°E) 
   - South-East Indian Ocean (SEIO, 0° to 40°S, 90° to 160°E)
-- Three-hourly observations are aggregated to daily storm presence:
+- Three-hourly observations are aggregated to daily storm presence per ocean basin:
   - A day is classified as a storm day if at least one three-hourly record within that day satisfies the wind threshold.
   - Multiple qualifying observations within the same day are counted only once, preventing double counting.
 - A seven-day window is defined from the initial date. Daily storm presence is summed over seven days to compute the number of tropical storm days per basin per week.
