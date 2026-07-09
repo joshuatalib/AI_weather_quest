@@ -1,26 +1,33 @@
-# AI_weather_quest
-To participate in the AI Weather Quest, you will need to install the AI-WQ-package Python package. This package requires Python version 3, and its source code is available on GitHub.
+# AI Weather Quest (`AI-WQ-package`)
 
-*AI-WQ-package* is a Python library designed to streamline participation in the AI Weather Quest. This guide provides step-by-step instructions on how to:
+> **Disclaimer:** This package is provided for research and competition participation purposes only. It is **not** intended for use in any operational or production context. It is not an officially supported ECMWF product. Use it at your own risk.
 
-- Submit a forecast to the AI Weather Quest competition.
-- Evaluate sub-seasonal forecasts using tools developed by the AI Weather Quest.
-- Download training data for initially developing sub-seasonal forecast models. 
+## Overview
 
-The package leverages capability developed through xarray for efficient data handling.
+`AI-WQ-package` is a Python library that supports participation in the **ECMWF AI Weather Quest**, a competition to develop and evaluate AI-based sub-seasonal forecasts.
 
-We highly recommend use the ReadTheDocs documentation as a guide for using this package: *https://ecmwf-ai-weather-quest.readthedocs.io/en/latest/*
+The package enables you to:
 
-Installation
---------------
+- **Submit forecasts** to the AI Weather Quest competition.
+- **Evaluate sub-seasonal forecasts** using tools developed by the AI Weather Quest team.
+- **Download training data** for developing sub-seasonal forecast models.
+
+It builds on [xarray](https://xarray.dev/) for efficient NetCDF-based data handling.
+
+---
+
+## Installation
+
 To install the *AI-WQ-package* on Linux, run the following command:
 
 **python3 -m pip install AI-WQ-package**
 
 For guidance on installing Python 3 or pip, refer to the official documentation.
 
-Dependencies
-------------
+---
+
+## Dependencies
+
 The AI-WQ-package requires the following dependencies:
 
 - **numpy** (version 1.23 or higher)
@@ -35,12 +42,42 @@ The AI-WQ-package requires the following dependencies:
 
 If these dependencies conflict with your current working environment, consider installing the package in a new virtual environment.
 
-Upgrading the Package
-----------------------
+---
+
+## Upgrading the Package
+
 To upgrade to the latest version, run:
 
 **python3 -m pip install --upgrade AI-WQ-package**
 
 This project is being actively developed. New updates may be released periodically with detailed annoucements given on the ECMWF-hosted forum.
 
+---
 
+## Software Maturity
+
+| Attribute        | Status |
+|------------------|--------|
+| **Maturity**     | [![Static Badge](https://github.com/ecmwf/codex/raw/refs/heads/main/Project%20Maturity/sandbox_badge.svg)](https://github.com/ecmwf/codex/raw/refs/heads/main/Project%20Maturity#sandbox) |
+| **Support level**| Best effort — no guaranteed response time |
+| **Operational use** | Not suitable for operational use |
+
+
+> \[!IMPORTANT\]
+> This software is **Sandbox**, is under active development, and subject to ECMWF's guidelines on [Software Maturity](https://github.com/ecmwf/codex/raw/refs/heads/main/Project%20Maturity). Releases are made periodically; announcements are posted on the [ECMWF Community Forum]([https://forum.ecmwf.int/](https://forum.ecmwf.int/c/workshop-and-events/ai-weather-quest/41)).
+
+---
+
+## Support
+
+This package is **not officially supported** by ECMWF. Community contributions and questions are welcome via GitHub Issues on the upstream repository or on the [ECMWF Community Forum]([https://forum.ecmwf.int/](https://forum.ecmwf.int/c/workshop-and-events/ai-weather-quest/41)).
+
+For general ECMWF-related enquiries, please use the [ECMWF Service Desk](https://support.ecmwf.int/).
+
+---
+
+## Documentation
+
+Full documentation is available on ReadTheDocs:
+
+**https://ecmwf-ai-weather-quest.readthedocs.io/en/latest/**
