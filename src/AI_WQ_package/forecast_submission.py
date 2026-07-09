@@ -8,8 +8,6 @@ import ftplib
 import os
 import pandas as pd
 import io
-#import sys
-#sys.path.append('/perm/ecm0847/S2S_comp/AI_WEATHER_QUEST_code/AI_weather_quest/src/AI_WQ_package/')
 from AI_WQ_package import check_fc_submission
 
 def create_ftp_dir_if_does_not_exist(ftp,dir_name):
