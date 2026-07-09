@@ -3,7 +3,7 @@ Forecast Evaluation
 
 Importing Forecast Evaluation Modules
 ----------------------------------------
-To ensure transparency and replicability throughout the AI Weather Quest, registered participants can evaluate their own submitted forecasts once the corresponding verification period has passed. The **AI-WQ-Package** provides dedicated modules for local forecast evaluation:
+To ensure transparency and replicability throughout the AI Weather Quest, registered participants can evaluate their own submitted forecasts once the forecast window has passed. The **AI-WQ-Package** provides dedicated modules for local forecast evaluation:
 
 - **retrieve_evaluation_data**: Downloads all the necessary datasets for local forecast evaluation. 
 - **forecast_evaluation**: Contains functions to compute forecast skill scores including area-weighted Ranked Probability Skill Scores (RPSSs) for spatial diagnostics and Brier Skill Scores (BSSs) for MJO predictions. 
@@ -21,9 +21,9 @@ To import these modules, use the following:
 
 The remainder of this page is organised by forecast type:
 
-1. **Global quintile-based probabilistic forecasts (tas, mslp, pr)**
-2. **Madden–Julian Oscillation (MJO) phase probability forecasts**
-3. **Tropical storm day (TS) forecasts**
+1. **Global quintile-based probability forecasts (tas, mslp, pr)**
+2. **Madden–Julian Oscillation phase probability forecasts (MJO)**
+3. **Tropical storm day tercile-based probability forecasts (TS)**
 
 Within each section, we describe how to retrieve the datasets required for forecast evaluation and demonstrate how to calculate skill scores using the same methodology employed in the official AI Weather Quest evaluation framework.
 
@@ -35,7 +35,7 @@ Retrieving datasets
 
 In addition to forecasted probabilities, three datasets are required for forecast evaluation. These datasets, and the important functions within the **retrieve_evaluation_data** module for downloading such data, include:
 
-- Weekly statistics of observed atmospheric characteristics: **retrieve_weekly_obs**.
+- Weekly statistics of observed atmospheric characteristics: **retrieve_weekly_obs**
 - Climatological quantile boundaries which are compared against observed conditions: **retrieve_20yr_quantile_clim**
 - Land fraction values which are used to exclude oceanic grid points: **retrieve_land_sea_mask**
 
@@ -45,7 +45,7 @@ In addition to forecasted probabilities, three datasets are required for forecas
 
 Weekly observations
 """"""""""""""""""""""
-The **retrieve_weekly_obs** function downloads the requested set of observations that are used for forecast evaluation.
+The *retrieve_weekly_obs* function downloads the requested set of observations that are used for forecast evaluation.
 
 .. code-block:: python
 
@@ -66,11 +66,12 @@ The **retrieve_weekly_obs** function downloads the requested set of observations
 - **password** (str): The forecast submission password provided in your registration email.
 - **local_destination** (*str*): The local destination for the downloaded dataset. If unspecified, the dataset is saved within the working directory.
 
-The **retrieve_weekly_obs** function returns the dataset used for forecast evaluation. 
+The *retrieve_weekly_obs* function returns the dataset used for forecast evaluation. 
 
 All variables mentioned above are derived using **ERA5T** data. Weekly-mean temperature and mean sea level pressure are calculated from six-hourly data (00, 06, 12, and 18 UTC), while hourly data is used for precipitation. 
 
 **Filename convention**
+
 Downloaded observations follow this naming pattern:
 
 .. code-block:: bash
@@ -139,7 +140,6 @@ Example: Retrieving required datasets
    obs = retrieve_evaluation_data.retrieve_weekly_obs('20250519','tas',<<password>>)
    # Download historical quintile boundaries 
    quintile_clim = retrieve_evaluation_data.retrieve_20yr_quantile_clim('20250519','tas',<<password>>)
-    
    # Download land-sea mask
    land_sea_mask = retrieve_evaluation_data.retrieve_land_sea_mask(<<password>>)
 
@@ -162,8 +162,8 @@ The *conditional_obs_probs* function determines observed probabilities within a 
 
   obs_pbs = forecast_evaluation.conditional_obs_probs(<<obs>>,<<quintile_bounds>>)
 
-- **obs** (*xarray.DataArray*): Weekly observations.
-- **quintile_bounds** (*xarray.DataArray*): Climatological quintile boundaries.
+- **obs** (*xarray.DataArray*): Weekly observations
+- **quintile_bounds** (*xarray.DataArray*): Climatological quintile boundaries
 
 Calculate Ranked Probability Skill Score
 """""""""""""""""""""""""""""""""""""""""""""""""""
@@ -224,7 +224,7 @@ A complete example demonstrating this workflow is provided below.
 Example evaluating a single forecast
 """""""""""""""""""""""""""""""""""""""""""""
 
-Continuing from the example above, the following code illustrates the evaluation of temperature forecasts for the week commencing 19th May 2025.
+Continuing from the example above, the following code illustrates the evaluation of temperature forecasts.
 
 .. code-block:: python
 
@@ -334,8 +334,8 @@ Retrieving datasets
 
 In addition to forecasted probabilities of each MJO phase, two datasets are required for evaluating MJO predictions. These datasets, and the important functions within the **retrieve_evaluation_data** module for downloading such data, include:
 
-- Daily MJO characteristics: **retrieve_daily_MJO_obs**.
-- Climatological MJO phase probabilities: **retrieve_20yr_MJO_clim**
+- Daily MJO characteristics: *retrieve_daily_MJO_obs*
+- Climatological MJO phase probabilities: *retrieve_20yr_MJO_clim*
 
 .. important::  
    
@@ -344,7 +344,7 @@ In addition to forecasted probabilities of each MJO phase, two datasets are requ
 Daily MJO characteristics
 """""""""""""""""""""""""""""""""
 
-The **retrieve_daily_MJO_obs** function downloads observed MJO characteristics for a requested date and returns either the observed MJO phase probabilities or the raw daily MJO observation. For AI Weather Quest evaluation, only the observed MJO phase probabilities is needed.
+The ``retrieve_daily_MJO_obs`` function downloads observed MJO characteristics for a requested date and returns either the observed MJO phase probabilities or the raw daily MJO observation. For AI Weather Quest evaluation, only the observed MJO phase probabilities is needed.
 
 .. code-block:: python
 
@@ -371,7 +371,7 @@ Downloaded daily MJO observation files follow this naming pattern:
 
    MJO_obs_DAILY_<monday_date>.nc
 
-where ``<monday_date>`` is the Monday corresponding to the week containing the requested date. For instance, MJO characteristics on the 2nd July 2026 will be stored in the 29th June 2026 file (``MJO_obs_DAILY_20260629.nc``).
+where ``<monday_date>`` is the Monday corresponding to the week containing the requested date. For instance, MJO characteristics on Thursday 2nd July 2026 will be stored in the Monday 29th June 2026 file (``MJO_obs_DAILY_20260629.nc``).
 
 Climatological phase probabilities
 """""""""""""""""""""""""""""""""""""""
@@ -506,7 +506,7 @@ The **retrieve_weekly_obs** function returns the dataset used for forecast evalu
 
 The number of tropical storm days (**TS**) is derived from the latest release of **IBTRACS v04r01**. These values are cross-checked against tropical storm observation files received at ECMWF from Regional Specialised Meteorological Centres (RSMCs) in BUFR format to ensure consistency.
 
-****Filename convention****
+**Filename convention**
 Downloaded observations follow this naming pattern:
 
 .. code-block:: bash
