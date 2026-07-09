@@ -1,6 +1,6 @@
 # AI Weather Quest (`AI-WQ-package`)
 
-> **Disclaimer:** This package is provided for research and competition participation purposes only. It is **not** intended for use in any operational or production context. It is not an officially supported ECMWF product. Use it at your own risk.
+> **Disclaimer:** This package is provided for research and competition participation purposes only. It is **not** intended for use in any operational or production context. It is not an officially supported ECMWF software product.
 
 ## Overview
 
@@ -63,14 +63,20 @@ This project is being actively developed. New updates may be released periodical
 | **Operational use** | Not suitable for operational use |
 
 
-> \[!IMPORTANT\]
-> This software is **Sandbox**, is under active development, and subject to ECMWF's guidelines on [Software Maturity](https://github.com/ecmwf/codex/raw/refs/heads/main/Project%20Maturity). Releases are made periodically; announcements are posted on the [ECMWF Community Forum]([https://forum.ecmwf.int/](https://forum.ecmwf.int/c/workshop-and-events/ai-weather-quest/41)).
+> [!IMPORTANT]
+> This software is **Sandbox**, is under active development, and subject to ECMWF's guidelines on [Software Maturity](https://github.com/ecmwf/codex/raw/refs/heads/main/Project%20Maturity). Releases are intended for testing, evaluation, and collaboration rather than production deployment.
+
+---
+
+## License
+
+This project is licensed under the **Apache License 2.0**. See the [LICENSE](LICENSE) file for the full text.
 
 ---
 
 ## Support
 
-This package is **not officially supported** by ECMWF. Community contributions and questions are welcome via GitHub Issues on the upstream repository or on the [ECMWF Community Forum]([https://forum.ecmwf.int/](https://forum.ecmwf.int/c/workshop-and-events/ai-weather-quest/41)).
+This package is **not officially supported** by ECMWF. Community contributions and questions are welcome via GitHub Issues on the upstream repository or on the [ECMWF Community Forum](https://forum.ecmwf.int/).
 
 For general ECMWF-related enquiries, please use the [ECMWF Service Desk](https://support.ecmwf.int/).
 
