@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2024 European Centre for Medium-Range Weather Forecasts (ECMWF)
+# SPDX-License-Identifier: Apache-2.0
+
 # script to check netCDF file for forecast submission
 import xarray as xr
 import numpy as np
@@ -79,7 +82,7 @@ def check_forecast_data_window(fc_start_date):
     date_obj = datetime.strptime(fc_start_date,'%Y%m%d')
     # date_obj should be a Thursday! In alignment with dynamical models.
     if date_obj.weekday() != 3:
-        raise ValueError(f"Forecast start date of {fc_start_date} is not a Thursday. All forecast start dates should be a Thursday to enable a direct comparison between AI/ML models and dynamical models.")
+        raise ValueError(f"Forecast start date of {fc_start_date} is not a Thursday. All forecast start dates should be a Thursday to enable a direct comparison between AI/ML models and dynamical forecast skill.")
 
     # check that it is within allotted time window
     # Start of Thursday to end of Sunday
@@ -95,7 +98,7 @@ def check_forecast_data_window(fc_start_date):
     if date_obj <= now <= end_of_next_sun:
         print ('forecast submitted within competition time window')
     else:
-        raise ValueError(f"You are not allowed to submit a forecast for the following forecast start date, {fc_start_date}, at this point in time. Allowed time window for this forecast start date is {fc_start_date} to {end_of_next_sun_str}")
+        raise ValueError(f"You are not allowed to submit a forecast for the following forecast start date, {fc_start_date}, at this point in time. Allowed time window for this forecast start date is between 0000 UTC on {fc_start_date} to 2359 UTC on {end_of_next_sun_str}.")
 
 def convert_fc_period_to_string(value):
     # convert the fc_period to a string for saving
@@ -252,13 +255,13 @@ def check_filename_characteristics(variable,fc_start_date,s2s_time_period,teamna
     return s2s_time_period
 
 
-def all_checks(data,variable,fc_start_date,s2s_time_period,teamname,modelname):
+ def all_checks(data,variable,fc_start_date,s2s_time_period,teamname,modelname):
     ''' This function performs all checks on submitted fields.
     Parameters:
         data (xarray.DataArray): xarray DataArray with forecasted probabilites in format (quintile, lat, long).
         variable (str): Saved variable. Options include 'tas', 'mslp' and 'pr'.
         fc_start_date (str): The forecast start date as a string in format '%Y%m%d', i.e. 20241118.
-        s2s_time_period (str or number): The two periods that we are requesting forecasts (Days 18–24 and Days 25–31) will be submitted as '1' or 1, i.e. '1' or 1. # the two values allowed, 1 or 2, to denote the two periods requested
+        s2s_time_period (str or number): The two periods that we are requesting forecasts (Days 18–24 and Days 25–31) will be submitted as '1' or 1, i.e. '1' or 1. # the two values allowed, 1 or 2.
         teamname (str): The teamname that was submitted during registration.
         modelname (str): Modelname for particular forecast. Teams are only allowed to submit three models each.
 
@@ -290,8 +293,3 @@ def all_checks(data,variable,fc_start_date,s2s_time_period,teamname,modelname):
     check_data_characteristics(data)
 
     return data, final_filename
-
-
-
-
-

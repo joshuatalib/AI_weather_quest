@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2024 European Centre for Medium-Range Weather Forecasts (ECMWF)
+# SPDX-License-Identifier: Apache-2.0
+
 # python code that will accept quintile, lat, long data and submit forecast to FTP site
 import xarray as xr
 import numpy as np
@@ -5,8 +8,6 @@ import ftplib
 import os
 import pandas as pd
 import io
-#import sys
-#sys.path.append('/perm/ecm0847/S2S_comp/AI_WEATHER_QUEST_code/AI_weather_quest/src/AI_WQ_package/')
 from AI_WQ_package import check_fc_submission
 
 def create_ftp_dir_if_does_not_exist(ftp,dir_name):
@@ -96,7 +97,7 @@ def AI_WQ_create_empty_dataarray(variable,fc_start_date,fc_period,teamname,model
     latitude = np.arange(90.0,-91.0,-1.5) # based on 1.5 deg grid
     longitude = np.arange(0.0,360.0,1.5)
 
-    # create an appropriate identity names. Unique_ID = origin (characters from teamname [first four + last six - filled with 'z' if needed]). expver_ID (teamname plus '01', '02' etc... where number denotes model number (based on names already in look-up table).
+    # create an appropriate identity names. Unique_ID = origin (characters from teamname [first four + last six - filled with 'z' if needed]). expver_ID (teamname plus '01', '02' etc... where number identifies model version) based on new or previous models from the team.
     origin_id, expver_id = update_table_unique_identifies(teamname,modelname,password)
 
     # work out forecast issue time
@@ -254,7 +255,7 @@ def update_table_unique_identifies(teamname,modelname,password):
     return str_identity, str_expver_id
 
 def AI_WQ_check_submission(variable,fc_start_date,fc_period,teamname,modelname,password):
-    ''' A function that checks whether a forecast has been successfully submitted to ECMWF. Please note, this function only checks the existence of a forecast and not whether the forecast will complete a full evaluation cycle.
+    ''' A function that checks whether a forecast has been successfully submitted to ECMWF. Please note, this function only checks the existence of a forecast and not whether the forecast will conform to the competition rules.
     '''
     # Check filename characteristics and output a string version of fc_period
     fc_period = check_fc_submission.check_filename_characteristics(variable,fc_start_date,fc_period,teamname,modelname)
@@ -280,4 +281,3 @@ def AI_WQ_check_submission(variable,fc_start_date,fc_period,teamname,modelname,p
             print(f"Directory '/forecast_submissions/{fc_start_date}' does not exist. Most likely not a valid forecast initialisation date")
         else:
             raise
-

@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2024 European Centre for Medium-Range Weather Forecasts (ECMWF)
+# SPDX-License-Identifier: Apache-2.0
+
 # a script that computes the previous 20-year climatology from daily values.
 import xarray as xr
 import numpy as np
@@ -227,5 +230,3 @@ def retrieve_all_competition_fcdates(fc_init_date,password,edition='1'):
     os.remove(local_filename) # once all initialisation dates have been extracted, remove the downloaded .csv file
 
     return all_fc_init_dates # return all the fc init dates
-
-
