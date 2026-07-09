@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2024 European Centre for Medium-Range Weather Forecasts (ECMWF)
+# SPDX-License-Identifier: Apache-2.0
+
 # a script that computes the previous 20-year climatology from daily values.
 import xarray as xr
 import numpy as np
@@ -58,7 +61,7 @@ def complete_20yr_quintiles(da,initial_rolling_window=7,date_window=[-4,-2,0,2,4
 
 # Function to compute the 20-year average for a specific year
 def compute_20yr_avg(weekly_means, current_year,start_date,end_date,date_window=[-4,-2,0,2,4]):
-    ''' Function that computes 20-year quintiles of DataArray (should have already been given altered to a weekly-mean). Will treat observational climatology in a similar manner to hindcast climatology. After taking 7-day rolling window, take a five day rolling window to average across multiple weeks. Seven-day rolling mean, and then five-day rolling-mean, is taken before computing average across the previous 20 years. 
+    ''' Function that computes 20-year quintiles of DataArray (should have already been given altered to a weekly-mean). Will treat observational climatology in a similar manner to hindcast climatology. 
 
     return: A full year of 20-year mean of rolling-mean values.
     '''
@@ -83,5 +86,3 @@ def compute_20yr_avg(weekly_means, current_year,start_date,end_date,date_window=
     full_year_quintiles = xr.concat(quintiles,dim='time')
 
     return full_year_quintiles
-
-
