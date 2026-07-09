@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+title: "AI Weather Quest"
+message: "If you use this software, please cite it using the metadata from this file."
+type: software
+authors:
+  - family-names: "Talib"
+    given-names: "Joshua"
+repository-code: "https://github.com/ecmwf/AI_weather_quest"
+url: "https://github.com/ecmwf/AI_weather_quest"
+license: "Apache-2.0"
