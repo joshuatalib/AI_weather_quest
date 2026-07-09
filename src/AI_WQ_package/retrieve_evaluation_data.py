@@ -196,3 +196,36 @@ def retrieve_all_period_fcdates(fc_init_date,password):
 
     return all_fc_init_dates # return all the fc init dates
 
+def retrieve_all_competition_fcdates(fc_init_date,password,edition='1'):
+    # get csv file from AI Weather Quest site.
+    # log onto FTP session and download .csv file
+    session = ftplib.FTP('ftp.ecmwf.int','ai_weather_quest',password)
+    local_filename = f'competition_dates_may23_to_may27.csv'
+    remote_path = f'competition_dates_may23_to_may27.csv'
+    # retrieve the full year file 
+    with open(local_filename,'wb') as f:
+        session.retrbinary(f"RETR {remote_path}", f.write)
+
+    print(f"File '{remote_path}' has been downloaded to successfully.")
+
+    session.quit()
+
+    # use pandas to read the csv file. 
+    df = pd.read_csv(local_filename)
+    df['Start date'] = pd.to_datetime(df['Start date'],format='%A %d-%b-%Y %H:%M',errors='coerce')
+
+    period_dates = df
+
+    if edition == '1':
+        start_date = '20250814' # can add further start dates at another point
+
+    # only collate dates where fc_init_date is smaller than or equal to Start date
+    selected_period_dates = period_dates[period_dates['Start date'] <= fc_init_date] # less or equal to requested date
+    selected_period_dates = selected_period_dates[selected_period_dates['Start date'] >= start_date]
+    all_fc_init_dates = selected_period_dates['Start date'].dt.strftime('%Y%m%d').tolist()
+
+    os.remove(local_filename) # once all initialisation dates have been extracted, remove the downloaded .csv file
+
+    return all_fc_init_dates # return all the fc init dates
+
+
