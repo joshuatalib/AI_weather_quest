@@ -11,8 +11,8 @@ project = 'AI_Weather_Quest'
 copyright = '2025, Joshua Talib + AI Weather Quest contributors'
 author = 'Joshua Talib'
 
-release = '1.0'
-version = '1.1.4'
+release = '3.9'
+version = '2.0.0'
 
 # -- General configuration
 
