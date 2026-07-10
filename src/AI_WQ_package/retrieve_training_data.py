@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2024 European Centre for Medium-Range Weather Forecasts (ECMWF)
+# SPDX-License-Identifier: Apache-2.0
+
 # a script that computes the previous 20-year climatology from daily values.
 import xarray as xr
 import numpy as np
@@ -81,4 +84,3 @@ def retrieve_annual_training_data(year,variable,password,local_destination=None)
     # open file using xarray. # removes time bounds
     full_year_obs = xr.open_dataset(local_filename).squeeze()
     return full_year_obs
-

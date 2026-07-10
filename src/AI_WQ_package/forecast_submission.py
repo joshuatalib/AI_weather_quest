@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2024 European Centre for Medium-Range Weather Forecasts (ECMWF)
+# SPDX-License-Identifier: Apache-2.0
+
 # python code that will accept quintile, lat, long data and submit forecast to FTP site
 import xarray as xr
 import numpy as np
@@ -5,12 +8,12 @@ import ftplib
 import os
 import pandas as pd
 import io
-from AI_WQ_package_EDITION2 import check_fc_submission
 from datetime import datetime
 import subprocess
 from sites.sdk.sites import Site, Authenticator
 from sites.sdk.sites.utils import FileType
 from pathlib import Path
+from AI_WQ_package import check_fc_submission
 
 def create_ftp_dir_if_does_not_exist(ftp,dir_name):
     """
@@ -472,7 +475,7 @@ def update_table_unique_identifies_ECBOX(teamname,modelname,password):
     return str_identity, str_expver_id
     
 def AI_WQ_check_submission(variable,fc_start_date,fc_period,teamname,modelname,password):
-    ''' A function that checks whether a forecast has been successfully submitted to ECMWF. Please note, this function only checks the existence of a forecast and not whether the forecast will complete a full evaluation cycle.
+    ''' A function that checks whether a forecast has been successfully submitted to ECMWF. Please note, this function only checks the existence of a forecast and not whether the forecast will conform to the competition rules.
     '''
     # Check filename characteristics and output a string version of fc_period
     fc_period = check_fc_submission.check_filename_characteristics(variable,fc_start_date,fc_period,teamname,modelname)
@@ -526,5 +529,6 @@ def AI_WQ_check_submission(variable,fc_start_date,fc_period,teamname,modelname,p
             print(f"File '{final_filename}' exists. "
                 "You have successfully submitted to the AI Weather Quest.")
         else:
-            print(f"Could not find '{final_filename}'. "
-                "Please try resubmitting to the AI Weather Quest.")
+            raise FileNotFoundError(
+                 f"Could not find '{final_filename}' after upload. "
+                  "Please try resubmitting to the AI Weather Quest.")
