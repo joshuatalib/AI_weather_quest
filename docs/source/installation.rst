@@ -6,17 +6,17 @@ To install the *AI-WQ-package* on Linux, run the following command:
 
    python3 -m pip install AI-WQ-package 
 
-To upgrade to the latest version, run:
-
-.. code-block:: bash
-
-   python3 -m pip install --upgrade AI-WQ-package 
-
 From August 10th 2026, the AI Weather Quest will be using `ECBox <https://sites.ecmwf.int/docs/public/services/ecbox/overview/>`_ functionality. To ensure capability with ECBox, please also install the *sites-toolkit* from the ECMWF repository:
 
 .. code-block:: bash
 
    python3 -m pip install sites-toolkit -i https://get.ecmwf.int/repository/pypi-all/simple
+
+To upgrade to the latest version, run:
+
+.. code-block:: bash
+
+   python3 -m pip install --upgrade AI-WQ-package 
 
 For guidance on installing `Python 3 <https://wiki.python.org/moin/BeginnersGuide/Download>`__ or `pip <https://pip.pypa.io/en/stable/installation/>`__, refer to the official documentation.
 
