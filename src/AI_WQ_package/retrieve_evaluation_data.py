@@ -290,7 +290,7 @@ def retrieve_all_period_fcdates(fc_init_date,password):
 
     os.remove(local_filename) # once all initialisation dates have been extracted, remove the downloaded .csv file
 
-    return all_fc_init_dates, idx # return all the fc init dates and idx of chunk
+    return all_fc_init_dates # return all the fc init dates
 
 def retrieve_all_competition_fcdates(fc_init_date,password,edition='1'):
     # get csv file from AI Weather Quest site.
