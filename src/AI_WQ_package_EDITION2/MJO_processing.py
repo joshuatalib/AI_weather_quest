@@ -1,4 +1,7 @@
-# python script that computes tercile-based climatology of TS days
+# SPDX-FileCopyrightText: 2024 European Centre for Medium-Range Weather Forecasts (ECMWF)
+# SPDX-License-Identifier: Apache-2.0
+
+# python script that 20 year climatology of MJO probabilities
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt

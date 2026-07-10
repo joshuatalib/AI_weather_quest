@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
-from AI_WQ_package_EDITION2 import check_fc_submission
+from AI_WQ_package import check_fc_submission
 import ftplib
 import os
 from pathlib import Path

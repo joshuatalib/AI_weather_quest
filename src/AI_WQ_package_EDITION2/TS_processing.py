@@ -1,9 +1,12 @@
+# SPDX-FileCopyrightText: 2024 European Centre for Medium-Range Weather Forecasts (ECMWF)
+# SPDX-License-Identifier: Apache-2.0
+
 # python script that computes tercile-based climatology of TS days
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import xarray as xr
-from AI_WQ_package_EDITION2 import forecast_submission, retrieve_training_data, plotting_forecast
+from AI_WQ_package import forecast_submission, retrieve_training_data, plotting_forecast
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 import sys
