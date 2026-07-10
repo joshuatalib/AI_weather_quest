@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: 2024 European Centre for Medium-Range Weather Forecasts (ECMWF)
+# SPDX-License-Identifier: Apache-2.0
+
 # script to plot AI Weather Quest quintile probability forecast
 from matplotlib.ticker import (MultipleLocator, FormatStrFormatter,
                                AutoMinorLocator)
@@ -11,7 +14,7 @@ import numpy as np
 import pandas as pd
 import os
 from datetime import datetime, timedelta
-from AI_WQ_package_EDITION2 import retrieve_training_data, retrieve_evaluation_data
+from AI_WQ_package import retrieve_training_data, retrieve_evaluation_data
 
 def all_plot_choices(ax,i):
     ax.add_feature(feature.BORDERS,facecolor='none',edgecolor='black',linewidth=0.5)
@@ -113,7 +116,7 @@ def get_forecast_attributes(single_quin):
     modelname = match.group(3)
 
     # figure title
-    fig_title = f'Probability of quintile range {quintile_label} for {fc_standard_name}. \n Forecast details: Initialisation date {fc_init_date}; forecast period: {fc_period_start} to {fc_period_end}; \n Teamname: {teamname}, Modelname: {modelname}.'
+    fig_title = f'Probability of quintile range {quintile_label} for {fc_standard_name}. \n Forecast details: Initialisation date {fc_init_date}; forecast period: {fc_period_start} to {fc_period_end}.\n Teamname = {teamname}, Modelname = {modelname}'
     sve_name = f'{variable}_{fc_init_date}_p{fcwin}_{teamname}_{modelname}_quintile_{quintile_svename}.jpg'
 
     return fig_title, sve_name
