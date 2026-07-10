@@ -316,8 +316,7 @@ def check_filename_characteristics(variable,fc_start_date,s2s_time_period,teamna
 
     return s2s_time_period
 
-
- def all_checks(data,variable,fc_start_date,s2s_time_period,teamname,modelname):
+def all_checks(data,variable,fc_start_date,s2s_time_period,teamname,modelname):
     ''' This function performs all checks on submitted fields.
     Parameters:
         data (xarray.DataArray): xarray DataArray with forecasted probabilites in format (quintile, lat, long).

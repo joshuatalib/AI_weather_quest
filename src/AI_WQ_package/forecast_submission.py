@@ -51,7 +51,7 @@ def create_ecbox_dir_if_does_not_exist(dir_name,password):
     remote_dir = f"{remote_base}/{dir_name}"
     result = content_manager.list(remote_path=remote_base,file_type=FileType.DIR)
 
-    existing_dirs = [f for f in result["files"]] # store existing directories as list.
+    existing_dirs = [f["path"] for f in result["files"]]
 
     if dir_name in existing_dirs:
         print(f"Directory '{dir_name}' already exists.")
