@@ -295,16 +295,9 @@ def retrieve_all_period_fcdates(fc_init_date,password):
 def retrieve_all_competition_fcdates(fc_init_date,password,edition='1'):
     # get csv file from AI Weather Quest site.
     # log onto FTP session and download .csv file
-    session = ftplib.FTP('ftp.ecmwf.int','ai_weather_quest',password)
-    local_filename = f'competition_dates_may23_to_may27.csv'
-    remote_path = f'competition_dates_may23_to_may27.csv'
-    # retrieve the full year file 
-    with open(local_filename,'wb') as f:
-        session.retrbinary(f"RETR {remote_path}", f.write)
-
-    print(f"File '{remote_path}' has been downloaded to successfully.")
-
-    session.quit()
+    local_filename = f'competition_dates_ED2_Aug25_Aug31.csv' # need to update competition dates file so it goes out further.
+    remote_path = f'competition_dates_ED2_Aug25_Aug31.csv'
+    ftp_or_ecbox_loading(remote_path,local_filename,password)
 
     # use pandas to read the csv file. 
     df = pd.read_csv(local_filename)
