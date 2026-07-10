@@ -4,15 +4,31 @@ To install the *AI-WQ-package* on Linux, run the following command:
 
 .. code-block:: bash
 
-   python3 -m pip install AI-WQ-package
+   python3 -m pip install AI-WQ-package 
+
+To upgrade to the latest version, run:
+
+.. code-block:: bash
+
+   python3 -m pip install --upgrade AI-WQ-package 
+
+From August 10th 2026, the AI Weather Quest will be using `ECBox <https://sites.ecmwf.int/docs/public/services/ecbox/overview/>`_ functionality. To ensure capability with ECBox, please also install the *sites-toolkit* from the ECMWF repository:
+
+.. code-block:: bash
+
+   python3 -m pip install sites-toolkit -i https://get.ecmwf.int/repository/pypi-all/simple
 
 For guidance on installing `Python 3 <https://wiki.python.org/moin/BeginnersGuide/Download>`__ or `pip <https://pip.pypa.io/en/stable/installation/>`__, refer to the official documentation.
+
+.. note::
+
+   This project is actively developed. Updates and announcements are shared on the
+   `ECMWF-hosted forum <https://forum.ecmwf.int/c/workshop-and-events/ai-weather-quest/41>`__.
 
 .. toctree::
    :maxdepth: 2
 
    dependencies
-   upgrading
 
 Dependencies
 ------------
@@ -29,17 +45,3 @@ The AI-WQ-package requires the following dependencies:
 - **cartopy** (versions 0.22 or higher)
 
 If these dependencies conflict with your current working environment, consider installing the package in a new virtual environment.
-
-Upgrading the Package
-----------------------
-To upgrade to the latest version, run:
-
-.. code-block:: bash
-
-   python3 -m pip install --upgrade AI-WQ-package
-
-.. note::
-
-   This project is being actively developed. New updates may be released periodically with detailed annoucements given on the `ECMWF-hosted forum <https://forum.ecmwf.int/c/workshop-and-events/ai-weather-quest/41>`__.
-
-

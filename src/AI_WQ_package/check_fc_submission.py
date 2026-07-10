@@ -172,6 +172,37 @@ def check_quintile_range(da):
 
     return da
 
+def check_tercile_range(da):
+    ''' function that checks that terciles within the dataarray are labelled 0.33, 0.66, and 1.0
+
+    Parameters:
+        da (xarray.DataArray): The DataArray to check.
+
+    Returns:
+        If the DataArray does not have terciles values equal to 0.33, 0.66, and 1.0, raises a value error.
+    '''
+    expected_terciles = np.arange(1,4)/3
+
+    # looping through possible tercile names
+    t_names = ['tercile', 'Tercile', 't', 'percentile', 'T']
+    tercile = None
+    for name in t_names:
+        if name in da.coords:
+            tercile = da[name] # extract the coordinate
+            tercile_vals = da[name].values # extract latitude values
+            print(f"Tercile found as '{name}'")
+            break
+
+    if tercile is None:
+        raise ValueError(f"Tercile coordinate not found in the dataset. Tried '{t_names}.'")
+
+    # check quintile values are similar (tolarance of 1e-8)
+    if not np.allclose(sorted(list(expected_terciles)), sorted(tercile_vals)):
+        raise ValueError(f"'{name}' coordinate values do not match the expected values. Found: {tercile_vals}, expected: {expected_terciles}.")
+
+    return da
+
+
 def check_and_convert_longitudes(ds):
     """
     Check if longitudes range from 0 to 360 and convert if necessary.
@@ -206,7 +237,7 @@ def check_and_convert_longitudes(ds):
         ds = ds.assign_coords({name: longitudes})  # Update the dataset's longitude coordinates with 0 to 360. 
     return ds
 
-def check_data_characteristics(da):
+def check_data_characteristics(da,variable,fc_start_date,s2s_time_period):
     # check all data is between 0.0 and 1.0
     all_within_range = True
    
@@ -219,16 +250,47 @@ def check_data_characteristics(da):
     else:
         raise ValueError(f"Submitted dataarray has values outside the range of 0 and 1. Nans are also permitted.")
 
-    # check data shape is (5,121,240)
-    expected_shape = (5, 121, 240)
+    if variable != 'MJO' and variable != 'TS':
+        # check data shape is (5,121,240) 
+        expected_shape = (5, 121, 240) # five probability ranges, global field
+    elif variable == 'MJO':
+        expected_shape = (9,4) # nine phases, four valid times
+    elif variable == 'TS':
+        expected_shape = (3,4) # three probability ranges, four basins
+        
     if da.shape != expected_shape:
         raise ValueError(f"DataArray shape is {da.shape}, but expected {expected_shape}.")
 
     # check all probabilities equal 1.0 when summing across axis.
     summed_values = da.sum(axis=0)
-    if not np.allclose(summed_values,1.0,atol=0.2):
-        raise ValueError("Values do not sum to 1.0 along the first axis.")
 
+    if variable == 'TS':
+        # work out which values should add to zero! 
+        if s2s_time_period == '2': # if week 4 lead time, subtract a week due to week 13 predictions!
+            start_fc_day = datetime.strptime(fc_start_date,'%Y%m%d') - timedelta(days=7)
+        else:
+            start_fc_day = datetime.strptime(fc_start_date,'%Y%m%d')
+        # if week 4 lead time, need to subtract a week
+        fc_month = start_fc_day.month
+   
+        # using knowledge of forecasted time, leave out certain basins
+        n_basins = 4
+        
+        # build active mask (same logic as plotting!)
+        active_mask = np.zeros(n_basins, dtype=bool)
+        
+        for j in range(n_basins):
+            if (fc_month in [6,7,8,9,10,11]) and (j <= 1): # ATL, NWP only
+                active_mask[j] = True
+            elif (fc_month in [12,1,2]) and (j >= 2): # SWIO, SEIO only
+                active_mask[j] = True
+            
+        if not np.allclose(summed_values[active_mask], 1.0, atol=0.2):
+            raise ValueError("Values do not sum to 1.0 along the first axis (active TS entries).")
+    else:
+        if not np.allclose(summed_values, 1.0, atol=0.2):
+            raise ValueError("Values do not sum to 1.0 along the first axis.")
+    
 def is_valid_date(input_str):
     try:
         # Attempt to parse the input string with the desired format
@@ -239,7 +301,7 @@ def is_valid_date(input_str):
 def check_filename_characteristics(variable,fc_start_date,s2s_time_period,teamname,modelname):
     # (1) first check submitted variables except for the dataset, i.e. components of the filename.
     # (1.a) check submitted variable name. - only allowed to submit 'tas', 'mslp' and 'pr'
-    check_variable_in_list(variable,['tas','mslp','pr'])
+    check_variable_in_list(variable,['tas','mslp','pr','MJO','TS']) # EDITION 2. Adding MJO and TC frequency diagnostics
 
     # (1.b) check the fc_start_date is appropriate format
     is_valid_date(fc_start_date)
@@ -248,7 +310,7 @@ def check_filename_characteristics(variable,fc_start_date,s2s_time_period,teamna
     s2s_time_period = convert_fc_period_to_string(s2s_time_period)
     check_variable_in_list(s2s_time_period,['1','2'])
 
-    # (1.d) TO ADD: CHECK THE TEAMNAME AND MODELNAME HAVE BEEN REGISTERED!
+    # (1.d) CHECK THE TEAMNAME AND MODELNAME HAVE BEEN REGISTERED!
     check_registered_teamname(teamname)
     check_registered_modelname(modelname)
 
@@ -274,22 +336,24 @@ def check_filename_characteristics(variable,fc_start_date,s2s_time_period,teamna
 
     # (2) Check the submitted xarray dataset.
     # (2.a) check forecast date is within appropriate range
-    if teamname != 'ECMWFtest': # during testing period, enabling any submission for ECMWF. Will be removed in Aug '25
+    if teamname != 'ECMWFtest': # during testing period, enabling any submission for ECMWF. 
         check_forecast_data_window(fc_start_date)
 
     # (2.b) check spatial components. - the components also check the domain size and the spacing between them (should be 1.0) for each.
-    # (2.bi) lat range [should be 90, -90 , 'degrees_north']
-    data = check_and_flip_latitudes(data)
-    # (2.bii) long range [should be 0 to 358.5,'degrees_east']
-    data = check_and_convert_longitudes(data)
-
-    # (2.c) check the quintile range 
-    data = check_quintile_range(data)    
+        # (2.bi) lat range [should be 90, -90 , 'degrees_north']
+    if variable != 'MJO' and variable != 'TS':
+        data = check_and_flip_latitudes(data)
+        # (2.bii) long range [should be 0 to 358.5,'degrees_east']
+        data = check_and_convert_longitudes(data)
+        # (2.c) check the quintile range 
+        data = check_quintile_range(data)
+    elif variable == 'TS':
+        data = check_tercile_range(data)
 
     # (2.d) check data characteristics
         # checks all data is between 0 and 1.0
-        # checks data shape is equal to (5, 121, 240)
+        # checks data shape is equal to (5, 121, 240) for global fields, (9,4) for MJO predictions (4 valid dates, 9 phases (inactive and phases 1 to 8)) and (3,4) for TS strike
         # checks probabilities equal 1.0 when summing across first axis (quintile)
-    check_data_characteristics(data)
+    check_data_characteristics(data,variable,fc_start_date,s2s_time_period)
 
     return data, final_filename

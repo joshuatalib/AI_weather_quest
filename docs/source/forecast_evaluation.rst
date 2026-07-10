@@ -3,10 +3,10 @@ Forecast Evaluation
 
 Importing Forecast Evaluation Modules
 ----------------------------------------
-To ensure transparency and replicability throughout the AI Weather Quest, registered participants can evaluate their own submitted forecasts after a forecast window has passed. The **AI-WQ-Package** provides dedicated modules for local forecast evaluation:
+To ensure transparency and replicability throughout the AI Weather Quest, registered participants can evaluate their own submitted forecasts once the forecast window has passed. The **AI-WQ-Package** provides dedicated modules for local forecast evaluation:
 
 - **retrieve_evaluation_data**: Downloads all the necessary datasets for local forecast evaluation. 
-- **forecast_evaluation**: Contains functions to compute area-weighted Ranked Probability Skill Scores (RPSSs). 
+- **forecast_evaluation**: Contains functions to compute forecast skill scores including area-weighted Ranked Probability Skill Scores (RPSSs) for spatial diagnostics and Brier Skill Scores (BSSs) for MJO predictions. 
 
 To import these modules, use the following:
 
@@ -17,15 +17,26 @@ To import these modules, use the following:
 
 .. important::
 
-  Evaluation at ECMWF will use the same functions and datasets supplied through these modules.
+  Evaluation performed at ECMWF for the AI Weather Quest will use the same functions and datasets supplied through these modules.
 
-Retrieving Datasets for Forecast Evaluation
----------------------------------------------------
+The remainder of this page is organised by forecast type:
+
+1. **Global quintile-based probability forecasts (tas, mslp, pr)**
+2. **Madden–Julian Oscillation phase probability forecasts (MJO)**
+3. **Tropical storm day tercile-based probability forecasts (TS)**
+
+Within each section, we describe how to retrieve the datasets required for forecast evaluation and demonstrate how to calculate skill scores using the same methodology employed in the official AI Weather Quest evaluation framework.
+
+Global quintile-based probabilistic forecasts (tas, mslp, pr)
+--------------------------------------------------------------
+
+Retrieving datasets 
+^^^^^^^^^^^^^^^^^^^^
 
 In addition to forecasted probabilities, three datasets are required for forecast evaluation. These datasets, and the important functions within the **retrieve_evaluation_data** module for downloading such data, include:
 
-- Weekly statistics of observed atmospheric characteristics: **retrieve_weekly_obs**.
-- Climatological quintile boundaries which are compared against observed conditions: **retrieve_20yr_quintile_clim**
+- Weekly statistics of observed atmospheric characteristics: **retrieve_weekly_obs**
+- Climatological quantile boundaries which are compared against observed conditions: **retrieve_20yr_quantile_clim**
 - Land fraction values which are used to exclude oceanic grid points: **retrieve_land_sea_mask**
 
 .. important::  
@@ -33,8 +44,8 @@ In addition to forecasted probabilities, three datasets are required for forecas
    When downloading historical atmospheric characteristics, the date should correspond to the beginning of the forecast window (i.e. day 19 or day 26) and not the forecast initialisation date (day 1). Additionally, participants will only be able to download weekly observations commencing on a Monday.
 
 Weekly observations
-^^^^^^^^^^^^^^^^^^^^^^^^
-The **retrieve_weekly_obs** function downloads the requested set of observations that are used for forecast evaluation.
+""""""""""""""""""""""
+The *retrieve_weekly_obs* function downloads the requested set of observations that are used for forecast evaluation.
 
 .. code-block:: python
 
@@ -46,7 +57,7 @@ The **retrieve_weekly_obs** function downloads the requested set of observations
    
    Participants should be able to download relevant observations from mid-January 2024.
 
-- **variable** (*str*): The requested atmospheric variable. Options are:
+- **variable** (*str*): The requested atmospheric variable. Options include:
   
   - ``'tas'``: Near-surface temperature
   - ``'mslp'``: Mean sea level pressure
@@ -55,26 +66,28 @@ The **retrieve_weekly_obs** function downloads the requested set of observations
 - **password** (str): The forecast submission password provided in your registration email.
 - **local_destination** (*str*): The local destination for the downloaded dataset. If unspecified, the dataset is saved within the working directory.
 
-The **retrieve_weekly_obs** function returns the dataset used for forecast evaluation. All variables are derived using **ERA5T** data. Weekly-mean temperature and pressure are calculated from six-hourly data (00, 06, 12, and 18 UTC), whilst hourly data is used for precipitation.
+The *retrieve_weekly_obs* function returns the dataset used for forecast evaluation. 
 
-**Filename Convention**
+All variables mentioned above are derived using **ERA5T** data. Weekly-mean temperature and mean sea level pressure are calculated from six-hourly data (00, 06, 12, and 18 UTC), while hourly data is used for precipitation. 
+
+**Filename convention**
 
 Downloaded observations follow this naming pattern:
 
 .. code-block:: bash
 
-   <<variable>>_obs_<<weekly_statistic>>_<<date>>
+   <<variable>>_obs_<<temporal_statistic>>_<<date>>
 
-where **weekly_statistic** is either 'WEEKLYMEAN' (for temperature and pressure) or 'WEEKLYSUM' (for precipitation). 
+where **temporal_statistic** is either 'WEEKLYMEAN' (for temperature and pressure) or 'WEEKLYSUM' (for precipitation). 
 
 Climatological quintile boundaries
-^^^^^^^^^^^^^^^^^^^^^^^^
+"""""""""""""""""""""""""""""""""""
 
-The *retrieve_20yr_quintile_clim* function downloads climatological quintile boundaries.
+The *retrieve_20yr_quantile_clim* function downloads climatological quintile boundaries.
 
 .. code-block:: python
 
-  clim_quintile_bounds = retrieve_evaluation_data.retrieve_20yr_quintile_clim(<<date>>,<<variable>>,<<password>>,local_destination=None)
+  clim_quintile_bounds = retrieve_evaluation_data.retrieve_20yr_quantile_clim(<<date>>,<<variable>>,<<password>>,local_destination=None)
 
 - **date** (*str*): The requested date for climatological quintile boundaries in format `YYYYMMDD` (e.g., `'20250519'` for 19th May 2025).
 - **variable** (*str*): The requested variable. Options are:
@@ -86,14 +99,14 @@ The *retrieve_20yr_quintile_clim* function downloads climatological quintile bou
 - **password** (str): The forecast submission password provided in your registration email.
 - **local_destination** (*str*): The local destination for the downloaded dataset. If unspecified, the dataset is saved within the working directory.
 
-The **retrieve_20yr_quintile_clim** function returns a dataset containing climatological quintile boundaries. Quintile boundaries have been calculated using the relevant weekly statistic (weekly-mean [tas, mslp]/weekly-sum [pr]) and collating observations from the past twenty years. To expand the sample size to 100 observations, we include data from +/- 4 days at two-day intervals around the requested date (i.e. Thursday (day -4), Saturday (day -2), Monday (day 0), Wednesday (day 2), Friday (day 4)). 
+The **retrieve_20yr_quantile_clim** function returns a dataset containing climatological quintile boundaries. Quintile boundaries have been calculated using the relevant weekly statistic (weekly-mean [tas, mslp]/weekly-sum [pr]) and collating observations from the past twenty years. To expand the sample size to 100 observations, we include data from +/- 4 days at two-day intervals around the requested date (i.e. Thursday (day -4), Saturday (day -2), Monday (day 0), Wednesday (day 2), Friday (day 4)). 
 
 .. important::  
    
    Climatological quintile boundaries are available at a daily resolution from 11th January 1999 to present day plus eight months. 
 
 Land fraction data
-^^^^^^^^^^^^^^^^^^^^^^^^
+""""""""""""""""""""""
 
 The *retrieve_land_sea_mask* function retrieves land fraction values from ECMWF.
 
@@ -116,8 +129,8 @@ This dataset is used to mask oceanic grid points when evaluating temperature and
    
    Land fraction values are not used when evaluating forecasts of mean sea level pressure. 
 
-Example: Retrieving Required Datasets
-^^^^^^^^^^^^^^^^^^^^^^^^
+Example: Retrieving required datasets
+""""""""""""""""""""""""""""""""""""""
 
 .. code-block:: python
 
@@ -126,36 +139,35 @@ Example: Retrieving Required Datasets
    # Download weekly observations
    obs = retrieve_evaluation_data.retrieve_weekly_obs('20250519','tas',<<password>>)
    # Download historical quintile boundaries 
-   quintile_clim = retrieve_evaluation_data.retrieve_20yr_quintile_clim('20250519','tas',<<password>>)
-    
+   quintile_clim = retrieve_evaluation_data.retrieve_20yr_quantile_clim('20250519','tas',<<password>>)
    # Download land-sea mask
    land_sea_mask = retrieve_evaluation_data.retrieve_land_sea_mask(<<password>>)
 
 This example retrieves all necessary datasets for evaluating near-surface temperature forecasts for the week starting May 19th 2025.
 
-Evaluating Forecasts Using Retrieved Data
----------------------------------------------------
-After downloading the required weekly observations, climatological quintile boundaries and land fraction values, you can now evaluate your forecast. 
+Evaluating global forecasts using retrieved data
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+After downloading the required weekly observations, climatological quintile boundaries and land fraction values, you can now evaluate your forecast.
 
 The **forecast evaluation** module provides two key functions for computing Ranked Probability Skill Scores (RPSSs):
 
-- **conditional_obs_probs**: Generates an **xarray.dataarray** containing observed probabilities within climatological quintile boundaries. 
+- **conditional_obs_probs**: Generates an **xarray.DataArray** containing observed probabilities within climatological quintile boundaries.
 - **work_out_RPSS**: Computes the global area-weighted ranked probability skill score, benchmarking forecasts against climatology.
 
 Compute observed probabilities
-^^^^^^^^^^^^^^^^^^^^^^^^
+""""""""""""""""""""""""""""""""""""""""""
 The *conditional_obs_probs* function determines observed probabilities within a given set of climatological quintile boundaries. The probability is 1 when an observation falls within the specified boundaries.
 
 .. code-block:: python
 
   obs_pbs = forecast_evaluation.conditional_obs_probs(<<obs>>,<<quintile_bounds>>)
 
-- **obs** (*xarray.DataArray*): Weekly observations.
-- **quintile_bounds** (*xarray.DataArray*): Climatological quintile boundaries.
+- **obs** (*xarray.DataArray*): Weekly observations
+- **quintile_bounds** (*xarray.DataArray*): Climatological quintile boundaries
 
 Calculate Ranked Probability Skill Score
-^^^^^^^^^^^^^^^^^^^^^^^^
-The **work_out_RPSS** function computes the global area-weighted RPSS, measuring forecast accuracy against climatology. 
+"""""""""""""""""""""""""""""""""""""""""""""""""""
+The **work_out_RPSS** function computes the global area-weighted RPSS, measuring forecast accuracy against climatology.
 
 .. code-block:: python
 
@@ -164,7 +176,7 @@ The **work_out_RPSS** function computes the global area-weighted RPSS, measuring
 - **fc_pbs** (*xarray.DataArray*): Predicted probabilities between quintile boundaries.
 - **obs_pbs** (*xarray.DataArray*): Observed probabilities (computed using **conditional_obs_probs**).
 - **variable** (*str*): The variables being evaluated. Options are:
-  
+
   - ``'tas'``: Near-surface temperature
   - ``'mslp'``: Mean sea level pressure
   - ``'pr'``: Precipitation
@@ -174,9 +186,9 @@ The **work_out_RPSS** function computes the global area-weighted RPSS, measuring
 
 The **work_out_RPSS** function executes the following tasks:
 
-- Computes a ranked probability score by comparing the cumulative sum of forecast and observed probabilities.
+- Computes the Ranked Probability Score (RPS) from the cumulative forecast and observed probability distributions.
 - Calculates the climatological ranked probability score by comparing the cumulative sum of climatological and observed probabilities.
-- Determines the RPSS with respect to climatology. 
+- Determines the RPSS with respect to climatology.
 - Applies a land-sea mask when the variable is either temperature or precipitation. Values are set to NaN at grid points with land fraction values less than 50%.
 - Computes the area-weighted RPSS.
 
@@ -187,8 +199,8 @@ The **work_out_RPSS** function executes the following tasks:
 The final output is the same RPSS displayed on the AI Weather Quest website.
 
 Calculate regional skill scores
-^^^^^^^^^^^^^^^^^^^^^^^^
-In addition to globally-averaged metrics, regional RPSSs can be computed using the function **apply_region_mask**. This allows skill to be evaluated over user-defined geographic domains. 
+""""""""""""""""""""""""""""""""""""""""""""
+In addition to globally-averaged metrics, regional RPSSs can be computed using the function **apply_region_mask**. This allows skill to be evaluated over user-defined geographic domains.
 
 Regional masking is applied by specifying a latitude–longitude bounding box:
 
@@ -197,7 +209,7 @@ Regional masking is applied by specifying a latitude–longitude bounding box:
   masked_score = forecast_evaluation.apply_region_mask(<<RPS>>,<<N>>,<<S>>,<<W>>,<<E>>)
 
 - **RPS** (*xarray.DataArray*): Global ranked probability scores.
-- **N,S,W,E** (*float*): Northern, southern, western, and eastern boundaries of the region (in degrees, 0 to 360 longitude).
+- **N, S, W, E** (*float*): Northern, southern, western, and eastern boundaries of the region (in degrees, 0 to 360 longitude).
 
 For regional skill evaluation, we recommend computing the Ranked Probability Scores (RPS) separately for the forecast and the climatology, applying the regional mask to each, and then calculating the RPSS explicitly. This ensures consistency with the standard RPSS definition and allows greater flexibility in post-processing.
 
@@ -210,9 +222,9 @@ The RPSS is computed as:
 A complete example demonstrating this workflow is provided below.
 
 Example evaluating a single forecast
-^^^^^^^^^^^^^^^^^^^^^^^^
+"""""""""""""""""""""""""""""""""""""""""""""
 
-Continuing from the example above, the following code illustrates the evaluation of temperature forecasts for the week commencing 19th May 2025. 
+Continuing from the example above, the following code illustrates the evaluation of temperature forecasts.
 
 .. code-block:: python
 
@@ -225,20 +237,20 @@ Continuing from the example above, the following code illustrates the evaluation
    global_RPSS = forecast_evaluation.work_out_RPSS(submitted_forecast,obs_pbs,'tas',land_sea_mask)
 
 Example computing period-aggregated scores
-^^^^^^^^^^^^^^^^^^^^^^^^
+"""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-Participants can compute period-aggregated scores by aggregating forecasts over multiple initialization dates within a competitive period. This requires retrieving a list of forecast initialization dates.
+Participants can compute period-aggregated scores by aggregating forecasts over multiple initialisation dates within a competitive period. This requires retrieving a list of forecast initialisation dates.
 
-The function **retrieve_all_period_fcdates** retrieves all initialisation dates within the same competitive period up to a given forecast initialisation date: 
+The function **retrieve_all_period_fcdates** retrieves all initialisation dates within the same competitive period up to a given forecast initialisation date:
 
 .. code-block:: python
 
   all_fc_dates = retrieve_evaluation_data.retrieve_all_period_fcdates(<<fc_init_date>>,<<password>>)
 
-- **fc_init_date** (*str*): The latest forecast initialisation date in the format *YYYYMMDD* (e.g., ‘20250519’ for 19th May 2025). 
+- **fc_init_date** (*str*): The latest forecast initialisation date in the format *YYYYMMDD* (e.g., ‘20250519’ for 19th May 2025).
 - **password** (*str*): The forecast submission password provided in your registration email.
 
-Once the forecast initialization dates are retrieved, the period-aggregated score is computed by iterating through each date:
+Once the forecast initialisation dates are retrieved, the period-aggregated score is computed by iterating through each date:
 
 .. code-block:: python
 
@@ -283,7 +295,7 @@ Once the forecast initialization dates are retrieved, the period-aggregated scor
        # Download observations
        obs = retrieve_evaluation_data.retrieve_weekly_obs(fc_valid_date,variable,password)
        # Download climatology
-       quintile_clim = retrieve_evaluation_data.retrieve_20yr_quintile_clim(fc_valid_date,variable,password)
+       quintile_clim = retrieve_evaluation_data.retrieve_20yr_quantile_clim(fc_valid_date,variable,password)
 
        # work out which quintile bound the observation sits in
        obs_pbs = forecast_evaluation.conditional_obs_probs(obs,quintile_clim)
@@ -313,3 +325,275 @@ For example, the following code would be used to compute RPSSs across the Tropic
 
   RPS_fc_region = forecast_evaluation.apply_region_mask(RPS_fc,30.0,-30.0,0.0,360.0)
   RPS_clim_region = forecast_evaluation.apply_region_mask(RPS_clim,30.0,-30.0,0.0,360.0)
+
+
+MJO phase probability forecasts
+---------------------------------------------------
+Retrieving datasets 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+In addition to forecasted probabilities of each MJO phase, two datasets are required for evaluating MJO predictions. These datasets, and the important functions within the **retrieve_evaluation_data** module for downloading such data, include:
+
+- Daily MJO characteristics: *retrieve_daily_MJO_obs*
+- Climatological MJO phase probabilities: *retrieve_20yr_MJO_clim*
+
+.. important::  
+   
+   When downloading historical MJO conditions, the date should correspond to the valid time (i.e. day 21 or day 28) and not the forecast initialisation date (day 1).
+
+Daily MJO characteristics
+"""""""""""""""""""""""""""""""""
+
+The ``retrieve_daily_MJO_obs`` function downloads observed MJO characteristics for a requested date and returns either the observed MJO phase probabilities or the raw daily MJO observation. For AI Weather Quest evaluation, only the observed MJO phase probabilities is needed.
+
+.. code-block:: python
+
+   daily_obs = retrieve_evaluation_data.retrieve_daily_MJO_obs(<<date>>,<<password>>,<<local_destination>>=None,<<phase_probs>>=True)
+
+- **date (str):** The requested date in ``YYYYMMDD`` format (e.g., ``'20260519'`` for 19 May 2026).
+- **password (str):** The forecast submission password provided in your registration email.
+- **local_destination (str):** The local destination for the downloaded dataset. If unspecified, the dataset is saved within the working directory.
+- **phase_probs (bool):** If ``True`` (default), returns the observed MJO phase as a probability vector with nine categories:
+
+    * Phase 0: Weak MJO (amplitude < 1)
+    * Phases 1–8: Active MJO phases
+
+    If ``False``, returns raw daily MJO diagnostics for the requested date.
+
+The ``retrieve_daily_MJO_obs`` function returns the observed MJO state for the requested day. Observations are derived from ERA5T-based MJO diagnostics and are downloaded from the weekly observation file corresponding to the Monday of the requested week.
+
+When ``phase_probs=True``, the output is returned as an ``xarray.DataArray`` containing probabilities for each MJO phase. The observed phase is assigned a probability of ``1.0`` and all other phases ``0.0``.
+
+**Filename convention**
+Downloaded daily MJO observation files follow this naming pattern:
+
+.. code-block:: text
+
+   MJO_obs_DAILY_<monday_date>.nc
+
+where ``<monday_date>`` is the Monday corresponding to the week containing the requested date. For instance, MJO characteristics on Thursday 2nd July 2026 will be stored in the Monday 29th June 2026 file (``MJO_obs_DAILY_20260629.nc``).
+
+Climatological phase probabilities
+"""""""""""""""""""""""""""""""""""""""
+
+The ``retrieve_20yr_MJO_clim`` function downloads the 20-year daily climatological MJO phase probabilities corresponding to a forecast start date.
+
+.. code-block:: python
+
+   MJO_clim = retrieve_evaluation_data.retrieve_20yr_MJO_clim(<<date>>,<<password>>,<<local_destination>>=None)
+
+- **date (str):** The forecast start date in ``YYYYMMDD`` format (e.g., ``'20250519'`` for 19 May 2025).
+- **password (str):** The forecast submission password provided in your registration email.
+- **local_destination (str):** The local destination for the downloaded climatology file. If unspecified, the file is saved within the working directory.
+
+The ``retrieve_20yr_MJO_clim`` function returns an ``xarray.DataArray`` containing climatological probabilities for each MJO phase. The climatology is constructed using a 20-year historical sample centred on the calendar date of interest and provides the reference probabilities used for MJO forecast verification. To expand the sample size to 100 observations, we include data from +/- 4 days at two-day intervals around the requested date.
+
+The returned data contain probabilities for:
+
+* Phase 0: Weak MJO (amplitude < 1)
+* Phases 1–8: Active MJO phases
+
+These probabilities sum to one and represent the climatological likelihood of observing each MJO phase on the requested date.
+
+**Filename convention**
+Downloaded MJO climatology files follow this naming pattern:
+
+.. code-block:: text
+
+   MJO_20yrCLIM_DAILYprobs_<date>.nc
+
+where ``<date>`` is the forecast start date in ``YYYYMMDD`` format.
+
+Example: Retrieving required datasets
+"""""""""""""""""""""""""""""""""""""""
+.. code-block:: python
+
+   from AI_WQ_package import retrieve_evaluation_data
+
+   # Download daily MJO observations
+   obs = retrieve_evaluation_data.retrieve_daily_MJO_obs('20260618',<<password>>)
+   
+   # Download MJO climatology 
+   clim = retrieve_evaluation_data.retrieve_20yr_MJO_clim('20260618',<<password>>)
+
+This example retrieves all necessary datasets for evaluating MJO forecasts on 18th June 2026.
+
+Evaluating MJO forecasts using retrieved data
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Once both observed and climatological MJO characteristics have been downloaded, it is trivial to compute the Brier Skill Score for a single forecast.
+
+The **forecast evaluation** module contains the **calculate_MJO_brier_score** function for computing the Brier Score for both forecasted and climatological predictions.
+
+Calculate Brier Skill Score
+"""""""""""""""""""""""""""""""""""""""
+
+The **calculate_MJO_brier_score** function computes the Brier Score for MJO phase forecasts, measuring the mean squared difference between forecast probabilities and observed phase probabilities.
+
+.. code-block:: python
+
+   bs = forecast_evaluation.calculate_MJO_brier_score(<<fc_pbs>>,<<obs_pbs>>)
+
+- **fc_pbs (xarray.DataArray):** Forecast probabilities for each MJO phase. Probabilities should be defined over the ``MJO_phase`` dimension.
+- **obs_pbs (xarray.DataArray):** Observed MJO phase probabilities.
+
+The ``calculate_MJO_brier_score`` function returns an ``xarray.DataArray`` containing the Brier Score, calculated as the mean squared error between the forecast and observed probabilities across all MJO phases.
+
+Once computing Brier Scores for both forecasted and climatological predictions, the Brier Skill Score can be calculated through
+
+.. math::
+
+   BSS = 1 - \frac{BS_fc}{BS_clim}
+
+as shown in the example below.
+
+Example evaluating an MJO forecast
+""""""""""""""""""""""""""""""""""""""""""""
+
+.. code-block:: python
+
+   from AI_WQ_package import forecast_evaluation
+
+   date='20260618'
+
+   # select correct date in forecast
+   pred = fc.sel(valid_time=date)
+
+   # compute Brier Score for climatology and forecast
+   BS_clim = forecast_evaluation.calculate_MJO_brier_score(clim,obs)
+   BS_fc = forecast_evaluation.calculate_MJO_brier_score(pred,obs)
+
+   # compute global RPSS
+   BSS = 1 - BS_fc/BS_clim
+
+Period-averaged BSSs are calculated as the mean of individual forecast BSS values over all forecast initialisation dates within the competitive period.
+
+Tropical storm days (TS)
+---------------------------------------------------
+
+Retrieving datasets 
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+In addition to forecasted probabilities, two datasets are required to evaluate tercile-based probabilities of tropical storm days. These datasets, and the important functions within the **retrieve_evaluation_data** module for downloading such data, include:
+
+- Weekly statistics of observed tropical storm days: **retrieve_weekly_obs**.
+- Climatological tercile boundaries of tropical storm days: **retrieve_20yr_quantile_clim**
+
+.. important::
+
+   When downloading historical tropical storm days, the date should correspond to the beginning of the forecast window (i.e. day 19 or day 26) and not the forecast initialisation date (day 1). Additionally, participants will only be able to download weekly observations commencing on a Monday.
+
+Weekly observations
+"""""""""""""""""""""""""""""""
+The **retrieve_weekly_obs** function downloads the requested set of observations that are used for forecast evaluation.
+
+.. code-block:: python
+
+  weekly_obs = retrieve_evaluation_data.retrieve_weekly_obs(<<date>>,<<variable>>,<<password>>,<<local_destination>>=None)
+
+- **date** (*str*): The requested date for weekly observations in format `YYYYMMDD` (e.g., `'20250519'` for 19th May 2025).
+
+.. note::  
+   
+   Participants should be able to download relevant observations from mid-January 2024.
+
+- **variable** (*str*): The requested atmospheric variable. Options include:
+
+  - ``'TS'``: Number of tropical storm days
+
+- **password** (str): The forecast submission password provided in your registration email.
+- **local_destination** (*str*): The local destination for the downloaded dataset. If unspecified, the dataset is saved within the working directory.
+
+The **retrieve_weekly_obs** function returns the dataset used for forecast evaluation.
+
+The number of tropical storm days (**TS**) is derived from the latest release of **IBTRACS v04r01**. These values are cross-checked against tropical storm observation files received at ECMWF from Regional Specialised Meteorological Centres (RSMCs) in BUFR format to ensure consistency.
+
+**Filename convention**
+Downloaded observations follow this naming pattern:
+
+.. code-block:: bash
+
+   TSdays_obs_WEEKLYSUM_<<date>>
+
+Climatological tercile boundaries
+"""""""""""""""""""""""""""""""""""""
+
+The *retrieve_20yr_quantile_clim* function can also download climatological tercile boundaries of tropical storm days.
+
+.. code-block:: python
+
+  clim_tercile_bounds = retrieve_evaluation_data.retrieve_20yr_quantile_clim(<<date>>,<<variable>>,<<password>>,local_destination=None)
+
+- **date** (*str*): The requested date for climatological tercile boundaries in format `YYYYMMDD` (e.g., `'20250519'` for 19th May 2025).
+- **variable** (*str*): The requested variable. Options are:
+
+  - ``'TS'``: Number of tropical storm days
+
+- **password** (str): The forecast submission password provided in your registration email.
+- **local_destination** (*str*): The local destination for the downloaded dataset. If unspecified, the dataset is saved within the working directory.
+
+The **retrieve_20yr_quantile_clim** function returns a dataset containing climatological tercile boundaries for each forecasted basin. Tercile boundaries have been calculated by collating observations from the past twenty years in the latest release of the **IBTRACS v04r01** dataset. To expand the sample size to 100 observations, we include data from +/- 4 days at two-day intervals around the requested date.
+
+.. important::  
+   
+   Climatological tercile boundaries are available at a daily resolution from 11th January 1999 to at least present day. 
+
+Example: Retrieving required datasets
+""""""""""""""""""""""""""""""""""""""""
+.. code-block:: python
+
+   from AI_WQ_package import retrieve_evaluation_data
+
+   # Download weekly observations
+   obs = retrieve_evaluation_data.retrieve_weekly_obs('20260615','TS',<<password>>)
+   # Download historical tercile boundaries 
+   tercile_clim = retrieve_evaluation_data.retrieve_20yr_quantile_clim('20260615','TS',<<password>>)
+
+This example retrieves all necessary datasets for evaluating tropical storm day forecasts for the week starting June 15th 2026.
+
+
+Evaluating TS forecasts using retrieved data
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+After downloading weekly observations of tropical storm days and climatological tercile boundaries, you can evaluate your forecast.
+
+The **forecast evaluation** module provides two key functions for computing Ranked Probability Skill Scores (RPSSs) for tropical storm days:
+
+- **conditional_obs_probs**: Generates an **xarray.DataArray** containing observed probabilities within climatological tercile boundaries.
+- **calculate_RPSS_TS**: Computes ranked probability skill score for each tropical storm basin, benchmarking forecasts against climatology.
+
+Compute observed probabilities
+""""""""""""""""""""""""""""""""""""""""
+The *conditional_obs_probs* function determines observed probabilities within a given set of climatological tercile boundaries. The probability is 1 when an observation falls within the specified boundaries.
+
+.. code-block:: python
+
+  obs_pbs = forecast_evaluation.conditional_obs_probs(<<obs>>,<<tercile_bounds>>)
+
+- **obs** (*xarray.DataArray*): Weekly observations.
+- **tercile_bounds** (*xarray.DataArray*): Climatological tercile boundaries.
+
+Calculate Ranked Probability Skill Score
+"""""""""""""""""""""""""""""""""""""""""""""""""
+The **calculate_RPSS_TS** function computes RPSS for each tropical storm basin independently, measuring forecast accuracy against climatology.
+
+.. code-block:: python
+
+  RPSS = forecast_evaluation.calculate_RPSS_TS(<<fc_pbs>>,<<obs_pbs>>)
+
+- **fc_pbs** (*xarray.DataArray*): Predicted probabilities between tercile boundaries.
+- **obs_pbs** (*xarray.DataArray*): Observed probabilities (computed using **conditional_obs_probs**).
+
+The **calculate_RPSS_TS** function computes a ranked probability score by comparing the cumulative sum of forecast and observed probabilities. It also calculates the climatological ranked probability score by comparing the cumulative sum of climatological and observed probabilities. With both these ranked probability scores, it then determines the RPSS with respect to climatology.
+
+The final output for each basin should be the same RPSS displayed on the AI Weather Quest website. Period-aggregated RPSSs for tropical storm days are the average across forecast initialisation dates for that competitive period. 
+
+Example evaluating a TS forecast
+"""""""""""""""""""""""""""""""""""""""""
+.. code-block:: python
+
+   from AI_WQ_package import forecast_evaluation
+
+   # work out conditional obs
+   cond_obs = forecast_evaluation.conditional_obs_probs(obs,tercile_clim)
+
+   # work out RPSS
+   TS_RPSS = forecast_evaluation.calculate_RPSS_TS(fc,cond_obs)
+
