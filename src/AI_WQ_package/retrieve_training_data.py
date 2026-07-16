@@ -68,9 +68,9 @@ def retrieve_annual_training_data(year,variable,password,local_destination=None)
     elif variable == 'pr':
         filename = f'{variable}_sevenday_WEEKLYSUM_{year}.nc'
     elif variable == 'TS':
-        filename == f'{variable}_sevenday_WEEKLYTSDAYS_{year}.nc'
+        filename = f'{variable}_sevenday_WEEKLYTSDAYS_{year}.nc'
     elif variable == 'MJO':
-        filename == f'MJO_DAILY_{year}.nc'
+        filename = f'MJO_DAILY_{year}.nc'
 
     if local_destination:
         local_filename = f'{local_destination}/{filename}'
