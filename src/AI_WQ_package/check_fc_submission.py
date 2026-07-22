@@ -15,23 +15,8 @@ def check_status(url):
     return response.status_code
 
 def check_registered_teamname(teamname):
-    csv_trigger_url = 'https://aiweatherquest.ecmwf.int/wp-load.php?export_key=REMOVED_EXPORT_KEY&export_id=2&action=trigger'
-    csv_check_status_url = 'https://aiweatherquest.ecmwf.int/wp-load.php?export_key=REMOVED_EXPORT_KEY&export_id=2&action=processing'
-    csv_data_url = 'https://aiweatherquest.ecmwf.int/wp-load.php?security_token=REMOVED_SECURITY_TOKEN&export_id=2&action=get_data'
+    csv_data_url = 'https://aiweatherquest.ecmwf.int/wp-json/csv/v1/export-teams-with-models'
     
-    # first trigger csv download
-    check_status(csv_trigger_url)
-
-    # wait for processing to complete. # will complete when status code 200 is recieved.
-    while True:
-        status_code = check_status(csv_check_status_url)
-        if status_code == 200:
-    # print("Processing completed. Status code 200 received.")
-            break
-        else:
-    #print("Processing not yet complete. Waiting 2 seconds before retrying...")
-            time.sleep(2)  # Wait for 2 seconds before checking again
-
     # once processing is complete, read the data.
     # read data within the url # saved webpage with team and model names
     df = pd.read_csv(csv_data_url)
@@ -43,23 +28,8 @@ def check_registered_teamname(teamname):
         raise ValueError(f"{teamname} is not recognised as a registered AI Weather Quest teamname.")
 
 def check_registered_modelname(modelname):
-    csv_trigger_url = 'https://aiweatherquest.ecmwf.int/wp-load.php?export_key=REMOVED_EXPORT_KEY&export_id=2&action=trigger'
-    csv_check_status_url = 'https://aiweatherquest.ecmwf.int/wp-load.php?export_key=REMOVED_EXPORT_KEY&export_id=2&action=processing'
-    csv_data_url = 'https://aiweatherquest.ecmwf.int/wp-load.php?security_token=REMOVED_SECURITY_TOKEN&export_id=2&action=get_data'
+    csv_data_url = 'https://aiweatherquest.ecmwf.int/wp-json/csv/v1/export-teams-with-models'
 
-    # first trigger csv download
-    check_status(csv_trigger_url)
-
-    # wait for processing to complete. # will complete when status code 200 is recieved.
-    while True:
-        status_code = check_status(csv_check_status_url)
-        if status_code == 200:
-        # print("Processing completed. Status code 200 received.")
-            break
-        else:
-        # print("Processing not yet complete. Waiting 2 seconds before retrying...")
-            time.sleep(2)  # Wait for 2 seconds before checking again
-    
     # read data within the url # saved webpage with team and model names
     df = pd.read_csv(csv_data_url)
     reg_modelnames = df['Models_model_name']

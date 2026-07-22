@@ -1,6 +1,9 @@
 # Python bytecode and caches
 src/AI_WQ_package/__pycache__/*
 *.py[cod]
+__pycache__/
+*.pyc
+*.swp
 
 # Packaging artifacts
 *.egg-info/
