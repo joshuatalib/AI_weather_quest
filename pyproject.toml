@@ -3,7 +3,7 @@ name = "AI_WQ_package"
 authors = [
   { name="Joshua Talib", email="joshuatalib@ecmwf.int" },
 ]
-version = "3.27"
+version = "3.28"
 description = "A python package to support forecast submission, visualisation and evaluation for S2S ML/AI prediction project"
 readme = "README.md"
 requires-python = ">=3.8"

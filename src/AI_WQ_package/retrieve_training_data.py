@@ -84,3 +84,22 @@ def retrieve_annual_training_data(year,variable,password,local_destination=None)
     # open file using xarray. # removes time bounds
     full_year_obs = xr.open_dataset(local_filename).squeeze()
     return full_year_obs
+
+def retrieve_MJO_projection_data(password,local_destination=None):
+    '''
+    function to retrieve combined EOFs and RMM std devs based on Wheeler and Hendon 2004
+    '''
+    combined_EOFs_fn = 'WH04_combinedEOFs.nc'
+    RMM_stddevs_fn = 'WH04_RMM_stddevs.nc'
+
+    if local_destination:
+        combined_EOFs_fn = f'{local_destination}/{combined_EOFs_fn}'
+        RMM_stddevs_fn = f'{local_destination}/{RMM_stddevs_fn}'
+
+    retrieve_evaluation_data.ftp_or_ecbox_loading(f'/training_data/MJO_reference_data/WH04_combinedEOFs.nc',combined_EOFs_fn,password)
+    retrieve_evaluation_data.ftp_or_ecbox_loading(f'/training_data/MJO_reference_data/WH04_RMM_stddevs.nc',RMM_stddevs_fn,password)
+
+    return combined_EOFs_fn, RMM_stddevs_fn
+
+
+

@@ -11,6 +11,7 @@ from AI_WQ_package import check_fc_submission
 import ftplib
 import os
 from pathlib import Path
+from sites.sdk.sites import Site, Authenticator
 
 def get_previous_monday(date_obj):
     if date_obj.weekday() != 0:  # Monday is 0
