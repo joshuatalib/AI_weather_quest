@@ -523,7 +523,7 @@ def AI_WQ_check_submission(variable,fc_start_date,fc_period,teamname,modelname,p
                 "Authentication or permission error accessing ECbox."
             ) from e
         
-        filenames = [os.path.basename(path) for path in entries['files']] # only want filename (no leading directories)
+        filenames = [os.path.basename(file_entry['path']) for file_entry in entries['files']] # only want filename (no leading directories)
         
         if final_filename in filenames:
             print(f"File '{final_filename}' exists. "
