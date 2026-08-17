@@ -517,16 +517,14 @@ def AI_WQ_check_submission(variable,fc_start_date,fc_period,teamname,modelname,p
         # get all entries in the remote directory
         try:
             # List directory contents
-            # List option will only output 100 entries. Need to loop through 100 entries
+            # List option will only output 100 entries. Need to loop through 100 entries and keep tokens
             entries = []
-            tokens = []
             token = None
             while True:
                 page = content_manager.list(remote_path=remote_dir,continuation_token=token)
                 entries.extend(page['files'])
 
                 token = page.get('continuation_token')
-                tokens.append(token)
                 if not token:
                     break
         except Exception as e:
